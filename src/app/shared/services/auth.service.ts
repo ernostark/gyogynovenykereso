@@ -10,24 +10,28 @@ export class AuthService {
 
   private apiUrl = 'http://localhost:8000/api';
 
-  login(email: string, password: string): Observable<any> {
-    const body = { email, password };
-    return this.http.post(`${this.apiUrl}/login`, body);
+  login(loginData: { email: string; password: string }): Observable<any> {
+    return this.http.post<any>('http://localhost:8000/api/login', loginData);
   }
 
-  logout(): void {
-    console.log('Kijelentkezés');
-  }
-
-  isAuthenticated(): boolean {
-    return true;
+  logout(): Observable<any> {
+    const token = sessionStorage.getItem('auth_token');
+    return this.http.post<any>(
+      'http://localhost:8000/api/logout',
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
   }
 
   register(userData: {
     name: string;
     email: string;
     password: string;
-    password_confirmation: string;
+    confirm_password: string;
   }): Observable<any> {
     return this.http.post(`${this.apiUrl}/register`, userData);
   }
