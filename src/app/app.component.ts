@@ -1,0 +1,13 @@
+import { Component } from '@angular/core';
+import { HeaderComponent } from './layout/header/header/header.component';
+import { HerblistComponent } from "./layout/content/list/herblist/herblist.component";
+
+@Component({
+  selector: 'app-root',
+  imports: [HeaderComponent, HerblistComponent],
+  templateUrl: './app.component.html',
+  styleUrl: './app.component.css',
+})
+export class AppComponent {
+  title = 'gyogynovenykereso';
+}

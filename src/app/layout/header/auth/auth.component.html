@@ -1,0 +1,172 @@
+<nav>
+  <div>
+    <div class="ms-auto">
+      <button
+        class="btn btn-primary mx-2"
+        data-bs-toggle="modal"
+        data-bs-target="#loginModal"
+      >
+        Bejelentkezés
+      </button>
+      <button
+        class="btn btn-primary my-2"
+        data-bs-toggle="modal"
+        data-bs-target="#registerModal"
+      >
+        Regisztráció
+      </button>
+    </div>
+
+    <!-- <div
+      class="modal fade ms-auto"
+      id="loginModal"
+      tabindex="-1"
+      aria-labelledby="loginModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="loginModalLabel">Bejelentkezés</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Bezárás"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form (submit)="onLogin()">
+              <div class="form-group">
+                <label for="loginEmail">Email</label>
+                <input
+                  id="loginEmail"
+                  type="email"
+                  class="form-control"
+                  [(ngModel)]="email"
+                  name="email"
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <label for="loginPassword">Jelszó</label>
+                <input
+                  id="loginPassword"
+                  type="password"
+                  class="form-control"
+                  [(ngModel)]="password"
+                  name="password"
+                  required
+                />
+              </div>
+              <button type="submit" class="btn btn-primary mt-3">
+                Bejelentkezés
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div> -->
+
+    <div
+      class="modal fade"
+      id="registerModal"
+      tabindex="-1"
+      aria-labelledby="registerModalLabel"
+      aria-hidden="true"
+      #registerModal
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="registerModalLabel">Regisztráció</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Bezárás"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form [formGroup]="registerForm" (ngSubmit)="onRegister()">
+              <div class="form-group">
+                <label for="name">Név</label>
+                <input
+                  id="name"
+                  type="text"
+                  class="form-control"
+                  formControlName="name"
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <label for="email">Email</label>
+                <input
+                  id="email"
+                  type="email"
+                  class="form-control"
+                  formControlName="email"
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <label for="password">Jelszó</label>
+                <input
+                  id="password"
+                  type="password"
+                  class="form-control"
+                  formControlName="password"
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <label for="password_confirmation">Jelszó megerősítése</label>
+                <input
+                  id="password_confirmation"
+                  type="password"
+                  class="form-control"
+                  formControlName="password_confirmation"
+                  required
+                />
+              </div>
+              <button type="submit" class="btn btn-primary mt-3">
+                Regisztráció
+              </button>
+            </form>
+
+            <div
+              *ngIf="errorMessage"
+              class="alert alert-danger mt-3"
+              [innerHTML]="errorMessage"
+            ></div>
+            <div *ngIf="successMessage" class="alert alert-success mt-3">
+              {{ successMessage }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="toast-container position-fixed top-0 end-0 p-3">
+      <div
+        class="toast align-items-center text-white bg-success border-0"
+        role="alert"
+        aria-live="assertive"
+        aria-atomic="true"
+        [ngClass]="{ show: showToast }"
+      >
+        <div class="d-flex">
+          <div class="toast-body">
+            {{ successMessage }}
+          </div>
+          <button
+            type="button"
+            class="btn-close btn-close-white me-2 m-auto"
+            (click)="hideToast()"
+            aria-label="Close"
+          ></button>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
