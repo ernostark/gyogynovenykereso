@@ -20,9 +20,11 @@ declare var bootstrap: any;
 })
 export class AuthComponent implements OnInit {
   @ViewChild('registerModal', { static: false }) registerModal!: ElementRef;
+
   email: string = '';
   password: string = '';
   registerForm: FormGroup;
+  updateForm!: FormGroup;
   errorMessage: string | null = null;
   successMessage: string | null = null;
   toastMessage: string | null = null;
@@ -31,6 +33,27 @@ export class AuthComponent implements OnInit {
 
   ngOnInit(): void {
     this.checkLoginStatus();
+    this.initializeUpdateForm();
+  }
+
+  initializeUpdateForm(): void {
+    this.updateForm = this.fb.group({
+      password: [
+        null,
+        [
+          Validators.minLength(8),
+          Validators.pattern(/[a-z]/), // Kisbetű
+          Validators.pattern(/[A-Z]/), // Nagybetű
+          Validators.pattern(/[0-9]/), // Szám
+        ],
+      ],
+      password_confirmation: [null],
+      country: [null, [Validators.required, Validators.maxLength(30)]], // Kötelező mező
+      postal_code: [null, [Validators.required, Validators.maxLength(10)]], // Kötelező mező
+      city: [null, [Validators.required, Validators.maxLength(40)]], // Kötelező mező
+      street: [null, [Validators.required, Validators.maxLength(80)]], // Kötelező mező
+      address_line_2: [null, [Validators.maxLength(80)]], // Nem kötelező
+    });
   }
 
   checkLoginStatus(): void {
@@ -154,7 +177,6 @@ export class AuthComponent implements OnInit {
   onLogout(): void {
     this.authService.logout().subscribe({
       next: () => {
-
         sessionStorage.removeItem('auth_token');
         sessionStorage.removeItem('user');
 
@@ -162,6 +184,47 @@ export class AuthComponent implements OnInit {
       },
       error: (error) => {
         console.error('Hiba történt a kijelentkezés során:', error);
+      },
+    });
+  }
+
+  onUpdateProfile(): void {
+    if (this.updateForm.invalid) {
+      this.errorMessage = 'Kérlek, töltsd ki helyesen az űrlapot!';
+      return;
+    }
+
+    const formData = this.updateForm.value;
+
+    this.authService.updateUserProfile(formData).subscribe({
+      next: (response) => {
+        if (response.success) {
+          this.showToast(response.message); // Sikeres üzenet toast-ban
+
+          // Modal bezárása
+          const modalInstance = bootstrap.Modal.getInstance(
+            document.getElementById('updateProfileModal')
+          );
+          if (modalInstance) {
+            modalInstance.hide();
+          }
+
+          // Form alaphelyzetbe állítása
+          this.updateForm.reset();
+
+          // Hibaüzenet törlése
+          this.errorMessage = null;
+        }
+      },
+      error: (error) => {
+        if (error.status === 422) {
+          const validationErrors = error.error.error || {};
+          this.errorMessage = Object.values(validationErrors)
+            .flat()
+            .join('<br>'); // Hibák megjelenítése a modal alján
+        } else {
+          this.errorMessage = 'Hiba történt a profil frissítése során.';
+        }
       },
     });
   }

@@ -35,4 +35,17 @@ export class AuthService {
   }): Observable<any> {
     return this.http.post(`${this.apiUrl}/register`, userData);
   }
+
+  updateUserProfile(data: any): Observable<any> {
+    const token = sessionStorage.getItem('auth_token');
+    return this.http.put<any>(
+      'http://localhost:8000/api/profile',
+      data,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+  }
 }
