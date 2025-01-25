@@ -16,16 +16,17 @@
     >
       Regisztráció
     </button>
-    <button *ngIf="isLoggedIn" class="btn btn-danger mx-2" (click)="onLogout()">
-      Kijelentkezés
-    </button>
     <button
       *ngIf="isLoggedIn"
+      (click)="onEditProfile()"
       class="btn btn-info mx-2"
       data-bs-toggle="modal"
       data-bs-target="#updateProfileModal"
     >
       Profilom
+    </button>
+    <button *ngIf="isLoggedIn" class="btn btn-danger mx-2" (click)="onLogout()">
+      Kijelentkezés
     </button>
   </div>
 
@@ -195,7 +196,7 @@
               />
             </div>
             <div class="form-group mb-3">
-              <label for="password_confirmation">Jelszó Megerősítése</label>
+              <label for="password_confirmation">Jelszó megerősítése</label>
               <input
                 type="password"
                 id="password_confirmation"
@@ -204,7 +205,9 @@
               />
             </div>
             <div class="form-group mb-3">
-              <label for="country">Ország</label>
+              <label for="country"
+                >Ország<span class="text-danger">*</span></label
+              >
               <input
                 type="text"
                 id="country"
@@ -213,7 +216,9 @@
               />
             </div>
             <div class="form-group mb-3">
-              <label for="postal_code">Irányítószám</label>
+              <label for="postal_code"
+                >Irányítószám<span class="text-danger">*</span></label
+              >
               <input
                 type="text"
                 id="postal_code"
@@ -222,7 +227,7 @@
               />
             </div>
             <div class="form-group mb-3">
-              <label for="city">Város</label>
+              <label for="city">Város<span class="text-danger">*</span></label>
               <input
                 type="text"
                 id="city"
@@ -231,7 +236,9 @@
               />
             </div>
             <div class="form-group mb-3">
-              <label for="street">Utca, házszám</label>
+              <label for="street"
+                >Utca, házszám<span class="text-danger">*</span></label
+              >
               <input
                 type="text"
                 id="street"
@@ -248,6 +255,12 @@
                 formControlName="address_line_2"
               />
             </div>
+            <div class="my-2">
+              A piros csillagal jelölt mezők kitöltése kötelező!<span
+                class="text-danger"
+                >*</span
+              >
+            </div>
             <button type="submit" class="btn btn-primary mx-2">Mentés</button>
             <button
               type="button"
@@ -257,6 +270,59 @@
               Mégse
             </button>
           </form>
+
+          <div
+            *ngIf="updateForm.invalid && updateForm.touched"
+            class="alert alert-danger mt-3"
+          >
+            <ul>
+              <li *ngIf="updateForm.get('password')?.errors?.['minlength']">
+                Jelszó legalább 8 karakter hosszú kell legyen!
+              </li>
+              <li *ngIf="updateForm.get('password')?.errors?.['pattern']">
+                Jelszónak tartalmaznia kell kisbetűt, nagybetűt és számot!
+              </li>
+
+              <li *ngIf="updateForm.errors?.['passwordMismatch']">
+                A jelszavak nem egyeznek!
+              </li>
+
+              <li *ngIf="updateForm.get('country')?.errors?.['required']">
+                Ország mező kitöltése kötelező!
+              </li>
+              <li *ngIf="updateForm.get('country')?.errors?.['maxlength']">
+                Ország mezőben maximum 30 karakter lehet!
+              </li>
+
+              <li *ngIf="updateForm.get('postal_code')?.errors?.['required']">
+                Irányítószám mező kitöltése kötelező!
+              </li>
+              <li *ngIf="updateForm.get('postal_code')?.errors?.['maxlength']">
+                Irányítószám mezőben maximum 10 karakter lehet!
+              </li>
+
+              <li *ngIf="updateForm.get('city')?.errors?.['required']">
+                Város mező kitöltése kötelező!
+              </li>
+              <li *ngIf="updateForm.get('city')?.errors?.['maxlength']">
+                Város mezőben maximum 40 karakter lehet!
+              </li>
+
+              <li *ngIf="updateForm.get('street')?.errors?.['required']">
+                Utca, házszám mező kitöltése kötelező!
+              </li>
+              <li *ngIf="updateForm.get('street')?.errors?.['maxlength']">
+                Utca, házszám mezőben maximum 80 karakter lehet!
+              </li>
+
+              <li
+                *ngIf="updateForm.get('address_line_2')?.errors?.['maxlength']"
+              >
+                Egyéb címadatok mezőben maximum 80 karakter lehet!
+              </li>
+            </ul>
+          </div>
+
           <div
             *ngIf="errorMessage"
             class="alert alert-danger mt-3"

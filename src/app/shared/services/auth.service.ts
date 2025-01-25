@@ -38,14 +38,18 @@ export class AuthService {
 
   updateUserProfile(data: any): Observable<any> {
     const token = sessionStorage.getItem('auth_token');
-    return this.http.put<any>(
-      'http://localhost:8000/api/profile',
-      data,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
+    return this.http.put<any>('http://localhost:8000/api/profile', data, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+  }
+
+  getUserProfile(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/getprofile`, {
+      headers: {
+        Authorization: `Bearer ${sessionStorage.getItem('auth_token')}`,
+      },
+    });
   }
 }
