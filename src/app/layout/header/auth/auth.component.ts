@@ -11,13 +11,15 @@ import {
   Validators,
 } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { LogoComponent } from "../logo/logo.component";
+import { SearchComponent } from "../search/search.component";
 
 declare var bootstrap: any;
 
 @Component({
   standalone: true,
   selector: 'app-auth',
-  imports: [ReactiveFormsModule, CommonModule, FormsModule],
+  imports: [ReactiveFormsModule, CommonModule, FormsModule, LogoComponent, SearchComponent],
   templateUrl: './auth.component.html',
   styleUrl: './auth.component.css',
 })
