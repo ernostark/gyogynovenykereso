@@ -1,0 +1,195 @@
+<div class="container py-2">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <div class="card shadow-sm border-0">
+        <div class="card-body p-5">
+          <h2 class="text-center mb-4 pb-2 position-relative">
+            Általános Szerződési Feltételek (ÁSZF)
+            <span
+              class="position-absolute start-0 bottom-0 w-100"
+              style="
+                height: 3px;
+                background: linear-gradient(
+                  90deg,
+                  rgba(113, 44, 249, 0.95),
+                  transparent
+                );
+                z-index: 1;
+                overflow: visible;
+              "
+            ></span>
+          </h2>
+
+          <p class="text-muted mb-5">
+            Hatályba lépés dátuma: {{ currentDate | date : "yyyy.MM.dd." }}
+          </p>
+
+          <div class="mb-5">
+            <h3 class="mb-4">1. Bevezetés</h3>
+            <p>
+              A jelen Általános Szerződési Feltételek (továbbiakban:
+              <strong>ÁSZF</strong>) meghatározzák a(z) *[Weboldal Neve]*
+              (továbbiakban: <strong>Szolgáltató</strong>) és a felhasználók
+              (továbbiakban: <strong>Felhasználó</strong>) közötti jogokat és
+              kötelezettségeket.
+            </p>
+            <p>
+              A weboldal szolgáltatásainak használatával a Felhasználó elfogadja
+              a jelen ÁSZF-et.
+            </p>
+          </div>
+
+          <div class="mb-5">
+            <h3 class="mb-4">2. Szolgáltató adatai</h3>
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item">
+                <i class="bi bi-building text-primary me-2"></i>
+                <strong>Cégnév:</strong> *[Cégnév]*
+              </li>
+              <li class="list-group-item">
+                <i class="bi bi-geo-alt text-primary me-2"></i>
+                <strong>Székhely:</strong> *[Cég címe]*
+              </li>
+              <li class="list-group-item">
+                <i class="bi bi-envelope text-primary me-2"></i>
+                <strong>E-mail:</strong> *[Kapcsolati e-mail]*
+              </li>
+              <li class="list-group-item">
+                <i class="bi bi-telephone text-primary me-2"></i>
+                <strong>Telefonszám:</strong> *[Telefonszám]*
+              </li>
+              <li class="list-group-item">
+                <i class="bi bi-globe text-primary me-2"></i>
+                <strong>Weboldal:</strong> *[Weboldal URL]*
+              </li>
+              <li class="list-group-item">
+                <i class="bi bi-file-earmark-text text-primary me-2"></i>
+                <strong>Adószám:</strong> *[Adószám]*
+              </li>
+            </ul>
+          </div>
+
+          <div class="mb-5">
+            <h3 class="mb-4">3. Szolgáltatásaink</h3>
+            <p>
+              A *[Weboldal Neve]* egy **gyógynövénykereső és webshop**, amely
+              lehetőséget biztosít a Felhasználók számára:
+            </p>
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item">
+                <i class="bi bi-search text-primary me-2"></i> Gyógynövények
+                keresésére betegségek és egészségügyi problémák alapján.
+              </li>
+              <li class="list-group-item">
+                <i class="bi bi-cart-check text-primary me-2"></i> Gyógynövények
+                és természetes termékek vásárlására a webshopban.
+              </li>
+              <li class="list-group-item">
+                <i class="bi bi-book text-primary me-2"></i> Tájékozódásra a
+                gyógynövények hatásairól és felhasználási módjairól.
+              </li>
+              <li class="list-group-item">
+                <i class="bi bi-envelope-paper text-primary me-2"></i>
+                Hírlevélre való feliratkozásra egészségügyi és életmódbeli
+                tippek kapcsán.
+              </li>
+            </ul>
+          </div>
+
+          <div class="mb-5">
+            <h3 class="mb-4">4. Felhasználói fiók és regisztráció</h3>
+            <p>
+              A webshop bizonyos funkcióinak használatához (pl. vásárlás,
+              rendelések követése) regisztráció szükséges.
+            </p>
+            <p>A regisztrációval a Felhasználó:</p>
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item">
+                <i class="bi bi-person-plus text-primary me-2"></i> Elfogadja az
+                ÁSZF-et és az <a href="#">Adatvédelmi nyilatkozatot</a>.
+              </li>
+              <li class="list-group-item">
+                <i class="bi bi-shield-lock text-primary me-2"></i> Köteles a
+                saját adatait pontosan és naprakészen megadni.
+              </li>
+            </ul>
+          </div>
+
+          <div class="mb-5">
+            <h3 class="mb-4">5. Rendelés menete és fizetési feltételek</h3>
+            <div class="bg-light p-4 rounded">
+              <ul class="list-unstyled mb-0">
+                <li class="mb-3">
+                  <i class="bi bi-cart text-primary me-2"></i> **Termék
+                  kiválasztása és kosárba helyezése** a webshopban.
+                </li>
+                <li class="mb-3">
+                  <i class="bi bi-file-earmark-text text-primary me-2"></i>
+                  **Megrendelés véglegesítése**, számlázási és szállítási adatok
+                  megadása.
+                </li>
+                <li class="mb-3">
+                  <i class="bi bi-credit-card text-primary me-2"></i> **Fizetés
+                  online bankkártyával vagy utánvéttel**.
+                </li>
+                <li class="mb-3">
+                  <i class="bi bi-truck text-primary me-2"></i> **Rendelés
+                  kiszállítása** futárszolgálattal.
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="mb-5">
+            <h3 class="mb-4">6. Elállási jog és visszaküldés</h3>
+            <p>
+              A Felhasználónak jogában áll **14 napon belül elállni a
+              vásárlástól** a jogszabályoknak megfelelően.
+            </p>
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item">
+                <i class="bi bi-arrow-left-right text-primary me-2"></i> Az
+                elállási jog **nem vonatkozik** bontott csomagolású
+                élelmiszerekre és étrend-kiegészítőkre.
+              </li>
+              <li class="list-group-item">
+                <i class="bi bi-box-seam text-primary me-2"></i> A visszaküldés
+                költsége a vásárlót terheli, kivéve ha a termék hibás.
+              </li>
+            </ul>
+          </div>
+
+          <div class="mb-5">
+            <h3 class="mb-4">7. Felelősség korlátozása</h3>
+            <p>A Szolgáltató nem vállal felelősséget:</p>
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item">
+                <i class="bi bi-exclamation-triangle text-primary me-2"></i> Az
+                oldalon található információk egészségügyi felhasználásáért.
+              </li>
+              <li class="list-group-item">
+                <i class="bi bi-graph-down text-primary me-2"></i> Az oldal
+                esetleges üzemszüneteiből eredő károkért.
+              </li>
+            </ul>
+          </div>
+
+          <div class="mb-5">
+            <h3 class="mb-4">8. Kapcsolat és ügyfélszolgálat</h3>
+            <p>Bármilyen kérdés esetén elérhetőek vagyunk:</p>
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item">
+                <i class="bi bi-envelope text-primary me-2"></i> E-mail: *[email
+                cím]*
+              </li>
+              <li class="list-group-item">
+                <i class="bi bi-telephone text-primary me-2"></i> Telefon:
+                *[telefonszám]*
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

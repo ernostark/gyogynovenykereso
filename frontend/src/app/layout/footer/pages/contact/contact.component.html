@@ -1,0 +1,99 @@
+<div class="container py-2">
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
+        <div class="card shadow-sm border-0">
+          <div class="card-body p-5">
+            <h2 class="text-center mb-4 pb-2 position-relative">
+              Kapcsolat
+              <span
+                class="position-absolute start-0 bottom-0 w-100"
+                style="height: 3px; background: linear-gradient(90deg, rgba(113, 44, 249, 0.95), transparent); z-index: 1; overflow: visible;"
+              ></span>
+            </h2>
+   
+            <form [formGroup]="contactForm" (ngSubmit)="onSubmit()" class="mt-5">
+              <div class="mb-4">
+                <label for="name" class="form-label">
+                  <i class="bi bi-person me-2 text-primary"></i>Név
+                </label>
+                <input
+                  type="text"
+                  class="form-control form-control-lg"
+                  id="name"
+                  formControlName="name"
+                  placeholder="Add meg a neved"
+                  [ngClass]="{'is-invalid': contactForm.get('name')?.touched && contactForm.get('name')?.invalid}"
+                >
+                <div class="invalid-feedback" *ngIf="contactForm.get('name')?.touched && contactForm.get('name')?.invalid">
+                  A név megadása kötelező!
+                </div>
+              </div>
+   
+              <div class="mb-4">
+                <label for="email" class="form-label">
+                  <i class="bi bi-envelope me-2 text-primary"></i>Email cím
+                </label>
+                <input
+                  type="email"
+                  class="form-control form-control-lg"
+                  id="email"
+                  formControlName="email"
+                  placeholder="Add meg az email címed"
+                  [ngClass]="{'is-invalid': contactForm.get('email')?.touched && contactForm.get('email')?.invalid}"
+                >
+                <div class="invalid-feedback" *ngIf="contactForm.get('email')?.touched && contactForm.get('email')?.invalid">
+                  Érvényes email cím megadása kötelező!
+                </div>
+              </div>
+   
+              <div class="mb-4">
+                <label for="subject" class="form-label">
+                  <i class="bi bi-chat-left-text me-2 text-primary"></i>Tárgy
+                </label>
+                <input
+                  type="text"
+                  class="form-control form-control-lg"
+                  id="subject"
+                  formControlName="subject"
+                  placeholder="Mi a megkeresésed tárgya?"
+                  [ngClass]="{'is-invalid': contactForm.get('subject')?.touched && contactForm.get('subject')?.invalid}"
+                >
+                <div class="invalid-feedback" *ngIf="contactForm.get('subject')?.touched && contactForm.get('subject')?.invalid">
+                  A tárgy megadása kötelező!
+                </div>
+              </div>
+   
+              <div class="mb-4">
+                <label for="message" class="form-label">
+                  <i class="bi bi-pencil me-2 text-primary"></i>Üzenet
+                </label>
+                <textarea
+                  class="form-control"
+                  id="message"
+                  formControlName="message"
+                  rows="6"
+                  placeholder="Írd le üzeneted..."
+                  [ngClass]="{'is-invalid': contactForm.get('message')?.touched && contactForm.get('message')?.invalid}"
+                ></textarea>
+                <div class="invalid-feedback" *ngIf="contactForm.get('message')?.touched && contactForm.get('message')?.invalid">
+                  Az üzenet nem lehet üres!
+                </div>
+              </div>
+   
+              <div class="text-center">
+                <button 
+                  type="submit" 
+                  class="btn btn-primary btn-lg px-5"
+                  [disabled]="contactForm.invalid"
+                >
+                  <i class="bi bi-send me-2"></i>
+                  Üzenet küldése
+                </button>
+              </div>
+            </form>
+   
+          </div>
+        </div>
+      </div>
+    </div>
+   </div>

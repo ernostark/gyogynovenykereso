@@ -1,0 +1,230 @@
+<div class="fixed-top">
+  <div class="container-fluid bg-dark rounded-bottom custom-shadow">
+    <nav class="navbar navbar-expand-lg navbar-dark">
+      <app-logo></app-logo>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="/">Főoldal</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" [routerLink]="['/search']">Keresés</a>
+          </li>
+          <li class="nav-item" *ngIf="isAdminLoggedIn$ | async">
+            <a class="nav-link" href="/admin/dashboard">Vezérlőpult</a>
+          </li>
+          <li class="nav-item" *ngIf="!isLoggedIn && !(isAdminLoggedIn$ | async)">
+            <a a href="" class="nav-link" data-bs-toggle="modal" data-bs-target="#loginModal">Bejelentkezés</a>
+          </li>
+          <li class="nav-item" *ngIf="!isLoggedIn && !(isAdminLoggedIn$ | async)">
+            <a a href="" class="nav-link" data-bs-toggle="modal" data-bs-target="#registerModal">Regisztráció</a>
+          </li>
+          <li class="nav-item" *ngIf="isLoggedIn && !(isAdminLoggedIn$ | async)">
+            <a class="nav-link" href="" data-bs-toggle="modal" data-bs-target="#">Rendeléseim</a>
+          </li>
+          <li class="nav-item" *ngIf="isLoggedIn && !(isAdminLoggedIn$ | async)">
+            <a a href="" class="nav-link" data-bs-toggle="modal" data-bs-target="#updateProfileModal"
+              (click)="onEditProfile()">Profilom</a>
+          </li>
+          <li class="nav-item" *ngIf="isLoggedIn && !(isAdminLoggedIn$ | async)">
+            <a class="nav-link" (click)="onLogout()" style="cursor: pointer">Kijelentkezés</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+  </div>
+</div>
+
+<div class="modal fade ms-auto" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="loginModalLabel">Bejelentkezés</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Bezárás"></button>
+      </div>
+      <div class="modal-body">
+        <form (submit)="onLogin()">
+          <div class="form-group">
+            <label for="loginEmail">Email</label>
+            <input id="loginEmail" type="email" class="form-control" [(ngModel)]="email" name="email" required />
+          </div>
+          <div class="form-group">
+            <label for="loginPassword">Jelszó</label>
+            <input id="loginPassword" type="password" class="form-control" [(ngModel)]="password" name="password"
+              required />
+          </div>
+          <button type="submit" class="btn btn-success mt-3">
+            Bejelentkezés
+          </button>
+        </form>
+        <div *ngIf="errorMessage" class="alert alert-danger mt-3">
+          {{ errorMessage }}
+        </div>
+        <div *ngIf="successMessage" class="alert alert-success mt-3">
+          {{ successMessage }}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="registerModal" tabindex="-1" aria-labelledby="registerModalLabel" aria-hidden="true"
+  #registerModal>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="registerModalLabel">Regisztráció</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Bezárás"></button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="registerForm" (ngSubmit)="onRegister()">
+          <div class="form-group">
+            <label for="name">Név</label>
+            <input id="name" type="text" class="form-control" formControlName="name" required />
+          </div>
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input id="email" type="email" class="form-control" formControlName="email" required />
+          </div>
+          <div class="form-group">
+            <label for="password">Jelszó</label>
+            <input type="password" class="form-control" formControlName="password" required />
+          </div>
+          <div class="form-group">
+            <label for="confirm_password">Jelszó megerősítése</label>
+            <input id="confirm_password" type="password" class="form-control" formControlName="confirm_password"
+              required />
+          </div>
+          <button type="submit" class="btn btn-primary mt-3">
+            Regisztráció
+          </button>
+        </form>
+
+        <div *ngIf="errorMessage" class="alert alert-danger mt-3" [innerHTML]="errorMessage"></div>
+        <div *ngIf="successMessage" class="alert alert-success mt-3">
+          {{ successMessage }}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="updateProfileModal" tabindex="-1" aria-labelledby="updateProfileModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="updateProfileModalLabel">
+          Profil Frissítése
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Bezárás"></button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="updateForm" (ngSubmit)="onUpdateProfile()">
+          <div class="form-group mb-3">
+            <label for="password">Új Jelszó</label>
+            <input type="password" class="form-control" formControlName="password" />
+          </div>
+          <div class="form-group mb-3">
+            <label for="password_confirmation">Jelszó megerősítése</label>
+            <input type="password" id="password_confirmation" class="form-control"
+              formControlName="password_confirmation" />
+          </div>
+          <div class="form-group mb-3">
+            <label for="country">Ország<span class="text-danger">*</span></label>
+            <input type="text" id="country" class="form-control" formControlName="country" />
+          </div>
+          <div class="form-group mb-3">
+            <label for="postal_code">Irányítószám<span class="text-danger">*</span></label>
+            <input type="text" id="postal_code" class="form-control" formControlName="postal_code" />
+          </div>
+          <div class="form-group mb-3">
+            <label for="city">Város<span class="text-danger">*</span></label>
+            <input type="text" id="city" class="form-control" formControlName="city" />
+          </div>
+          <div class="form-group mb-3">
+            <label for="street">Utca, házszám<span class="text-danger">*</span></label>
+            <input type="text" id="street" class="form-control" formControlName="street" />
+          </div>
+          <div class="form-group mb-3">
+            <label for="address_line_2">Egyéb címadatok</label>
+            <input type="text" id="address_line_2" class="form-control" formControlName="address_line_2" />
+          </div>
+          <div class="my-2">
+            A piros csillagal jelölt mezők kitöltése kötelező!<span class="text-danger">*</span>
+          </div>
+          <button type="submit" class="btn btn-primary mx-2">Mentés</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+            Mégse
+          </button>
+        </form>
+
+        <div *ngIf="updateForm.invalid && updateForm.touched" class="alert alert-danger mt-3">
+          <ul>
+            <li *ngIf="updateForm.get('password')?.errors?.['minlength']">
+              Jelszó legalább 8 karakter hosszú kell legyen!
+            </li>
+            <li *ngIf="updateForm.get('password')?.errors?.['pattern']">
+              Jelszónak tartalmaznia kell kisbetűt, nagybetűt és számot!
+            </li>
+
+            <li *ngIf="updateForm.errors?.['passwordMismatch']">
+              A jelszavak nem egyeznek!
+            </li>
+
+            <li *ngIf="updateForm.get('country')?.errors?.['required']">
+              Ország mező kitöltése kötelező!
+            </li>
+            <li *ngIf="updateForm.get('country')?.errors?.['maxlength']">
+              Ország mezőben maximum 30 karakter lehet!
+            </li>
+
+            <li *ngIf="updateForm.get('postal_code')?.errors?.['required']">
+              Irányítószám mező kitöltése kötelező!
+            </li>
+            <li *ngIf="updateForm.get('postal_code')?.errors?.['maxlength']">
+              Irányítószám mezőben maximum 10 karakter lehet!
+            </li>
+
+            <li *ngIf="updateForm.get('city')?.errors?.['required']">
+              Város mező kitöltése kötelező!
+            </li>
+            <li *ngIf="updateForm.get('city')?.errors?.['maxlength']">
+              Város mezőben maximum 40 karakter lehet!
+            </li>
+
+            <li *ngIf="updateForm.get('street')?.errors?.['required']">
+              Utca, házszám mező kitöltése kötelező!
+            </li>
+            <li *ngIf="updateForm.get('street')?.errors?.['maxlength']">
+              Utca, házszám mezőben maximum 80 karakter lehet!
+            </li>
+
+            <li *ngIf="updateForm.get('address_line_2')?.errors?.['maxlength']">
+              Egyéb címadatok mezőben maximum 80 karakter lehet!
+            </li>
+          </ul>
+        </div>
+
+        <div *ngIf="errorMessage" class="alert alert-danger mt-3" [innerHTML]="errorMessage"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+  <div *ngIf="toastMessage" class="toast align-items-center text-bg-success border-0 show" role="alert"
+    aria-live="assertive" aria-atomic="true">
+    <div class="d-flex">
+      <div class="toast-body">
+        {{ toastMessage }}
+      </div>
+      <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"
+        (click)="closeToast()"></button>
+    </div>
+  </div>
+</div>

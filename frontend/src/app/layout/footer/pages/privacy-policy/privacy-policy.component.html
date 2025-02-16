@@ -1,0 +1,376 @@
+<div class="container py-2">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <div class="card shadow-sm border-0">
+        <div class="card-body p-5">
+          <h2 class="text-center mb-4 pb-2 position-relative">
+            Adatvédelmi Nyilatkozat
+            <span
+              class="position-absolute start-0 bottom-0 w-100"
+              style="
+                height: 3px;
+                background: linear-gradient(
+                  90deg,
+                  rgba(113, 44, 249, 0.95),
+                  transparent
+                );
+                z-index: 1;
+                overflow: visible;
+              "
+            ></span>
+          </h2>
+
+          <p class="text-muted mb-5">
+            Hatályba lépés dátuma: {{ currentDate | date : "yyyy.MM.dd." }}
+          </p>
+
+          <p class="lead mb-5">
+            Üdvözlünk weboldalunkon! Fontos számunkra a személyes adataid
+            védelme, ezért az alábbi Adatvédelmi Nyilatkozatban részletesen
+            tájékoztatunk arról, hogyan kezeljük és védjük adataidat.
+          </p>
+
+          <div class="mb-5">
+            <h3 class="mb-4">1. Az adatkezelő adatai</h3>
+            <div class="bg-light p-4 rounded">
+              <ul class="list-unstyled mb-0">
+                <li class="mb-2"><strong>Cégnév:</strong> [Cégnév]</li>
+                <li class="mb-2"><strong>Székhely:</strong> [Cím]</li>
+                <li class="mb-2"><strong>E-mail:</strong> [Email]</li>
+                <li class="mb-2"><strong>Telefonszám:</strong> [Telefon]</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="mb-5">
+            <h3 class="mb-4">2. Milyen adatokat gyűjtünk?</h3>
+            <p>Az alábbi adatokat gyűjthetjük és kezelhetjük:</p>
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item">
+                <i class="bi bi-person-circle text-primary me-2"></i>
+                <strong>Felhasználói adatok:</strong> név, e-mail cím,
+                telefonszám, szállítási és számlázási cím.
+              </li>
+              <li class="list-group-item">
+                <i class="bi bi-key text-primary me-2"></i>
+                <strong>Regisztrációs adatok:</strong> ha felhasználói fiókot
+                hozol létre, a megadott adataid a fiókodhoz kapcsolódnak.
+              </li>
+              <li class="list-group-item">
+                <i class="bi bi-cart text-primary me-2"></i>
+                <strong>Rendelési adatok:</strong> a vásárlás során megadott
+                termékek és rendelési információk.
+              </li>
+              <li class="list-group-item">
+                <i class="bi bi-envelope text-primary me-2"></i>
+                <strong>Hírlevél feliratkozás:</strong> ha feliratkozol, az
+                e-mail címedet marketing célokra használhatjuk.
+              </li>
+              <li class="list-group-item">
+                <i class="bi bi-laptop text-primary me-2"></i>
+                <strong>Technikai adatok:</strong> IP-cím, böngésző típusa,
+                eszköz információk, sütik és egyéb weboldal-analitikák.
+              </li>
+            </ul>
+          </div>
+
+          <div class="mb-5">
+            <h3 class="mb-4">3. Az adatok gyűjtésének célja</h3>
+            <p>
+              Személyes adataidat kizárólag a következő célokra használjuk fel:
+            </p>
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item">
+                <i class="bi bi-cart-check text-primary me-2"></i>
+                A vásárlás és szállítás lebonyolítása
+              </li>
+              <li class="list-group-item">
+                <i class="bi bi-shield-lock text-primary me-2"></i>
+                Felhasználói fiók kezelése és biztonságos működtetése
+              </li>
+              <li class="list-group-item">
+                <i class="bi bi-headset text-primary me-2"></i>
+                Ügyfélszolgálati támogatás biztosítása
+              </li>
+              <li class="list-group-item">
+                <i class="bi bi-envelope-paper text-primary me-2"></i>
+                Hírlevelek, promóciók és értesítések küldése
+              </li>
+              <li class="list-group-item">
+                <i class="bi bi-gear text-primary me-2"></i>
+                Weboldalunk fejlesztése és biztonságának biztosítása
+              </li>
+              <li class="list-group-item">
+                <i class="bi bi-file-text text-primary me-2"></i>
+                Jogi kötelezettségek teljesítése
+              </li>
+            </ul>
+          </div>
+
+          <div class="mb-5">
+            <h3 class="mb-4">4. Az adatkezelés jogalapja</h3>
+            <div class="row g-4">
+              <div class="col-md-6">
+                <div class="card h-100 border-0 shadow-sm">
+                  <div class="card-body">
+                    <h5 class="card-title">
+                      <i class="bi bi-check-circle text-primary me-2"></i>
+                      Szerződés teljesítése
+                    </h5>
+                    <p class="card-text">Például vásárlás esetén</p>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="card h-100 border-0 shadow-sm">
+                  <div class="card-body">
+                    <h5 class="card-title">
+                      <i class="bi bi-hand-thumbs-up text-primary me-2"></i>
+                      Hozzájárulás
+                    </h5>
+                    <p class="card-text">Például hírlevél feliratkozásnál</p>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="card h-100 border-0 shadow-sm">
+                  <div class="card-body">
+                    <h5 class="card-title">
+                      <i class="bi bi-file-earmark-text text-primary me-2"></i>
+                      Jogi kötelezettség
+                    </h5>
+                    <p class="card-text">Például számlázás esetén</p>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="card h-100 border-0 shadow-sm">
+                  <div class="card-body">
+                    <h5 class="card-title">
+                      <i class="bi bi-shield-check text-primary me-2"></i>
+                      Jogos érdek
+                    </h5>
+                    <p class="card-text">
+                      Például biztonsági okokból történő adatkezelés
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="mb-5">
+            <h3 class="mb-4">5. Az adatok tárolásának időtartama</h3>
+            <div class="bg-light p-4 rounded">
+              <p>
+                A személyes adatokat csak addig őrizzük meg, ameddig az
+                szükséges:
+              </p>
+              <ul class="list-unstyled mb-0">
+                <li class="mb-3">
+                  <i class="bi bi-clock-history text-primary me-2"></i>
+                  Fiók törléséig vagy inaktivitás esetén 2 évig
+                </li>
+                <li class="mb-3">
+                  <i class="bi bi-file-earmark-text text-primary me-2"></i>
+                  Számlázási és jogi kötelezettségek miatt 8 évig
+                </li>
+                <li>
+                  <i class="bi bi-envelope text-primary me-2"></i>
+                  Hírlevél esetén a leiratkozásig
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="mb-5">
+            <h3 class="mb-4">6. Az adatok megosztása harmadik felekkel</h3>
+            <p>
+              Bizonyos esetekben személyes adataidat harmadik felekkel is
+              megoszthatjuk, például:
+            </p>
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item">
+                <i class="bi bi-truck text-primary me-2"></i>
+                <strong>Szállítási partnereinkkel</strong> (pl. futárszolgálat)
+                a rendelések kézbesítése érdekében.
+              </li>
+              <li class="list-group-item">
+                <i class="bi bi-credit-card text-primary me-2"></i>
+                <strong>Fizetési szolgáltatókkal</strong> (pl. bankok, online
+                fizetési rendszerek).
+              </li>
+              <li class="list-group-item">
+                <i class="bi bi-shield-lock text-primary me-2"></i>
+                <strong>Jogi hatóságokkal</strong>, ha erre jogszabály kötelez
+                minket.
+              </li>
+            </ul>
+          </div>
+
+          <div class="mb-5">
+            <h3 class="mb-4">7. Az érintettek jogai</h3>
+            <div class="row g-4">
+              <div class="col-md-6">
+                <div class="card h-100 border-0 shadow-sm">
+                  <div class="card-body">
+                    <h5 class="card-title">
+                      <i class="bi bi-eye text-primary me-2"></i> Hozzáférés
+                      joga
+                    </h5>
+                    <p class="card-text">
+                      Bármikor kérheted, hogy milyen adatokat tárolunk rólad.
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="card h-100 border-0 shadow-sm">
+                  <div class="card-body">
+                    <h5 class="card-title">
+                      <i class="bi bi-pencil text-primary me-2"></i> Helyesbítés
+                      joga
+                    </h5>
+                    <p class="card-text">
+                      Ha hibásak az adatok, kérheted azok javítását.
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="card h-100 border-0 shadow-sm">
+                  <div class="card-body">
+                    <h5 class="card-title">
+                      <i class="bi bi-trash text-primary me-2"></i> Törlés joga
+                    </h5>
+                    <p class="card-text">
+                      Bizonyos esetekben kérheted adataid törlését.
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="card h-100 border-0 shadow-sm">
+                  <div class="card-body">
+                    <h5 class="card-title">
+                      <i class="bi bi-people text-primary me-2"></i>
+                      Adathordozhatóság joga
+                    </h5>
+                    <p class="card-text">
+                      Kérheted adataid strukturált, géppel olvasható
+                      formátumban.
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="card h-100 border-0 shadow-sm">
+                  <div class="card-body">
+                    <h5 class="card-title">
+                      <i
+                        class="bi bi-exclamation-triangle text-primary me-2"
+                      ></i>
+                      Tiltakozás joga
+                    </h5>
+                    <p class="card-text">
+                      Jogos érdek alapján végzett adatkezelés ellen
+                      tiltakozhatsz.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="mb-5">
+            <h3 class="mb-4">8. Sütik (Cookies) kezelése</h3>
+            <p>
+              Weboldalunk sütiket használ a jobb felhasználói élmény érdekében.
+              A sütik segítenek:
+            </p>
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item">
+                <i class="bi bi-globe text-primary me-2"></i> Az oldal
+                működésének optimalizálásában.
+              </li>
+              <li class="list-group-item">
+                <i class="bi bi-bar-chart text-primary me-2"></i> A látogatók
+                elemzésében (<strong>Google Analytics</strong>).
+              </li>
+              <li class="list-group-item">
+                <i class="bi bi-megaphone text-primary me-2"></i> A hirdetések
+                személyre szabásában.
+              </li>
+            </ul>
+            <p class="mt-3">
+              Bármikor módosíthatod süti beállításaidat a böngésződben.
+            </p>
+          </div>
+
+          <div class="mb-5">
+            <h3 class="mb-4">9. Adatbiztonság</h3>
+            <div class="bg-light p-4 rounded">
+              <p>Mindent megteszünk az adatok védelme érdekében:</p>
+              <ul class="list-unstyled mb-0">
+                <li class="mb-3">
+                  <i class="bi bi-lock text-primary me-2"></i> SSL titkosítást
+                  alkalmazunk.
+                </li>
+                <li class="mb-3">
+                  <i class="bi bi-person-check text-primary me-2"></i>
+                  Korlátozzuk az adatokhoz való hozzáférést.
+                </li>
+                <li>
+                  <i class="bi bi-shield-check text-primary me-2"></i>
+                  Rendszeres biztonsági frissítéseket végzünk.
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="alert alert-info mt-5">
+            <h4 class="alert-heading">
+              <i class="bi bi-info-circle me-2"></i>
+              Módosítások és frissítések
+            </h4>
+            <p class="mb-0">
+              Az adatvédelmi szabályzat időnként módosulhat, ezért javasoljuk,
+              hogy rendszeresen ellenőrizd az oldalt. A frissítésekről szükség
+              esetén e-mailben értesítünk.
+            </p>
+          </div>
+
+          <div class="bg-light p-4 rounded mt-5">
+            <h3 class="mb-4">Kapcsolatfelvétel</h3>
+            <p>
+              Ha bármilyen kérdésed van az adatvédelmi nyilatkozattal
+              kapcsolatban, kérjük, lépj kapcsolatba velünk:
+            </p>
+            <div class="d-flex flex-column gap-2">
+              <div>
+                <i class="bi bi-envelope-fill text-primary me-2"></i>
+                <strong>E-mail:</strong> [email]
+              </div>
+              <div>
+                <i class="bi bi-geo-alt-fill text-primary me-2"></i>
+                <strong>Cím:</strong> [cím]
+              </div>
+              <div>
+                <i class="bi bi-telephone-fill text-primary me-2"></i>
+                <strong>Telefon:</strong> [telefon]
+              </div>
+            </div>
+          </div>
+
+          <div class="text-center mt-5">
+            <i class="bi bi-shield-check text-primary fs-1"></i>
+            <p class="lead mt-3">
+              Adataid biztonsága számunkra kiemelten fontos! Köszönjük, hogy
+              megbízol bennünk!
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
