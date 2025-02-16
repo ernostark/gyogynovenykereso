@@ -1,0 +1,37 @@
+<div class="container py-4">
+    <div *ngIf="loading" class="text-center">
+      <div class="spinner-border" role="status">
+        <span class="visually-hidden">Betöltés...</span>
+      </div>
+    </div>
+  
+    <div *ngIf="!loading">
+        <h3 class="pb-2 mb-0 position-relative">
+            {{ category?.name }}
+            <span
+              class="position-absolute start-0 bottom-0 w-100"
+              style="height: 3px; background: linear-gradient(90deg, rgba(113, 44, 249, 0.95), transparent); z-index: 1; overflow: visible;"
+            ></span>
+          </h3>
+      
+      <div class="row row-cols-1 row-cols-md-3 g-4 my-2">
+        <div class="col" *ngFor="let post of posts">
+          <div class="card h-100 shadow-sm">
+            <img 
+              [src]="post.image_path ? storageUrl + '/storage/' + post.image_path : '/storage/images/default.png'"
+              class="card-img-top"
+              alt="{{ post.title }}"
+              style="height: 200px; object-fit: cover;"
+            >
+            <div class="card-body">
+              <h5 class="card-title">{{ post.title }}</h5>
+              <p class="card-text">{{ post.excerpt }}</p>
+              <a [routerLink]="['/posts', post.id]" class="btn btn-primary">
+                Tovább olvasom
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

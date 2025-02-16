@@ -1,0 +1,42 @@
+<div class="container py-4">
+  <div *ngIf="loading" class="text-center">
+    <div class="spinner-border" role="status">
+      <span class="visually-hidden">Betöltés...</span>
+    </div>
+  </div>
+
+  <div *ngIf="error" class="alert alert-danger">
+    {{ error }}
+  </div>
+
+  <div *ngIf="post && !loading" class="card shadow-sm border-0">
+    <div *ngIf="post.image_path" class="card-img-top position-relative">
+        <img 
+        [src]="post.image_path" 
+        class="img-fluid w-100"
+        alt="{{ post.title }}"
+        style="max-height: 400px; object-fit: cover;"
+      >
+    </div>
+
+    <div class="card-body p-4">
+      <h1 class="card-title mb-3">{{ post.title }}</h1>
+
+      <div class="mb-4">
+        <span class="badge bg-primary me-2">{{ post.category?.name }}</span>
+        <small class="text-muted">
+          Közzétéve: {{ post.published_at | date : "yyyy.MM.dd HH:mm" }}
+        </small>
+      </div>
+
+      <div class="mb-4">
+        <h6 class="text-muted mb-2">
+            Kapcsolódó betegségek: 
+            <small class="text-muted">{{ getFormattedDiseases(post.diseases) }}</small>
+        </h6>       
+    </div>
+
+      <div class="card-text" [innerHTML]="post.content"></div>
+    </div>
+  </div>
+</div>

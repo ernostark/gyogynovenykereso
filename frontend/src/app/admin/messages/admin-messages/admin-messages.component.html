@@ -1,0 +1,59 @@
+<div class="container py-4">
+  <div class="card shadow-sm">
+    <div class="card-body">
+      <h5 class="card-title mb-4">Beérkezett üzenetek</h5>
+
+      <div class="table-responsive">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Név</th>
+              <th>Email</th>
+              <th>Tárgy</th>
+              <th style="width: 30%">Üzenet</th>
+              <th>Dátum</th>
+              <th>Státusz</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let message of messages; let i = index">
+              <td>{{ message.name }}</td>
+              <td>{{ message.email }}</td>
+              <td>{{ message.subject }}</td>
+              <td>
+                <div class="message-preview">
+                  {{ message.message | slice : 0 : 30 }}...
+                  <button
+                    class="btn btn-link btn-sm"
+                    data-bs-toggle="collapse"
+                    [attr.data-bs-target]="'#message-' + i"
+                  >
+                    Bővebben
+                  </button>
+                </div>
+                <div [id]="'message-' + i" class="collapse">
+                  <div class="card card-body mt-2">
+                    {{ message.message }}
+                  </div>
+                </div>
+              </td>
+              <td>{{ message.created_at | date : "yyyy.MM.dd. HH:mm" }}</td>
+              <td>
+                <button
+                  *ngIf="!message.is_read"
+                  class="btn btn-sm btn-outline-success"
+                  (click)="markAsRead(message.id)"
+                >
+                  <i class="bi bi-check2"></i> Olvasottnak jelöl
+                </button>
+                <span *ngIf="message.is_read" class="badge bg-success">
+                  <i class="bi bi-check2-all"></i> Olvasott
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

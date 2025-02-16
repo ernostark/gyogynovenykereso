@@ -1,0 +1,88 @@
+<div class="container-fluid">
+  <div class="row">
+    <nav class="col-md-3 col-lg-2 d-md-block bg-white shadow-sm sidebar">
+      <div class="sidebar-sticky">
+        <div class="px-3 mb-4">
+          <h5 class="text-muted fw-bold">Admin Panel</h5>
+        </div>
+        <ul class="nav flex-column">
+          <li class="nav-item">
+            <a class="nav-link d-flex align-items-center gap-2 py-3 px-3 rounded-3 mb-1" 
+               routerLink="posts" 
+               routerLinkActive="active bg-light">
+              <i class="bi bi-file-text"></i>
+              <span>Bejegyzések</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link d-flex align-items-center gap-2 py-3 px-3 rounded-3 mb-1" 
+               routerLink="posts/create" 
+               routerLinkActive="active bg-light">
+              <i class="bi bi-plus-circle"></i>
+              <span>Új bejegyzés</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link d-flex align-items-center gap-2 py-3 px-3 rounded-3 mb-1" 
+               routerLink="categories" 
+               routerLinkActive="active bg-light">
+              <i class="bi bi-folder"></i>
+              <span>Kategóriák</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link d-flex align-items-center gap-2 py-3 px-3 rounded-3 mb-1" 
+               routerLink="products" 
+               routerLinkActive="active bg-light">
+              <i class="bi bi-cart"></i>
+              <span>Termékek</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link d-flex align-items-center gap-2 py-3 px-3 rounded-3 mb-1" 
+               routerLink="products/create" 
+               routerLinkActive="active bg-light">
+              <i class="bi bi-plus-square"></i>
+              <span>Új termék</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link d-flex align-items-center gap-2 py-3 px-3 rounded-3 mb-1" 
+               routerLink="orders" 
+               routerLinkActive="active bg-light">
+              <i class="bi bi-box"></i>
+              <span>Rendelések</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link d-flex align-items-center gap-2 py-3 px-3 rounded-3 mb-1" 
+               routerLink="users" 
+               routerLinkActive="active bg-light">
+              <i class="bi bi-people"></i>
+              <span>Felhasználók</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link d-flex align-items-center gap-2 py-3 px-3 rounded-3 mb-1" 
+               routerLink="admin-messages" 
+               routerLinkActive="active bg-light">
+              <i class="bi bi-envelope"></i>
+              <span>Üzenetek</span>
+            </a>
+          </li>
+          <li class="nav-item mt-4 px-3">
+            <button class="btn btn-danger w-100 d-flex align-items-center justify-content-center gap-2" 
+                    (click)="onLogout()">
+              <i class="bi bi-box-arrow-right"></i>
+              <span>Kijelentkezés</span>
+            </button>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 bg-light min-vh-100">
+      <router-outlet></router-outlet>
+    </main>
+  </div>
+</div>

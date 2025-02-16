@@ -1,0 +1,27 @@
+@import 'bootstrap';
+
+body {
+    margin: 0;
+    padding-top: 76px;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+@media (max-width: 768px) {
+    body {
+        padding-top: calc(70px + 1rem);
+    }
+}
+
+.content-container {
+    min-height: calc(100vh - 64px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.content {
+    padding-top: 76px;
+    min-height: calc(100vh - 76px);
+  }
+  
