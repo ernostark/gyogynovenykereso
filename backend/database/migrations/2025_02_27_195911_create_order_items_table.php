@@ -13,18 +13,18 @@ return new class extends Migration
     {
         Schema::create('order_items', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('order_id');
-            $table->unsignedBigInteger('herb_id');
+            $table->foreignId('order_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('product_id')->nullable()->constrained()->nullOnDelete();
+            $table->string('product_name');
+            $table->string('product_latin_name')->nullable();
             $table->integer('quantity');
-            $table->decimal('price', 10, 2);
+            $table->string('unit')->default('g');
+            $table->decimal('unit_price', 10, 2);
+            $table->decimal('discount_price', 10, 2)->nullable();
+            $table->decimal('subtotal', 10, 2);
             $table->timestamps();
-        
-            $table->foreign('order_id')->references('id')->on('orders')->onDelete('cascade');
-            $table->foreign('herb_id')->references('id')->on('herbs')->onDelete('cascade');
-        });        
-        
+        });
     }
-
     /**
      * Reverse the migrations.
      */

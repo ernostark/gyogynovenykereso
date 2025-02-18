@@ -1,1 +1,167 @@
-<p>create-product works!</p>
+<div class="container py-4">
+    <div class="card shadow-sm border-0">
+        <div class="card-body p-4">
+            <div class="mb-4">
+                <h4 class="mb-1">Új termék létrehozása</h4>
+                <p class="text-muted mb-0">
+                    Töltsd ki az alábbi mezőket a termék létrehozásához
+                </p>
+            </div>
+
+            <form [formGroup]="productForm" (ngSubmit)="onSubmit()">
+                <div class="row g-4">
+                    <div class="col-md-6">
+                        <label for="name" class="form-label small text-muted">Termék neve</label>
+                        <input type="text" id="name" class="form-control form-control-lg" formControlName="name"
+                            placeholder="Add meg a termék nevét" required />
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="latin_name" class="form-label small text-muted">Latin név (opcionális)</label>
+                        <input type="text" id="latin_name" class="form-control form-control-lg"
+                            formControlName="latin_name" placeholder="Add meg a növény latin nevét" />
+                    </div>
+
+                    <div class="col-md-4">
+                        <label for="category_id" class="form-label small text-muted">Kategória</label>
+                        <select id="category_id" class="form-select form-select-lg" formControlName="category_id">
+                            <option value="" disabled selected>Válassz kategóriát</option>
+                            <option *ngFor="let category of categories" [value]="category.id">
+                                {{ category.name }}
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-3">
+                        <label for="price" class="form-label small text-muted">Ár (Ft)</label>
+                        <input type="number" id="price" class="form-control form-control-lg" formControlName="price"
+                            placeholder="Termék ára" min="0" required />
+                    </div>
+
+                    <div class="col-md-3">
+                        <label for="discount_price" class="form-label small text-muted">Akciós ár (Ft,
+                            opcionális)</label>
+                        <input type="number" id="discount_price" class="form-control form-control-lg"
+                            formControlName="discount_price" placeholder="Akciós ár" min="0" />
+                    </div>
+
+                    <div class="col-md-2">
+                        <label class="form-label small text-muted d-block">Elérhetőség</label>
+                        <div class="form-check form-switch mt-2">
+                            <input class="form-check-input" type="checkbox" id="is_available"
+                                formControlName="is_available" />
+                            <label class="form-check-label" for="is_available">
+                                Elérhető
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label for="stock_quantity" class="form-label small text-muted">Készlet mennyiség</label>
+                        <input type="number" id="stock_quantity" class="form-control form-control-lg"
+                            formControlName="stock_quantity" placeholder="Készleten lévő mennyiség" min="0" required />
+                    </div>
+
+                    <div class="col-md-4">
+                        <label for="unit" class="form-label small text-muted">Mértékegység</label>
+                        <select id="unit" class="form-select form-select-lg" formControlName="unit" required>
+                            <option value="g">gramm (g)</option>
+                            <option value="dkg">dekagramm (dkg)</option>
+                            <option value="kg">kilogramm (kg)</option>
+                            <option value="ml">milliliter (ml)</option>
+                            <option value="cl">centiliter (cl)</option>
+                            <option value="l">liter (l)</option>
+                            <option value="db">darab (db)</option>
+                            <option value="csomag">csomag</option>
+                        </select>
+                    </div>
+
+                    <div class="col-12">
+                        <label for="description" class="form-label small text-muted">Termék leírása</label>
+                        <textarea id="description" class="form-control" formControlName="description" rows="5"
+                            placeholder="Írd ide a termék leírását..." required></textarea>
+                    </div>
+
+                    <div class="col-12">
+                        <label for="usage" class="form-label small text-muted">Felhasználási javaslat</label>
+                        <textarea id="usage" class="form-control" formControlName="usage" rows="5"
+                            placeholder="Írd ide a felhasználási javaslatot..." required></textarea>
+                    </div>
+
+                    <div class="col-12">
+                        <label class="form-label small text-muted">Termék képei</label>
+                        <div class="drop-zone p-5 rounded border-2 border-dashed text-center bg-light">
+                            <input type="file" id="images" class="d-none" (change)="onFilesSelected($event)"
+                                accept="image/*" multiple />
+                            <label for="images" class="mb-0 cursor-pointer">
+                                <i class="bi bi-cloud-upload fs-3 text-primary mb-2"></i>
+                                <p class="mb-0">
+                                    Húzd ide a képeket vagy kattints a feltöltéshez
+                                </p>
+                                <p class="small text-muted">Maximum 2MB képenként</p>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="col-12" *ngIf="selectedFiles.length > 0">
+                        <label class="form-label small text-muted">Feltöltött képek</label>
+                        <div class="row g-3">
+                            <div class="col-md-3" *ngFor="let file of selectedFiles; let i = index">
+                                <div class="card h-100" [class.border-primary]="i === primaryImageIndex">
+                                    <div class="position-relative">
+                                        <img [src]="file ? getSafeImageUrl(file) : ''" class="card-img-top"
+                                            alt="Termék kép" style="height: 180px; object-fit: cover" />
+                                        <div class="position-absolute top-0 end-0 p-2">
+                                            <button type="button" class="btn btn-danger btn-sm rounded-circle"
+                                                (click)="removeFile(i)">
+                                                <i class="bi bi-x"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="card-body">
+                                        <p class="card-text small text-truncate mb-2">
+                                            {{ file.name }}
+                                        </p>
+                                        <button type="button" class="btn btn-sm"
+                                            [class.btn-primary]="i !== primaryImageIndex"
+                                            [class.btn-success]="i === primaryImageIndex" (click)="setPrimaryImage(i)">
+                                            <i class="bi" [class.bi-star]="i !== primaryImageIndex"
+                                                [class.bi-star-fill]="i === primaryImageIndex"></i>
+                                            {{ i === primaryImageIndex ? 'Fő kép' : 'Beállítás fő képként' }}
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12">
+                        <div class="d-flex justify-content-end gap-2 mt-3">
+                            <button type="button" class="btn btn-outline-secondary btn-lg"
+                                [routerLink]="['/admin/dashboard/products']">
+                                Mégse
+                            </button>
+                            <button type="submit" class="btn btn-primary btn-lg d-inline-flex align-items-center gap-2">
+                                <i class="bi bi-save"></i>
+                                Termék mentése
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+    <div *ngIf="toastMessage" class="toast align-items-center text-bg-success border-0 show" role="alert"
+        aria-live="assertive" aria-atomic="true">
+        <div class="d-flex">
+            <div class="toast-body">
+                {{ toastMessage }}
+            </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+                aria-label="Close" (click)="closeToast()"></button>
+        </div>
+    </div>
+</div>

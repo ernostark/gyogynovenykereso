@@ -1,1 +1,334 @@
-<p>products works!</p>
+<div class="container card shadow-sm border-0 mt-50">
+    <div class="d-flex justify-content-between align-items-center p-3 border-bottom">
+        <h4 class="mb-0">Termékek kezelése</h4>
+        <a [routerLink]="['/admin/dashboard/products/create']" class="btn btn-primary d-flex align-items-center gap-2">
+            <i class="bi bi-plus-circle"></i>
+            Új termék létrehozása
+        </a>
+    </div>
+
+    <div class="d-none d-lg-block">
+        <table class="table table-hover align-middle mb-0">
+            <thead>
+                <tr class="bg-light">
+                    <th class="border-0 rounded-start ps-4">Kép</th>
+                    <th class="border-0">ID</th>
+                    <th class="border-0">Név</th>
+                    <th class="border-0">Latin név</th>
+                    <th class="border-0">Ár</th>
+                    <th class="border-0">Készlet</th>
+                    <th class="border-0">Kategória</th>
+                    <th class="border-0">Elérhető</th>
+                    <th class="border-0" colspan="2">Műveletek</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let product of products">
+                    <td class="ps-4">
+                        <img *ngIf="product.images && product.images.length > 0"
+                            [src]="storageUrl + '/storage/' + (product.images | findPrimaryImage)?.image_url"
+                            alt="Termék képe" width="40" height="40" class="rounded object-fit-cover" />
+                        <div *ngIf="!product.images || product.images.length === 0"
+                            class="rounded bg-light d-flex align-items-center justify-content-center"
+                            style="width: 40px; height: 40px">
+                            <i class="bi bi-image text-muted"></i>
+                        </div>
+                    </td>
+                    <td class="text-muted">#{{ product.id }}</td>
+                    <td>
+                        <span class="fw-medium">{{ product.name }}</span>
+                    </td>
+                    <td>
+                        <em class="text-muted small">{{ product.latin_name || '-' }}</em>
+                    </td>
+                    <td>
+                        <div *ngIf="product.discount_price">
+                            <span class="text-decoration-line-through text-muted me-1">
+                                {{ formatPrice(product.price) }}
+                            </span>
+                            <span class="text-danger fw-medium">
+                                {{ formatPrice(product.discount_price) }}
+                            </span>
+                            <span class="badge bg-danger ms-1">
+                                -{{ getDiscountPercentage(product.price, product.discount_price) }}%
+                            </span>
+                        </div>
+                        <span *ngIf="!product.discount_price">
+                            {{ formatPrice(product.price) }}
+                        </span>
+                    </td>
+                    <td>
+                        <span [ngClass]="{'text-danger': product.stock_quantity < 5}">
+                            {{ product.stock_quantity }} {{ product.unit }}
+                        </span>
+                    </td>
+                    <td>
+                        <span class="badge bg-light text-dark border">
+                            {{ product.category?.name || "Nincs kategória" }}
+                        </span>
+                    </td>
+                    <td>
+                        <span class="badge" [ngClass]="product.is_available ? 'bg-success' : 'bg-danger'">
+                            {{ product.is_available ? 'Elérhető' : 'Nem elérhető' }}
+                        </span>
+                    </td>
+                    <td class="text-end">
+                        <div class="d-flex gap-2">
+                            <a [routerLink]="['/products', product.id]" class="btn btn-primary btn-sm" target="_blank">
+                                <i class="bi bi-eye"></i>
+                            </a>
+                            <button class="btn btn-light btn-sm d-flex align-items-center gap-1"
+                                (click)="openEditModal(product)">
+                                <i class="bi bi-pencil"></i>
+                                Módosítás
+                            </button>
+                            <button class="btn btn-light btn-sm text-danger d-flex align-items-center gap-1"
+                                (click)="onDeleteProduct(product.id)">
+                                <i class="bi bi-trash"></i>
+                                Törlés
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+                <tr *ngIf="products.length === 0">
+                    <td colspan="9" class="text-center py-4">
+                        <i class="bi bi-box fs-1 text-muted mb-2"></i>
+                        <p class="mb-0">Még nincsenek termékek</p>
+                        <p class="small text-muted">Kattints az "Új termék létrehozása" gombra a kezdéshez</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="d-lg-none">
+        <div class="card mb-3" *ngFor="let product of products">
+            <div class="card-body">
+                <div class="d-flex align-items-center mb-3">
+                    <img *ngIf="product.images && product.images.length > 0"
+                        [src]="storageUrl + '/storage/' + (product.images | findPrimaryImage)?.image_url"
+                        class="rounded me-3" width="50" height="50" alt="Termék képe" style="object-fit: cover" />
+                    <div *ngIf="!product.images || product.images.length === 0"
+                        class="rounded bg-light d-flex align-items-center justify-content-center me-3"
+                        style="width: 50px; height: 50px">
+                        <i class="bi bi-image text-muted"></i>
+                    </div>
+                    <div>
+                        <h6 class="mb-0">{{ product.name }}</h6>
+                        <small class="text-muted">{{ product.latin_name || "" }}</small>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-between mb-2">
+                    <div>
+                        <strong>Ár:</strong>
+                        <span *ngIf="product.discount_price" class="ms-2 text-danger">
+                            {{ formatPrice(product.discount_price) }}
+                            <span class="text-decoration-line-through text-muted ms-1 small">
+                                {{ formatPrice(product.price) }}
+                            </span>
+                        </span>
+                        <span *ngIf="!product.discount_price" class="ms-2">
+                            {{ formatPrice(product.price) }}
+                        </span>
+                    </div>
+                    <div>
+                        <strong>Készlet:</strong>
+                        <span class="ms-2" [ngClass]="{'text-danger': product.stock_quantity < 5}">
+                            {{ product.stock_quantity }} {{ product.unit }}
+                        </span>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-between align-items-center">
+                    <span class="badge" [ngClass]="product.is_available ? 'bg-success' : 'bg-danger'">
+                        {{ product.is_available ? 'Elérhető' : 'Nem elérhető' }}
+                    </span>
+                    <div class="btn-group">
+                        <a [routerLink]="['/products', product.id]" target="_blank" class="btn btn-sm btn-light">
+                            <i class="bi bi-eye"></i>
+                        </a>
+                        <button class="btn btn-sm btn-light" (click)="openEditModal(product)">
+                            <i class="bi bi-pencil"></i>
+                        </button>
+                        <button class="btn btn-sm btn-light text-danger" (click)="onDeleteProduct(product.id)">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div *ngIf="products.length === 0" class="text-center py-4">
+            <i class="bi bi-box fs-1 text-muted mb-2"></i>
+            <p class="mb-0">Még nincsenek termékek</p>
+            <p class="small text-muted">Kattints az "Új termék létrehozása" gombra a kezdéshez</p>
+        </div>
+    </div>
+</div>
+
+<div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+    <div *ngIf="toastMessage" class="toast align-items-center text-bg-success border-0 show"
+        role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="d-flex">
+            <div class="toast-body">
+                {{ toastMessage }}
+            </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto"
+                data-bs-dismiss="toast" aria-label="Close" (click)="closeToast()"></button>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="editProductModal" tabindex="-1" aria-labelledby="editProductModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Termék szerkesztése</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form [formGroup]="editProductForm" (ngSubmit)="onUpdateProduct()">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label for="edit-name" class="form-label">Termék neve</label>
+                            <input type="text" formControlName="name" id="edit-name" class="form-control" required />
+                        </div>
+                        <div class="col-md-6">
+                            <label for="edit-latin-name" class="form-label">Latin név</label>
+                            <input type="text" formControlName="latin_name" id="edit-latin-name" class="form-control" />
+                        </div>
+
+                        <div class="col-md-4">
+                            <label for="edit-price" class="form-label">Ár (Ft)</label>
+                            <input type="number" formControlName="price" id="edit-price" class="form-control" min="0"
+                                required />
+                        </div>
+                        <div class="col-md-4">
+                            <label for="edit-discount-price" class="form-label">Akciós ár (Ft)</label>
+                            <input type="number" formControlName="discount_price" id="edit-discount-price"
+                                class="form-control" min="0" />
+                        </div>
+                        <div class="col-md-4">
+                            <label for="edit-stock-quantity" class="form-label">Készlet</label>
+                            <div class="input-group">
+                                <input type="number" formControlName="stock_quantity" id="edit-stock-quantity"
+                                    class="form-control" min="0" required />
+                                <select formControlName="unit" class="form-select" id="edit-unit"
+                                    style="max-width: 80px">
+                                    <option value="g">g</option>
+                                    <option value="dkg">dkg</option>
+                                    <option value="kg">kg</option>
+                                    <option value="ml">ml</option>
+                                    <option value="cl">cl</option>
+                                    <option value="l">l</option>
+                                    <option value="db">db</option>
+                                    <option value="csomag">csomag</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="edit-category" class="form-label">Kategória</label>
+                            <select formControlName="category_id" id="edit-category" class="form-select">
+                                <option value="">Válassz kategóriát</option>
+                                <option *ngFor="let category of categories" [value]="category.id">
+                                    {{ category.name }}
+                                </option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label d-block">Elérhetőség</label>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="edit-is-available"
+                                    formControlName="is_available" />
+                                <label class="form-check-label" for="edit-is-available">
+                                    Termék elérhető
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="col-12">
+                            <label for="edit-description" class="form-label">Termék leírása</label>
+                            <textarea formControlName="description" id="edit-description" class="form-control" rows="4"
+                                required></textarea>
+                        </div>
+                        <div class="col-12">
+                            <label for="edit-usage" class="form-label">Felhasználási javaslat</label>
+                            <textarea formControlName="usage" id="edit-usage" class="form-control" rows="4"
+                                required></textarea>
+                        </div>
+
+                        <div class="col-12" *ngIf="existingImages && existingImages.length > 0">
+                            <label class="form-label">Meglévő képek</label>
+                            <div class="row g-2">
+                                <div class="col-md-3" *ngFor="let image of existingImages">
+                                    <div class="card h-100" [class.border-primary]="image.is_primary"
+                                        [class.border-danger]="imagesToRemove.includes(image.id)"
+                                        [class.opacity-50]="imagesToRemove.includes(image.id)">
+                                        <img [src]="storageUrl + '/storage/' + image.image_url" class="card-img-top"
+                                            alt="Termék kép" style="height: 120px; object-fit: cover" />
+                                        <div class="card-body p-2">
+                                            <div class="d-flex justify-content-between">
+                                                <button *ngIf="!imagesToRemove.includes(image.id)" type="button"
+                                                    class="btn btn-sm" [class.btn-primary]="!image.is_primary"
+                                                    [class.btn-success]="image.is_primary"
+                                                    (click)="setPrimaryImage(image.id)">
+                                                    <i class="bi" [class.bi-star]="!image.is_primary"
+                                                        [class.bi-star-fill]="image.is_primary"></i>
+                                                </button>
+                                                <button *ngIf="!imagesToRemove.includes(image.id)" type="button"
+                                                    class="btn btn-sm btn-outline-danger"
+                                                    (click)="markImageForRemoval(image.id)">
+                                                    <i class="bi bi-trash"></i>
+                                                </button>
+                                                <button *ngIf="imagesToRemove.includes(image.id)" type="button"
+                                                    class="btn btn-sm btn-outline-secondary"
+                                                    (click)="cancelImageRemoval(image.id)">
+                                                    Visszaállítás
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12">
+                            <label for="new-images" class="form-label">Új képek hozzáadása</label>
+                            <input type="file" id="new-images" class="form-control" (change)="onFilesSelected($event)"
+                                multiple accept="image/*" />
+                        </div>
+
+                        <div class="col-12" *ngIf="selectedFiles.length > 0">
+                            <label class="form-label">Feltöltendő új képek</label>
+                            <div class="row g-2">
+                                <div class="col-md-3" *ngFor="let file of selectedFiles; let i = index">
+                                    <div class="card h-100">
+                                        <img [src]="getSafeImageUrl(file)" class="card-img-top" alt="Új termék kép"
+                                            style="height: 120px; object-fit: cover" />
+                                        <div class="card-body p-2">
+                                            <div class="d-flex justify-content-between">
+                                                <small class="text-truncate">{{ file.name }}</small>
+                                                <button type="button" class="btn btn-sm btn-outline-danger"
+                                                    (click)="removeNewFile(i)">
+                                                    <i class="bi bi-x"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-end gap-2 mt-4">
+
+                        <div class="d-flex justify-content-end gap-2 mt-4">
+                            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                                Mégse
+                            </button>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-save me-2"></i>
+                                Módosítások mentése
+                            </button>
+                        </div>
+
+                    </div>
