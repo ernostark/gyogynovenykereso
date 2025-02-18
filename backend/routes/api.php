@@ -32,9 +32,12 @@ Route::middleware(['auth:sanctum'])->prefix('admin')->group(function () {
         Route::delete('/categories/{id}', 'destroy');
     });
     Route::controller(ContactController::class)->group(function () {
-        Route::get('/messages', 'index');        
-        Route::put('/messages/{id}/read', 'markAsRead');        
+        Route::get('/messages', 'index');
+        Route::put('/messages/{id}/read', 'markAsRead');
+        Route::delete('/messages/{id}', 'destroy');
     });
+    Route::post('/users/{userId}/toggle-admin', [UserController::class, 'toggleAdminStatus']);
+    Route::get('/users', [UserController::class, 'index']);
 });
 
 Route::get('posts/featured', [PostController::class, 'getFeaturedPosts']);
@@ -42,7 +45,7 @@ Route::get('posts/latest', [PostController::class, 'getLatestPosts']);
 Route::post('posts/search-by-diseases', [PostController::class, 'searchByDiseases']);
 Route::get('posts/search', [PostController::class, 'searchInContent']);
 Route::get('/posts/{id}', [PostController::class, 'show']);
-Route::get('/posts/{id}/check-access', [PostController::class, 'checkAccess']);
+/* Route::get('/posts/{id}/check-access', [PostController::class, 'checkAccess']); */
 Route::get('/posts/latest', [PostController::class, 'getLatestPosts']);
 
 Route::get('/categories', [CategoryController::class, 'index']);
