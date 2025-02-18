@@ -4,11 +4,8 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
-    /**
-     * Run the migrations.
-     */
+return new class extends Migration {
+    
     public function up(): void
     {
         Schema::create('posts', function (Blueprint $table) {
@@ -19,7 +16,8 @@ return new class extends Migration
             $table->string('image_path')->nullable();
             $table->text('excerpt')->nullable();
             $table->json('diseases')->nullable();
-            $table->foreignId('author_id')->constrained('admins')->onDelete('cascade');
+            $table->boolean('featured')->default(false);
+            $table->foreignId('author_id')->constrained('users')->onDelete('cascade');
             $table->foreignId('category_id')->nullable()->constrained('categories')->onDelete('set null');
             $table->timestamp('published_at')->nullable();
             $table->enum('status', ['draft', 'published', 'archived'])->default('draft');
@@ -28,9 +26,6 @@ return new class extends Migration
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('posts');

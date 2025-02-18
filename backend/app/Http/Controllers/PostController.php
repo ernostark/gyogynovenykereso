@@ -14,7 +14,10 @@ class PostController extends Controller
     public function index()
     {
         try {
-            if (!auth('admin')->check()) {
+            if (
+                !auth('admin')->check() &&
+                !(auth('sanctum')->check() && auth('sanctum')->user()->is_admin)
+            ) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Nincs jogosultság!',
@@ -40,12 +43,13 @@ class PostController extends Controller
         try {
             $post = Post::with(['category', 'author'])->findOrFail($id);
 
-            $isAdmin = Auth::guard('admin')->check();
+            $isAdmin = Auth::guard('admin')->check() ||
+                (Auth::guard('sanctum')->check() && Auth::guard('sanctum')->user()->is_admin);
 
             if (!$isAdmin && $post->status !== 'published') {
                 return response()->json([
                     'success' => false,
-                    'message' => 'A bejegyzés nem megtekinthető'
+                    'message' => 'A bejegyzés nem megtekinthető!'
                 ], 403);
             }
 
@@ -85,7 +89,9 @@ class PostController extends Controller
                 'featured' => 'boolean'
             ]);
 
-            $authorId = Auth::guard('admin')->id();
+            $authorId = Auth::guard('admin')->id() ||
+                (Auth::guard('sanctum')->check() && Auth::guard('sanctum')->user()->is_admin);
+
             if (is_null($authorId)) {
                 return response()->json([
                     'success' => false,
@@ -107,10 +113,14 @@ class PostController extends Controller
                 $diseases = json_decode($diseases, true);
             }
 
+            $authorId = Auth::guard('admin')->check()
+                ? Auth::guard('admin')->id()
+                : Auth::guard('sanctum')->user()->id;
+
             $post = Post::create([
                 'title' => $validatedData['title'],
                 'content' => $validatedData['content'],
-                'author_id' => $validatedData['author_id'] = Auth::guard('admin')->id(),
+                'author_id' => $authorId,
                 'slug' => Str::slug($validatedData['title']),
                 'excerpt' => Str::limit($validatedData['content'], 100),
                 'category_id' => $validatedData['category_id'] ?? null,
@@ -145,7 +155,11 @@ class PostController extends Controller
     {
 
         try {
-            if (!auth('admin')->check()) {
+
+            if (
+                !auth('admin')->check() &&
+                !(auth('sanctum')->check() && auth('sanctum')->user()->is_admin)
+            ) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Nincs jogosultság!',
@@ -214,7 +228,10 @@ class PostController extends Controller
     public function destroy($id)
     {
         try {
-            if (!auth('admin')->check()) {
+            if (
+                !auth('admin')->check() &&
+                !(auth('sanctum')->check() && auth('sanctum')->user()->is_admin)
+            ) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Nincs jogosultság!',
@@ -293,7 +310,7 @@ class PostController extends Controller
         ]);
     }
 
-    public function checkAccess($id)
+    /* public function checkAccess($id)
     {
         try {
             $post = Post::findOrFail($id);
@@ -310,7 +327,7 @@ class PostController extends Controller
         } catch (\Exception $e) {
             return response()->json(['access' => false], 404);
         }
-    }
+    } */
     public function getFeaturedPosts()
     {
         try {

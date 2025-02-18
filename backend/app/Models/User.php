@@ -9,7 +9,6 @@ use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
-    public $timestamps = false;
     use HasApiTokens, HasFactory, Notifiable;
 
     /**
@@ -25,7 +24,8 @@ class User extends Authenticatable
         'postal_code',
         'city',
         'street',
-        'address_line_2'
+        'address_line_2',
+        'is_admin'
     ];
 
     /**
@@ -46,11 +46,15 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
+        'is_admin' => 'boolean'
     ];
 
     public function orders()
     {
         return $this->hasMany(Order::class);
     }
-
+    public function isAdmin()
+    {
+        return $this->is_admin;
+    }
 }

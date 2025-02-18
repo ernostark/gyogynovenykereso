@@ -47,12 +47,20 @@ class UserController extends Controller
 
         $user = $request->user();
         $expiresAt = Carbon::now()->addDay();
-        $token = $user->createToken('auth_token', ['*'], $expiresAt)->plainTextToken;
+
+        if ($user->is_admin) {
+            $token = $user->createToken('admin_token', ['*'], $expiresAt)->plainTextToken;
+            $tokenType = 'admin_token';
+        } else {
+            $token = $user->createToken('auth_token', ['*'], $expiresAt)->plainTextToken;
+            $tokenType = 'auth_token';
+        }
 
         return response()->json([
             'message' => 'Sikeres bejelentkezés!',
             'user' => $user,
-            'token' => $token
+            'token' => $token,
+            'tokenType' => $tokenType
         ], 200);
     }
 
@@ -105,6 +113,46 @@ class UserController extends Controller
                 'street' => $user->street,
                 'address_line_2' => $user->address_line_2
             ],
+        ]);
+    }
+    public function index()
+    {
+        try {
+            $users = User::select(
+                'id',
+                'name',
+                'email',
+                'created_at',
+                'updated_at',
+                'country',
+                'postal_code',
+                'city',
+                'street',
+                'address_line_2',
+                'is_admin'
+            )->get();
+
+            return response()->json([
+                'success' => true,
+                'users' => $users
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Hiba történt a felhasználók lekérése során',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+    public function toggleAdminStatus($userId)
+    {
+        $user = User::findOrFail($userId);
+        $user->is_admin = !$user->is_admin;
+        $user->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Admin jogosultság módosítva!'
         ]);
     }
 }

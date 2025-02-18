@@ -51,4 +51,21 @@ class ContactController extends Controller
             ], 500);
         }
     }
+    public function destroy($id)
+    {
+        try {
+            $message = Contact::findOrFail($id);
+            $message->delete();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Üzenet sikeresen törölve!'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Hiba történt a törlés során!'
+            ], 500);
+        }
+    }
 }
