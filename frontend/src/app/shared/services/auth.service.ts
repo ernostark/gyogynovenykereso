@@ -12,13 +12,13 @@ export class AuthService {
   private apiUrl = `${environment.apiUrl}`;
 
   login(loginData: { email: string; password: string }): Observable<any> {
-    return this.http.post<any>(`${environment.apiUrl}/login`, loginData);
+    return this.http.post<any>(`${this.apiUrl}/login`, loginData);
   }
 
   logout(): Observable<any> {
     const token = sessionStorage.getItem('auth_token');
     return this.http.post<any>(
-      `${environment.apiUrl}/logout`,
+      `${this.apiUrl}/logout`,
       {},
       {
         headers: {
@@ -38,8 +38,8 @@ export class AuthService {
   }
 
   updateUserProfile(data: any): Observable<any> {
-    const token = sessionStorage.getItem('auth_token');
-    return this.http.put<any>(`${environment.apiUrl}/profile`, data, {
+    const token = localStorage.getItem('admin_token') || sessionStorage.getItem('auth_token');
+    return this.http.put<any>(`${this.apiUrl}/profile`, data, {
       headers: {
         Authorization: `Bearer ${token}`,
       },

@@ -45,7 +45,6 @@ Route::get('posts/latest', [PostController::class, 'getLatestPosts']);
 Route::post('posts/search-by-diseases', [PostController::class, 'searchByDiseases']);
 Route::get('posts/search', [PostController::class, 'searchInContent']);
 Route::get('/posts/{id}', [PostController::class, 'show']);
-/* Route::get('/posts/{id}/check-access', [PostController::class, 'checkAccess']); */
 Route::get('/posts/latest', [PostController::class, 'getLatestPosts']);
 
 Route::get('/categories', [CategoryController::class, 'index']);

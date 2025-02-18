@@ -23,7 +23,6 @@ class ContactController extends Controller
             'message' => 'Köszönjük megkeresését! Hamarosan válaszolunk.'
         ]);
     }
-
     public function index()
     {
         $messages = Contact::orderBy('created_at', 'desc')->get();
@@ -33,7 +32,6 @@ class ContactController extends Controller
             'messages' => $messages
         ]);
     }
-
     public function markAsRead($id)
     {
         try {

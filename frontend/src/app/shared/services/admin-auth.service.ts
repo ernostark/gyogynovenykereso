@@ -7,6 +7,7 @@ import { environment } from '../../../environments/environment.development';
 @Injectable({
   providedIn: 'root',
 })
+
 export class AuthService {
   private adminLoginUrl = `${environment.apiUrl}/admin/login`;
 
@@ -14,7 +15,7 @@ export class AuthService {
     private http: HttpClient,
     private router: Router,
     private sharedService: SharedService
-  ) {}
+  ) { }
 
   adminLogin(credentials: { email: string; password: string }): void {
     this.http.post(this.adminLoginUrl, credentials).subscribe({
@@ -47,7 +48,7 @@ export class AuthService {
         next: (response: any) => {
           localStorage.removeItem('admin_token');
           this.sharedService.updateAdminStatus(false);
-          this.router.navigate(['/admin/login']);
+          this.router.navigate(['/']);
         },
         error: (error) => {
           console.error('Hiba a kijelentkezés során:', error);

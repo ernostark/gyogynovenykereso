@@ -3,7 +3,15 @@
     <div class="card-body">
       <h5 class="card-title mb-4">Beérkezett üzenetek</h5>
 
-      <div class="table-responsive">
+      <div *ngIf="!messages || messages.length === 0" class="text-center py-5">
+        <div class="mb-3">
+          <i class="bi bi-inbox text-muted" style="font-size: 3rem;"></i>
+        </div>
+        <h5 class="text-muted mb-2">Nincsenek beérkezett üzenetek</h5>
+        <p class="text-muted small">Az üzenetek megjelennek itt, amint valaki használja a kapcsolat űrlapot.</p>
+      </div>
+
+      <div class="table-responsive" *ngIf="messages && messages.length > 0">
         <table class="table">
           <thead>
             <tr>
@@ -13,6 +21,7 @@
               <th style="width: 30%">Üzenet</th>
               <th>Dátum</th>
               <th>Státusz</th>
+              <th>Műveletek</th>
             </tr>
           </thead>
           <tbody>
@@ -22,16 +31,12 @@
               <td>{{ message.subject }}</td>
               <td>
                 <div class="message-preview">
-                  {{ message.message | slice : 0 : 30 }}...
-                  <button
-                    class="btn btn-link btn-sm"
-                    data-bs-toggle="collapse"
-                    [attr.data-bs-target]="'#message-' + i"
-                  >
-                    Bővebben
+                  {{ message.message | slice: 0:30 }}...
+                  <button class="btn btn-link btn-sm" (click)="toggleMessage(i)">
+                    {{ expandedMessages[i] ? 'Bezárás' : 'Bővebben' }}
                   </button>
                 </div>
-                <div [id]="'message-' + i" class="collapse">
+                <div [id]="'message-' + i" [class.show]="expandedMessages[i]" class="collapse">
                   <div class="card card-body mt-2">
                     {{ message.message }}
                   </div>
@@ -39,16 +44,18 @@
               </td>
               <td>{{ message.created_at | date : "yyyy.MM.dd. HH:mm" }}</td>
               <td>
-                <button
-                  *ngIf="!message.is_read"
-                  class="btn btn-sm btn-outline-success"
-                  (click)="markAsRead(message.id)"
-                >
+                <button *ngIf="!message.is_read" class="btn btn-sm btn-outline-success"
+                  (click)="markAsRead(message.id)">
                   <i class="bi bi-check2"></i> Olvasottnak jelöl
                 </button>
                 <span *ngIf="message.is_read" class="badge bg-success">
                   <i class="bi bi-check2-all"></i> Olvasott
                 </span>
+              </td>
+              <td>
+                <button class="btn btn-sm btn-outline-danger" (click)="deleteMessage(message.id)">
+                  <i class="bi bi-trash"></i> Törlés
+                </button>
               </td>
             </tr>
           </tbody>
