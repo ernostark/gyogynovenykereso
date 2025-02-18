@@ -12,7 +12,6 @@ use Carbon\Carbon;
 
 class UserController extends Controller
 {
-
     public function register(RegisterUserRequest $request)
     {
         try {
@@ -63,7 +62,6 @@ class UserController extends Controller
             'tokenType' => $tokenType
         ], 200);
     }
-
     public function logout(Request $request)
     {
         $request->user()->tokens()->delete();

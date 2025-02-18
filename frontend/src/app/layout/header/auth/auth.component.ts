@@ -24,7 +24,9 @@ declare var bootstrap: any;
   templateUrl: './auth.component.html',
   styleUrl: './auth.component.css',
 })
+
 export class AuthComponent implements OnInit {
+  
   private sharedService: SharedService;
   isAdminLoggedIn$;
 
@@ -155,7 +157,7 @@ export class AuthComponent implements OnInit {
             .flat()
             .join('<br>');
         } else {
-          this.errorMessage = 'Hiba történt a regisztráció során.';
+          this.errorMessage = 'Hiba történt a regisztráció során!';
         }
       },
     });
@@ -179,9 +181,12 @@ export class AuthComponent implements OnInit {
     this.authService.login(loginData).subscribe({
       next: (response) => {
         if (response.token) {
-          sessionStorage.setItem('auth_token', response.token);
-
-          sessionStorage.setItem('user', JSON.stringify(response.user));
+          if (response.tokenType === 'admin_token') {
+            localStorage.setItem('admin_token', response.token);
+            this.sharedService.updateAdminStatus(true);
+          } else {
+            sessionStorage.setItem('auth_token', response.token);
+          }
 
           this.isLoggedIn = true;
 
@@ -227,7 +232,6 @@ export class AuthComponent implements OnInit {
     this.authService.logout().subscribe({
       next: () => {
         sessionStorage.removeItem('auth_token');
-        sessionStorage.removeItem('user');
 
         this.isLoggedIn = false;
       },

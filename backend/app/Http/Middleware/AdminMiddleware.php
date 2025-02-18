@@ -14,22 +14,15 @@ class AdminMiddleware
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-    /* public function handle(Request $request, Closure $next): Response
+    public function handle(Request $request, Closure $next): Response
     {
-        if (Auth::guard('admin')->check()) {
+        if (
+            Auth::guard('admin')->check() ||
+            (Auth::guard('sanctum')->check() && Auth::guard('sanctum')->user()->is_admin)
+        ) {
             return $next($request);
         }
 
         return response()->json(['message' => 'Hozzáférés megtagadva!'], 403);
-    } */
-
-    public function handle(Request $request, Closure $next): Response
-{
-    if (Auth::guard('admin')->check() || 
-        (Auth::guard('sanctum')->check() && Auth::guard('sanctum')->user()->is_admin)) {
-        return $next($request);
     }
-
-    return response()->json(['message' => 'Hozzáférés megtagadva!'], 403);
-}
 }

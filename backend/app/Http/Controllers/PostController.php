@@ -75,7 +75,6 @@ class PostController extends Controller
             ], 500);
         }
     }
-
     public function store(Request $request)
     {
         try {
@@ -258,7 +257,6 @@ class PostController extends Controller
             ], 500);
         }
     }
-
     public function searchByDiseases(Request $request)
     {
         $searchTerms = $request->input('diseases', []);
@@ -285,7 +283,6 @@ class PostController extends Controller
             'total' => $posts->count()
         ]);
     }
-
     public function searchInContent(Request $request)
     {
         $query = $request->query('q');
@@ -309,25 +306,6 @@ class PostController extends Controller
             'posts' => $posts
         ]);
     }
-
-    /* public function checkAccess($id)
-    {
-        try {
-            $post = Post::findOrFail($id);
-
-            if (Auth::guard('admin')->check()) {
-                return response()->json(['access' => true]);
-            }
-
-            if ($post->status !== 'published') {
-                return response()->json(['access' => false], 403);
-            }
-
-            return response()->json(['access' => true]);
-        } catch (\Exception $e) {
-            return response()->json(['access' => false], 404);
-        }
-    } */
     public function getFeaturedPosts()
     {
         try {
