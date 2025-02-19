@@ -53,6 +53,7 @@ Route::middleware(['auth:sanctum'])->prefix('admin')->group(function () {
     Route::get('/check-super-admin', [UserController::class, 'checkSuperAdmin']);
     Route::post('/users/{userId}/toggle-admin', [UserController::class, 'toggleAdminStatus']);
     Route::get('/users', [UserController::class, 'index']);
+    Route::delete('/users/{id}', [UserController::class, 'destroy']);
 
     Route::get('/newsletter/subscribers', [NewsletterController::class, 'index']);
     Route::delete('/newsletter/subscribers/{id}', [NewsletterController::class, 'destroy']);

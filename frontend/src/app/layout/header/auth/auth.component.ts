@@ -58,8 +58,35 @@ export class AuthComponent implements OnInit {
   isLoggedIn: boolean = false;
 
   ngOnInit(): void {
+
     this.checkLoginStatus();
     this.initializeUpdateForm();
+
+    document.getElementById('registerModal')?.addEventListener('hidden.bs.modal', () => {
+      this.errorMessage = null;
+      this.successMessage = null;
+    });
+
+    document.getElementById('loginModal')?.addEventListener('hidden.bs.modal', () => {
+      this.errorMessage = null;
+      this.successMessage = null;
+    });
+
+    const successMsg = sessionStorage.getItem('toastMessage');
+    if (successMsg) {
+      setTimeout(() => {
+        this.showToast(successMsg);
+        sessionStorage.removeItem('toastMessage');
+      }, 200);
+    }
+  }
+
+  showToast(message: string): void {
+    this.toastMessage = message;
+
+    setTimeout(() => {
+      this.toastMessage = null;
+    }, 5000);
   }
 
   conditionalPasswordValidator(): ValidatorFn {
@@ -107,63 +134,60 @@ export class AuthComponent implements OnInit {
     this.isLoggedIn = !!token;
   }
 
-  showToast(message: string): void {
-    this.toastMessage = message;
-
-    setTimeout(() => {
-      this.toastMessage = null;
-    }, 5000);
-  }
-
   onRegister(): void {
-    if (this.registerForm.invalid) {
-      this.errorMessage = 'Kérlek, töltsd ki helyesen az űrlapot!';
-      return;
-    }
 
     const formData = this.registerForm.value;
 
     this.authService.register(formData).subscribe({
       next: (response) => {
         if (response.success) {
-          this.successMessage = response.message;
-          this.errorMessage = null;
+          sessionStorage.setItem('toastMessage', 'Sikeres regisztráció!');
 
           const modalInstance = bootstrap.Modal.getInstance(
             this.registerModal.nativeElement
           );
-
-          if (this.registerModal && this.registerModal.nativeElement) {
-            const modalInstance = bootstrap.Modal.getInstance(
-              this.registerModal.nativeElement
-            )
-          };
-
           if (modalInstance) {
             modalInstance.hide();
-            setTimeout(() => {
-              document.querySelector('.modal-backdrop')?.remove();
-              document.body.classList.remove('modal-open');
-              document.body.style.overflow = '';
-              document.body.style.paddingRight = '';
-
-              this.showToast('Sikeres regisztráció!');
-            }, 900);
           }
 
-          this.registerForm.reset();
+          document.querySelectorAll('.modal-backdrop').forEach(backdrop => backdrop.remove());
+          document.body.classList.remove('modal-open');
+          document.body.style.removeProperty('overflow');
+          document.body.style.removeProperty('padding-right');
 
+          this.registerForm.reset();
           this.successMessage = null;
+          this.errorMessage = null;
+
+          window.location.reload();
+
         }
       },
       error: (error) => {
+        console.log('Teljes hibaválasz:', error);
+
         if (error.status === 422) {
-          const validationErrors = error.error.error;
-          this.errorMessage = Object.values(validationErrors)
-            .flat()
-            .join('<br>');
+          if (error.error && error.error.error) {
+            const errorFields = Object.values(error.error.error);
+            const allErrors: string[] = [];
+
+            errorFields.forEach(fieldErrors => {
+              if (Array.isArray(fieldErrors)) {
+                fieldErrors.forEach(err => allErrors.push(err));
+              }
+            });
+
+            if (allErrors.length > 0) {
+              this.errorMessage = allErrors.join('<br>');
+            } else {
+              this.errorMessage = error.error.message || 'Érvénytelen adatok!';
+            }
+          } else {
+            this.errorMessage = error.error.message || 'Érvénytelen adatok!';
+          }
         } else {
           this.errorMessage = 'Hiba történt a regisztráció során!';
+          console.error('Regisztrációs hiba:', error);
         }
       },
     });
@@ -209,13 +233,13 @@ export class AuthComponent implements OnInit {
           if (modalInstance) {
             modalInstance.hide();
             setTimeout(() => {
-              document.querySelector('.modal-backdrop')?.remove();
+              document.querySelectorAll('.modal-backdrop').forEach(backdrop => backdrop.remove());
               document.body.classList.remove('modal-open');
               document.body.style.overflow = '';
               document.body.style.paddingRight = '';
 
               this.showToast('Sikeres bejelentkezés!');
-            }, 900);
+            }, 200);
           }
 
           this.email = '';
@@ -226,10 +250,30 @@ export class AuthComponent implements OnInit {
         }
       },
       error: (error) => {
-        console.error('Hiba a bejelentkezés során:', error);
+        console.log('Teljes hibaválasz:', error);
 
         if (error.status === 401) {
           this.errorMessage = 'Helytelen email vagy jelszó!';
+        }
+        else if (error.status === 422) {
+          if (error.error && error.error.error) {
+            const errorFields = Object.values(error.error.error);
+            const allErrors: string[] = [];
+
+            errorFields.forEach(fieldErrors => {
+              if (Array.isArray(fieldErrors)) {
+                fieldErrors.forEach(err => allErrors.push(err));
+              }
+            });
+
+            if (allErrors.length > 0) {
+              this.errorMessage = allErrors.join('<br>');
+            } else {
+              this.errorMessage = error.error.message || 'Érvénytelen adatok!';
+            }
+          } else {
+            this.errorMessage = error.error.message || 'Érvénytelen adatok!';
+          }
         } else {
           this.errorMessage = 'Hiba történt a bejelentkezés során.';
         }
@@ -261,26 +305,24 @@ export class AuthComponent implements OnInit {
     this.authService.updateUserProfile(formData).subscribe({
       next: (response) => {
         if (response.success) {
+          sessionStorage.setItem('toastMessage', 'Sikeresen módosította a profilját!');
 
           const modalInstance = bootstrap.Modal.getInstance(
             document.getElementById('updateProfileModal')
           );
-
           if (modalInstance) {
             modalInstance.hide();
-            setTimeout(() => {
-              document.querySelector('.modal-backdrop')?.remove();
-              document.body.classList.remove('modal-open');
-              document.body.style.overflow = '';
-              document.body.style.paddingRight = '';
-
-              this.showToast('Sikeresen módosította a profilját!');
-            }, 900);
           }
 
-          this.updateForm.reset();
+          document.querySelectorAll('.modal-backdrop').forEach(backdrop => backdrop.remove());
+          document.body.classList.remove('modal-open');
+          document.body.style.removeProperty('overflow');
+          document.body.style.removeProperty('padding-right');
 
-          this.errorMessage = null;
+          this.updateForm.reset();
+          this.successMessage = null;
+
+          window.location.reload();
         }
       },
       error: (error) => {

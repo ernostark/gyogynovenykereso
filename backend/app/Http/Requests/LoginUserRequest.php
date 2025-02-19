@@ -31,7 +31,21 @@ class LoginUserRequest extends FormRequest
     {
         return [
             'email.required' => 'Az email mező kitöltése kötelező!',
+            'email.email' => 'Kérjük, érvényes email címet adjon meg!',
             'password.required' => 'A jelszó megadása kötelező!',
+            'password.min' => 'A jelszónak legalább 8 karakter hosszúnak kell lennie!'
         ];
+    }
+
+    protected function failedValidation(\Illuminate\Contracts\Validation\Validator $validator)
+    {
+        throw new \Illuminate\Validation\ValidationException(
+            $validator,
+            response()->json([
+                'success' => false,
+                'message' => 'Adatbeviteli hiba!',
+                'error' => $validator->errors()
+            ], 422)
+        );
     }
 }

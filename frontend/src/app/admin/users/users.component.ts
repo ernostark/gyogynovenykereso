@@ -87,4 +87,32 @@ export class UsersComponent implements OnInit {
         }
       });
   }
+
+  deleteUser(userId: number): void {
+
+    if (!confirm('Biztosan törölni szeretnéd ezt a felhasználót? Ez a művelet nem visszavonható!')) {
+      return;
+    }
+
+    const token = localStorage.getItem('admin_token');
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+
+    this.http.delete(`${environment.apiUrl}/admin/users/${userId}`, { headers })
+      .subscribe({
+        next: (response: any) => {
+          this.loadUsers();
+          sessionStorage.setItem('toastMessage', 'Felhasználó sikeresen törölve!');
+          window.location.reload();
+        },
+        error: (error) => {
+          console.error('Hiba a felhasználó törlése során:', error);
+
+          if (error.status === 403) {
+            alert('Nincs jogosultságod a felhasználó törléséhez!');
+          } else {
+            alert('Hiba történt a felhasználó törlése során!');
+          }
+        }
+      });
+  }
 }
