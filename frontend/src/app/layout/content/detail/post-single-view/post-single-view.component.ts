@@ -8,8 +8,8 @@ import { environment } from '../../../../../environments/environment.development
   selector: 'app-herbdetail',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './herb-detail.component.html',
-  styleUrl: './herb-detail.component.css',
+  templateUrl: './post-single-view.component.html',
+  styleUrl: './post-single-view.component.css',
 })
 export class HerbdetailComponent implements OnInit {
   post: any;

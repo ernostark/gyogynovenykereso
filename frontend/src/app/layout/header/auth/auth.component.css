@@ -1,5 +1,62 @@
 .custom-shadow {
-    box-shadow: 
-      0 8px 20px rgba(0, 0, 0, 0.15),
-      0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow:
+    0 8px 20px rgba(0, 0, 0, 0.15),
+    0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.menu-button {
+  background-color: #f0f0f0;
+  color: #333 !important;
+  border-radius: 20px;
+  padding: 6px 14px !important;
+  margin: 0 3px;
+  font-weight: 400;
+  transition: all 0.3s ease;
+}
+
+.menu-button:hover,
+.menu-button:focus {
+  background-color: #e0e0e0;
+  transform: translateY(-2px);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.webshop-highlight {
+  background-color: var(--bs-primary);
+  color: white !important;
+  border-radius: 20px;
+  padding: 6px 16px !important;
+  margin: 0 3px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.webshop-highlight:hover,
+.webshop-highlight:focus {
+  background-color: var(--bs-primary-dark, #0b5ed7);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(13, 110, 253, 0.3);
+}
+
+.navbar-nav {
+  gap: 3px;
+  padding: 5px 0;
+}
+
+@media (max-width: 991.98px) {
+  .navbar-nav {
+    gap: 8px;
+    padding: 10px 0;
   }
+
+  .menu-button,
+  .webshop-highlight {
+    text-align: left;
+    border-radius: 10px;
+  }
+
+  .nav-item.ms-auto {
+    margin-left: 0 !important;
+    margin-top: 10px;
+  }
+}

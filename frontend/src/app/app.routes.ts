@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 import { SearchComponent } from './layout/header/search/search.component';
-import { HerbdetailComponent } from './layout/content/detail/herb-detail/herb-detail.component';
+import { HerbdetailComponent } from './layout/content/detail/post-single-view/post-single-view.component';
 import { PostAccessGuard } from './guards/post-access.guard';
 import { HomeComponent } from './layout/home/home.component';
 import { CategoryDetailComponent } from './layout/content/detail/category-detail/category-detail.component';
@@ -11,6 +11,7 @@ import { ContactComponent } from './layout/footer/pages/contact/contact.componen
 import { PrivacyPolicyComponent } from './layout/footer/pages/privacy-policy/privacy-policy.component';
 import { TermsComponent } from './layout/footer/pages/terms/terms.component';
 import { ProductDetailComponent } from './layout/content/products/product-detail/product-detail.component';
+import { WebshopHomepage } from './webshop/webshop-homepage/webshop-homepage.component';
 
 export const routes: Routes = [
   {
@@ -54,7 +55,11 @@ export const routes: Routes = [
     component: CategoryPostsComponent,
   },
   {
+    path: 'webshop',
+    component: WebshopHomepage,
+  },
+  {
     path: '**',
     redirectTo: 'home',
-  },
+  }
 ];

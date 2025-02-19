@@ -11,14 +11,17 @@ use Illuminate\Support\Facades\DB;
 class ProductController extends Controller
 {
     public function index()
-{
-    $products = Product::with(['category', 'images' => function ($query) {
-        $query->orderBy('is_primary', 'desc')
-              ->orderBy('id', 'asc');
-    }])->latest()->get();
+    {
+        $products = Product::with([
+            'category',
+            'images' => function ($query) {
+                $query->orderBy('is_primary', 'desc')
+                    ->orderBy('id', 'asc');
+            }
+        ])->latest()->get();
 
-    return response()->json($products);
-}
+        return response()->json($products);
+    }
 
     public function store(Request $request)
     {
@@ -33,6 +36,7 @@ class ProductController extends Controller
             'unit' => 'required|string|max:20',
             'category_id' => 'nullable|exists:product_categories,id',
             'is_available' => 'nullable|boolean',
+            'is_featured' => 'nullable|boolean',
             'images' => 'required|array|min:1',
             'images.*' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
             'primary_image_index' => 'required|integer|min:0'
@@ -53,6 +57,7 @@ class ProductController extends Controller
                 'unit' => $request->unit,
                 'category_id' => $request->category_id,
                 'is_available' => $request->filled('is_available') ? $request->is_available : true,
+                'is_featured' => $request->filled('is_featured') ? $request->is_featured : false,
             ]);
 
             if ($request->hasFile('images')) {
@@ -116,6 +121,7 @@ class ProductController extends Controller
             'unit' => 'required|string|max:20',
             'category_id' => 'nullable|exists:product_categories,id',
             'is_available' => 'nullable|boolean',
+            'is_featured' => 'nullable|boolean',
             'new_images' => 'nullable|array',
             'new_images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'remove_image_ids' => 'nullable|array',
@@ -140,6 +146,7 @@ class ProductController extends Controller
                 'unit' => $request->unit,
                 'category_id' => $request->category_id,
                 'is_available' => $request->filled('is_available') ? $request->is_available : true,
+                'is_featured' => $request->filled('is_featured') ? $request->is_featured : false,
             ]);
 
             if ($request->has('remove_image_ids') && is_array($request->remove_image_ids)) {

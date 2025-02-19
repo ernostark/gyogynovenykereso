@@ -69,7 +69,8 @@ export class ProductsComponent implements OnInit {
       stock_quantity: [0, [Validators.required, Validators.min(0)]],
       unit: ['g', Validators.required],
       category_id: [''],
-      is_available: [true]
+      is_available: [true],
+      is_featured: [false]
     });
   }
 
@@ -142,7 +143,8 @@ export class ProductsComponent implements OnInit {
       stock_quantity: product.stock_quantity,
       unit: product.unit,
       category_id: product.category_id || '',
-      is_available: product.is_available
+      is_available: product.is_available,
+      is_featured: product.is_featured || false
     });
 
     this.modalInstance = new bootstrap.Modal(
@@ -219,6 +221,7 @@ export class ProductsComponent implements OnInit {
     formData.append('unit', this.editProductForm.value.unit);
     formData.append('category_id', this.editProductForm.value.category_id || '');
     formData.append('is_available', this.editProductForm.value.is_available ? '1' : '0');
+    formData.append('is_featured', this.editProductForm.value.is_featured ? '1' : '0');
 
     if (this.imagesToRemove.length > 0) {
       for (const imageId of this.imagesToRemove) {
