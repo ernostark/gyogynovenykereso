@@ -12,34 +12,26 @@
           <th class="border-0">Szerző</th>
           <th class="border-0">Kiemelt</th>
           <th class="border-0">Közzétéve</th>
-          <th class="border-0">Állapot</th>          
+          <th class="border-0">Állapot</th>
           <th class="border-0" colspan="2">Műveletek</th>
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let post of posts">
           <td class="ps-4">
-            <img
-              [src]="
+            <img [src]="
                 post.image_path
                   ? storageUrl + '/storage/' + post.image_path
                   : storageUrl + '/storage/images/default.png'
-              "
-              alt="Bejegyzés képe"
-              width="40"
-              height="40"
-              class="rounded-circle object-fit-cover"
-            />
+              " alt="Bejegyzés képe" width="40" height="40" class="rounded-circle object-fit-cover" />
           </td>
           <td class="text-muted">#{{ post.id }}</td>
           <td>
             <span class="fw-medium">{{ post.title }}</span>
           </td>
           <td>
-            <span class="text-muted"
-              >{{ post.excerpt | slice : 0 : 50
-              }}{{ post.excerpt.length > 50 ? "..." : "" }}</span
-            >
+            <span class="text-muted">{{ post.excerpt | slice : 0 : 50
+              }}{{ post.excerpt.length > 50 ? "..." : "" }}</span>
           </td>
           <td>
             <span class="badge bg-light text-dark border">
@@ -53,13 +45,11 @@
           </td>
           <td>
             <div class="d-flex align-items-center gap-2">
-              <div
-                class="rounded-circle bg-light d-flex align-items-center justify-content-center"
-                style="width: 32px; height: 32px"
-              >
+              <div class="rounded-circle bg-light d-flex align-items-center justify-content-center"
+                style="width: 32px; height: 32px">
                 <i class="bi bi-person text-muted"></i>
               </div>
-              <span>{{ post.author?.name || "Ismeretlen" }}</span>
+              <span>{{ post.author_name || post.author?.name || "Ismeretlen" }}</span>
             </div>
           </td>
 
@@ -72,59 +62,44 @@
           <td>
             <span class="text-muted">
               {{
-                post.published_at
-                  ? (post.published_at | date : "yyyy.MM.dd.")
-                  : "N/A"
+              post.published_at
+              ? (post.published_at | date : "yyyy.MM.dd.")
+              : "N/A"
               }}
             </span>
           </td>
           <td>
-            <span
-              class="badge rounded-pill"
-              [ngClass]="{
+            <span class="badge rounded-pill" [ngClass]="{
                 'bg-success-subtle text-success': post.status === 'published',
                 'bg-warning-subtle text-warning': post.status === 'draft',
                 'bg-secondary-subtle text-secondary': post.status === 'archived'
-              }"
-            >
-              <i
-                class="bi"
-                [ngClass]="{
+              }">
+              <i class="bi" [ngClass]="{
                   'bi-check-circle-fill': post.status === 'published',
                   'bi-pencil-fill': post.status === 'draft',
                   'bi-archive-fill': post.status === 'archived'
-                }"
-              >
+                }">
               </i>
               {{
-                post.status === "published"
-                  ? "Közzétéve"
-                  : post.status === "draft"
-                  ? "Vázlat"
-                  : "Archivált"
+              post.status === "published"
+              ? "Közzétéve"
+              : post.status === "draft"
+              ? "Vázlat"
+              : "Archivált"
               }}
             </span>
           </td>
           <td class="text-end">
             <div class="d-flex gap-2">
-              <a
-                [routerLink]="['/posts', post.id]"
-                class="btn btn-primary btn-sm"
-                target="_blank"
-              >
+              <a [routerLink]="['/posts', post.id]" class="btn btn-primary btn-sm" target="_blank">
                 Megtekintés
               </a>
-              <button
-                class="btn btn-light btn-sm d-flex align-items-center gap-1"
-                (click)="openEditModal(post)"
-              >
+              <button class="btn btn-light btn-sm d-flex align-items-center gap-1" (click)="openEditModal(post)">
                 <i class="bi bi-pencil"></i>
                 Módosítás
               </button>
-              <button
-                class="btn btn-light btn-sm text-danger d-flex align-items-center gap-1"
-                (click)="onDeletePost(post.id)"
-              >
+              <button class="btn btn-light btn-sm text-danger d-flex align-items-center gap-1"
+                (click)="onDeletePost(post.id)">
                 <i class="bi bi-trash"></i>
                 Törlés
               </button>
@@ -140,66 +115,47 @@
   <div class="card mb-3" *ngFor="let post of posts">
     <div class="card-body">
       <div class="d-flex align-items-center mb-3">
-        <img
-          [src]="
+        <img [src]="
             post.image_path
               ? storageUrl + '/storage/' + post.image_path
               : storageUrl + '/storage/images/default.png'
-          "
-          class="rounded-circle me-3"
-          width="40"
-          height="40"
-          alt="Bejegyzés képe"
-        />
+          " class="rounded-circle me-3" width="40" height="40" alt="Bejegyzés képe" />
         <div>
           <h6 class="mb-0">{{ post.title }}</h6>
           <small class="text-muted">{{
-            post.author?.name || "Ismeretlen"
-          }}</small>
+            post.author_name || post.author?.name || "Ismeretlen"
+            }}</small>
         </div>
       </div>
       <p class="text-muted small mb-3">{{ post.excerpt }}</p>
       <div class="d-flex justify-content-between align-items-center">
-        <span
-          class="badge rounded-pill"
-          [ngClass]="{
+        <span class="badge rounded-pill" [ngClass]="{
             'bg-success-subtle text-success': post.status === 'published',
             'bg-warning-subtle text-warning': post.status === 'draft',
             'bg-secondary-subtle text-secondary': post.status === 'archived'
-          }"
-        >
-          <i
-            class="bi"
-            [ngClass]="{
+          }">
+          <i class="bi" [ngClass]="{
               'bi-check-circle-fill': post.status === 'published',
               'bi-pencil-fill': post.status === 'draft',
               'bi-archive-fill': post.status === 'archived'
-            }"
-          >
+            }">
           </i>
           {{
-            post.status === "published"
-              ? "Közzétéve"
-              : post.status === "draft"
-              ? "Vázlat"
-              : "Archivált"
+          post.status === "published"
+          ? "Közzétéve"
+          : post.status === "draft"
+          ? "Vázlat"
+          : "Archivált"
           }}
         </span>
         <div class="btn-group">
-          <a
-            [routerLink]="['/posts', post.id]"
-            target="_blank"
-            class="btn btn-sm btn-light"
-          >
+          <a [routerLink]="['/posts', post.id]" target="_blank" class="btn btn-sm btn-light">
             <i class="bi bi-eye"></i>
           </a>
           <button class="btn btn-sm btn-light" (click)="openEditModal(post)">
             <i class="bi bi-pencil"></i>
           </button>
-          <button
-            class="btn btn-sm btn-light text-danger"
-            (click)="onDeletePost(post.id)"
-          >
+          <button class="btn btn-sm btn-light text-danger" (click)="onDeletePost(post.id)">
             <i class="bi bi-trash"></i>
           </button>
         </div>
@@ -208,49 +164,26 @@
   </div>
 </div>
 
-<div
-  class="modal fade"
-  id="editPostModal"
-  tabindex="-1"
-  aria-labelledby="editPostModalLabel"
-  aria-hidden="true"
->
+<div class="modal fade" id="editPostModal" tabindex="-1" aria-labelledby="editPostModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title">Bejegyzés módosítása</h5>
-        <button
-          type="button"
-          class="btn-close"
-          data-bs-dismiss="modal"
-        ></button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
       <div class="modal-body">
         <form [formGroup]="editPostForm" (ngSubmit)="onUpdatePost()">
           <div class="mb-3">
             <label for="title">Cím</label>
-            <input
-              type="text"
-              formControlName="title"
-              id="title"
-              class="form-control"
-            />
+            <input type="text" formControlName="title" id="title" class="form-control" />
           </div>
           <div class="mb-3">
             <label for="content">Tartalom</label>
-            <textarea
-              formControlName="content"
-              id="content"
-              class="form-control"
-            ></textarea>
+            <textarea formControlName="content" id="content" class="form-control"></textarea>
           </div>
           <div class="mb-3">
             <label for="category">Kategória</label>
-            <select
-              formControlName="category_id"
-              id="category"
-              class="form-control"
-            >
+            <select formControlName="category_id" id="category" class="form-control">
               <option *ngFor="let category of categories" [value]="category.id">
                 {{ category.name }}
               </option>
@@ -266,35 +199,18 @@
           </div>
           <div class="mb-3">
             <label for="diseases">Betegségek</label>
-            <input
-              type="text"
-              formControlName="diseases"
-              id="diseases"
-              class="form-control"
-              placeholder="Betegségek vesszővel elválasztva"
-            />
-            <small class="text-muted"
-              >Példa: cukorbetegség, magas vérnyomás, asztma</small
-            >
+            <input type="text" formControlName="diseases" id="diseases" class="form-control"
+              placeholder="Betegségek vesszővel elválasztva" />
+            <small class="text-muted">Példa: cukorbetegség, magas vérnyomás, asztma</small>
           </div>
           <div class="mb-3">
             <label for="image">Kép cseréje</label>
-            <input
-              type="file"
-              id="image"
-              (change)="onFileSelected($event)"
-              class="form-control"
-            />
+            <input type="file" id="image" (change)="onFileSelected($event)" class="form-control" />
           </div>
 
           <div class="mb-3">
             <div class="form-check">
-              <input
-                type="checkbox"
-                class="form-check-input"
-                id="featured"
-                formControlName="featured"
-              >
+              <input type="checkbox" class="form-check-input" id="featured" formControlName="featured">
               <label class="form-check-label" for="featured">
                 Kiemelt bejegyzés
               </label>
@@ -303,11 +219,7 @@
 
           <div class="d-flex gap-2">
             <button type="submit" class="btn btn-success">Mentés</button>
-            <button
-              type="button"
-              class="btn btn-secondary"
-              data-bs-dismiss="modal"
-            >
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
               Mégse
             </button>
           </div>
@@ -317,28 +229,15 @@
   </div>
 </div>
 
-<div
-  class="toast-container position-fixed bottom-0 end-0 p-3"
-  style="z-index: 11"
->
-  <div
-    *ngIf="toastMessage"
-    class="toast align-items-center text-bg-success border-0 show"
-    role="alert"
-    aria-live="assertive"
-    aria-atomic="true"
-  >
+<div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+  <div *ngIf="toastMessage" class="toast align-items-center text-bg-success border-0 show" role="alert"
+    aria-live="assertive" aria-atomic="true">
     <div class="d-flex">
       <div class="toast-body">
         {{ toastMessage }}
       </div>
-      <button
-        type="button"
-        class="btn-close btn-close-white me-2 m-auto"
-        data-bs-dismiss="toast"
-        aria-label="Close"
-        (click)="toastMessage = null"
-      ></button>
+      <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"
+        (click)="toastMessage = null"></button>
     </div>
   </div>
 </div>

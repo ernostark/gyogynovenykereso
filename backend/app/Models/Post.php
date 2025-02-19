@@ -16,6 +16,7 @@ class Post extends Model
         'content',
         'excerpt',
         'author_id',
+        'author_type',
         'category_id',
         'published_at',
         'status',
@@ -34,10 +35,26 @@ class Post extends Model
         'diseases' => 'array',
         'featured' => 'boolean',
     ];
+    protected $appends = ['author_name'];
 
     public function author()
     {
-        return $this->belongsTo(Admin::class, 'author_id');
+        if ($this->author_type === 'admin') {
+            return $this->belongsTo(Admin::class, 'author_id');
+        }
+
+        return $this->belongsTo(User::class, 'author_id');
+    }
+
+    public function getAuthorNameAttribute()
+    {
+        if ($this->author_type === 'admin') {
+            $admin = Admin::find($this->author_id);
+            return $admin ? $admin->name : 'Admin';
+        } else {
+            $user = User::find($this->author_id);
+            return $user ? $user->name : 'Felhasználó';
+        }
     }
 
     public function category()

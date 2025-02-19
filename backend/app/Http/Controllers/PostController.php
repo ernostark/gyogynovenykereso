@@ -24,7 +24,12 @@ class PostController extends Controller
                 ], 401);
             }
 
-            $posts = Post::with('category', 'author')->orderBy('created_at', 'desc')->get();
+            $posts = Post::with('category')
+                ->orderBy('created_at', 'desc')
+                ->get()
+                ->each(function ($post) {
+                    $post->append('author_name');
+                });
 
             return response()->json([
                 'success' => true,
@@ -38,19 +43,22 @@ class PostController extends Controller
             ], 500);
         }
     }
+
     public function show($id)
     {
         try {
-            $post = Post::with(['category', 'author'])->findOrFail($id);
+            $post = Post::with(['category'])->findOrFail($id);
 
-            $isAdmin = Auth::guard('admin')->check() ||
-                (Auth::guard('sanctum')->check() && Auth::guard('sanctum')->user()->is_admin);
+            if ($post->status !== 'published') {
+                $isAdmin = Auth::guard('admin')->check() ||
+                    (Auth::guard('sanctum')->check() && Auth::guard('sanctum')->user()->is_admin);
 
-            if (!$isAdmin && $post->status !== 'published') {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'A bejegyzés nem megtekinthető!'
-                ], 403);
+                if (!$isAdmin) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'A bejegyzés nem megtekinthető!'
+                    ], 403);
+                }
             }
 
             if ($post->image_path) {
@@ -63,6 +71,8 @@ class PostController extends Controller
                 }
             }
 
+            $post->append('author_name');
+
             return response()->json([
                 'success' => true,
                 'post' => $post,
@@ -72,6 +82,30 @@ class PostController extends Controller
                 'success' => false,
                 'message' => 'Hiba történt a bejegyzés betöltése során',
                 'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function getPublicPosts()
+    {
+        try {
+            $posts = Post::with(['category'])
+                ->where('status', 'published')
+                ->orderBy('created_at', 'desc')
+                ->get()
+                ->each(function ($post) {
+                    $post->append('author_name');
+                });
+
+            return response()->json([
+                'success' => true,
+                'posts' => $posts,
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Hiba történt a bejegyzések lekérésekor.',
+                'error' => $e->getMessage(),
             ], 500);
         }
     }
@@ -88,14 +122,14 @@ class PostController extends Controller
                 'featured' => 'boolean'
             ]);
 
-            $authorId = Auth::guard('admin')->id() ||
-                (Auth::guard('sanctum')->check() && Auth::guard('sanctum')->user()->is_admin);
+            $isAdmin = Auth::guard('admin')->check();
+            $isUserAdmin = Auth::guard('sanctum')->check() && Auth::guard('sanctum')->user()->is_admin;
 
-            if (is_null($authorId)) {
+            if (!$isAdmin && !$isUserAdmin) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Az admin azonosító nem található!',
-                ], 500);
+                    'message' => 'Nincs jogosultság a bejegyzés létrehozására!',
+                ], 403);
             }
 
             if ($request->hasFile('image')) {
@@ -112,14 +146,19 @@ class PostController extends Controller
                 $diseases = json_decode($diseases, true);
             }
 
-            $authorId = Auth::guard('admin')->check()
-                ? Auth::guard('admin')->id()
-                : Auth::guard('sanctum')->user()->id;
+            if ($isAdmin) {
+                $authorId = Auth::guard('admin')->id();
+                $authorType = 'admin';
+            } else {
+                $authorId = Auth::guard('sanctum')->user()->id;
+                $authorType = 'user';
+            }
 
             $post = Post::create([
                 'title' => $validatedData['title'],
                 'content' => $validatedData['content'],
                 'author_id' => $authorId,
+                'author_type' => $authorType,
                 'slug' => Str::slug($validatedData['title']),
                 'excerpt' => Str::limit($validatedData['content'], 100),
                 'category_id' => $validatedData['category_id'] ?? null,
@@ -152,9 +191,7 @@ class PostController extends Controller
     }
     public function update(Request $request, $id)
     {
-
         try {
-
             if (
                 !auth('admin')->check() &&
                 !(auth('sanctum')->check() && auth('sanctum')->user()->is_admin)
@@ -208,8 +245,14 @@ class PostController extends Controller
                 $validatedData['featured'] = (bool) $request->input('featured');
             }
 
+            unset($validatedData['author_id']);
+            unset($validatedData['author_type']);
+
             $post->update($validatedData);
-            $validatedData['diseases'] = json_encode($validatedData['diseases'] ?? []);
+
+            if (isset($validatedData['diseases'])) {
+                $validatedData['diseases'] = json_encode($validatedData['diseases'] ?? []);
+            }
 
             return response()->json([
                 'success' => true,
