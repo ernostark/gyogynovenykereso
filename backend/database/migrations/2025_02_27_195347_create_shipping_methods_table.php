@@ -11,24 +11,21 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('herbs', function (Blueprint $table) {
+        Schema::create('shipping_methods', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->text('description');
-            $table->text('usage');
-            $table->string('image_url')->nullable();
-            $table->decimal('price', 10, 2)->nullable();
-            $table->boolean('is_available')->default(true);
+            $table->text('description')->nullable();
+            $table->decimal('price', 10, 2)->default(0);
+            $table->boolean('is_active')->default(true);
+            $table->integer('sort_order')->default(0);
             $table->timestamps();
-        });      
-        
+        });
     }
-
     /**
      * Reverse the migrations.
      */
     public function down(): void
     {
-        Schema::dropIfExists('herbs');
+        Schema::dropIfExists('shipping_methods');
     }
 };

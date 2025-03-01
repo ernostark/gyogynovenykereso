@@ -4,6 +4,8 @@ use App\Http\Controllers\AdminAuthController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\ProductCategoryController;
+use App\Http\Controllers\ProductController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -31,6 +33,16 @@ Route::middleware(['auth:sanctum'])->prefix('admin')->group(function () {
         Route::post('/categories', 'store');
         Route::delete('/categories/{id}', 'destroy');
     });
+    Route::controller(ProductCategoryController::class)->group(function () {
+        Route::post('/product-categories', 'store');
+        Route::put('/product-categories/{id}', 'update');
+        Route::delete('/product-categories/{id}', 'destroy');
+    });
+    Route::controller(ProductController::class)->group(function () {
+        Route::post('/products', 'store');
+        Route::post('/products/{id}', 'update');
+        Route::delete('/products/{id}', 'destroy');
+    });
     Route::controller(ContactController::class)->group(function () {
         Route::get('/messages', 'index');
         Route::put('/messages/{id}/read', 'markAsRead');
@@ -49,4 +61,12 @@ Route::get('/posts/latest', [PostController::class, 'getLatestPosts']);
 
 Route::get('/categories', [CategoryController::class, 'index']);
 Route::get('/categories/{id}/posts', [CategoryController::class, 'getPosts']);
+
 Route::post('/contact', [ContactController::class, 'store']);
+
+Route::get('/product-categories', [ProductCategoryController::class, 'index']);
+Route::get('/product-categories/{id}', [ProductCategoryController::class, 'show']);
+Route::get('/product-categories/{id}/products', [ProductCategoryController::class, 'getProducts']);
+
+Route::get('/products', [ProductController::class, 'index']);
+Route::get('/products/{id}', [ProductController::class, 'show']);

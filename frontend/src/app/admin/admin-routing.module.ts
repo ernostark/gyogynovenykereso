@@ -12,6 +12,7 @@ import { OrdersComponent } from './orders/orders.component';
 import { UsersComponent } from './users/users.component';
 import { CategoriesComponent } from './categories/categories.component';
 import { AdminMessagesComponent } from './messages/admin-messages/admin-messages.component';
+import { ProductCategoriesComponent } from './product-categories/product-categories.component';
 
 const routes: Routes = [
   { path: 'login', component: AdminAuthComponent },
@@ -26,6 +27,7 @@ const routes: Routes = [
       { path: 'products', component: ProductsComponent },
       { path: 'products/create', component: CreateProductComponent },
       { path: 'products/edit/:id', component: EditProductComponent },
+      { path: 'product_categories', component: ProductCategoriesComponent },
       { path: 'orders', component: OrdersComponent },
       { path: 'users', component: UsersComponent },
       { path: 'admin-messages', component: AdminMessagesComponent },

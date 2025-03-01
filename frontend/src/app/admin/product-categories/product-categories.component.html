@@ -1,0 +1,97 @@
+<div class="container py-4">
+    <div class="card shadow-sm border-0">
+        <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h4 class="mb-1">Termékkategóriák kezelése</h4>
+                    <p class="text-muted mb-0">Hozz létre és kezelj termék kategóriákat</p>
+                </div>
+            </div>
+
+            <form [formGroup]="categoryForm" (ngSubmit)="onCreateCategory()" class="mb-4">
+                <div class="row g-3 align-items-end">
+                    <div class="col-md-6">
+                        <input type="text" id="name" class="form-control form-control-lg" formControlName="name"
+                            placeholder="Add meg a kategória nevét" required />
+                    </div>
+                    <div class="col-md-3">
+                        <input type="text" id="description" class="form-control form-control-lg"
+                            formControlName="description" placeholder="Leírás (opcionális)" />
+                    </div>
+                    <div class="col-md-3">
+                        <button type="submit"
+                            class="btn btn-primary w-100 d-flex align-items-center justify-content-center gap-2"
+                            [disabled]="categoryForm.invalid">
+                            <i class="bi bi-plus-circle"></i>
+                            Kategória létrehozása
+                        </button>
+                    </div>
+                </div>
+            </form>
+
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead>
+                        <tr class="bg-light">
+                            <th class="border-0 ps-4">Kategória neve</th>
+                            <th class="border-0">Leírás</th>
+                            <th class="border-0 text-end pe-4">Műveletek</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let category of categories">
+                            <td class="ps-4">
+                                <div class="d-flex align-items-center gap-2">
+                                    <i class="bi bi-tag text-primary"></i>
+                                    <span class="fw-medium">{{ category.name }}</span>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="text-muted small">{{ category.description || 'Nincs leírás' }}</span>
+                            </td>
+                            <td class="text-end pe-4">
+                                <button class="btn btn-light btn-sm text-danger d-flex align-items-center gap-1 ms-auto"
+                                    (click)="onDeleteCategory(category.id)">
+                                    <i class="bi bi-trash"></i>
+                                    Törlés
+                                </button>
+                            </td>
+                        </tr>
+                        <tr *ngIf="categories.length === 0">
+                            <td colspan="3" class="text-center py-4 text-muted">
+                                <i class="bi bi-tags d-block mb-2" style="font-size: 2rem"></i>
+                                Még nincsenek termék kategóriák
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="toast-container position-fixed bottom-0 end-0 p-3">
+    <div id="successToast" class="toast align-items-center text-bg-success border-0" role="alert" aria-live="assertive"
+        aria-atomic="true">
+        <div class="d-flex">
+            <div class="toast-body">
+                <i class="bi bi-check-circle me-2"></i>
+                {{ successMessage }}
+            </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+                aria-label="Close"></button>
+        </div>
+    </div>
+
+    <div id="errorToast" class="toast align-items-center text-bg-danger border-0" role="alert" aria-live="assertive"
+        aria-atomic="true">
+        <div class="d-flex">
+            <div class="toast-body">
+                <i class="bi bi-exclamation-circle me-2"></i>
+                {{ errorMessage }}
+            </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+                aria-label="Close"></button>
+        </div>
+    </div>
+</div>

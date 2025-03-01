@@ -10,6 +10,7 @@ import { FaqComponent } from './layout/footer/pages/faq/faq.component';
 import { ContactComponent } from './layout/footer/pages/contact/contact.component';
 import { PrivacyPolicyComponent } from './layout/footer/pages/privacy-policy/privacy-policy.component';
 import { TermsComponent } from './layout/footer/pages/terms/terms.component';
+import { ProductDetailComponent } from './layout/content/products/product-detail/product-detail.component';
 
 export const routes: Routes = [
   {
@@ -25,6 +26,10 @@ export const routes: Routes = [
     path: 'posts/:id',
     component: HerbdetailComponent,
     canActivate: [PostAccessGuard],
+  },
+  {
+    path: 'products/:id',
+    component: ProductDetailComponent
   },
   {
     path: '',
