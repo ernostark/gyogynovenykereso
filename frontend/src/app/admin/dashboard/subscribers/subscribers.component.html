@@ -1,0 +1,110 @@
+<div class="container py-4">
+    <div class="card shadow-sm border-0">
+        <div class="card-body">
+            <h4 class="mb-4 position-relative">
+                Hírlevél feliratkozók kezelése
+                <span class="position-absolute start-0 bottom-0 w-100"
+                    style="height: 3px; background: linear-gradient(90deg, rgba(113, 44, 249, 0.95), transparent); z-index: 1;">
+                </span>
+            </h4>
+
+            <div *ngIf="loading" class="text-center py-5">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Betöltés...</span>
+                </div>
+            </div>
+
+            <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+
+            <div *ngIf="successMessage" class="alert alert-success alert-dismissible fade show">
+                {{ successMessage }}
+                <button type="button" class="btn-close" aria-label="Close" (click)="successMessage = null"></button>
+            </div>
+
+            <div class="table-responsive" *ngIf="!loading && !error">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Email</th>
+                            <th>Felhasználó</th>
+                            <th>Státusz</th>
+                            <th>Feliratkozás ideje</th>
+                            <th>Leiratkozás ideje</th>
+                            <th>Műveletek</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let subscriber of subscribers" [class.table-danger]="!subscriber.is_active">
+                            <td>{{ subscriber.email }}</td>
+                            <td>
+                                <span *ngIf="subscriber.user">
+                                    {{ subscriber.user.name }}
+                                </span>
+                                <span *ngIf="!subscriber.user" class="text-muted">
+                                    Vendég feliratkozó
+                                </span>
+                            </td>
+                            <td>
+                                <span class="badge" [ngClass]="subscriber.is_active ? 'bg-success' : 'bg-danger'">
+                                    {{ subscriber.is_active ? 'Aktív' : 'Leiratkozott' }}
+                                </span>
+                            </td>
+                            <td>{{ formatDate(subscriber.subscribed_at) }}</td>
+                            <td>{{ formatDate(subscriber.unsubscribed_at) }}</td>
+                            <td>
+                                <div class="btn-group">
+                                    <button class="btn btn-sm" [class.btn-warning]="subscriber.is_active"
+                                        [class.btn-success]="!subscriber.is_active"
+                                        (click)="toggleSubscriberStatus(subscriber.id, subscriber.is_active)">
+                                        <i class="bi"
+                                            [ngClass]="subscriber.is_active ? 'bi-x-circle' : 'bi-check-circle'"></i>
+                                        {{ subscriber.is_active ? 'Deaktiválás' : 'Aktiválás' }}
+                                    </button>
+                                    <button class="btn btn-sm btn-danger ms-2" (click)="showConfirmDelete(subscriber)">
+                                        <i class="bi bi-trash"></i>
+                                        Törlés
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr *ngIf="subscribers.length === 0">
+                            <td colspan="6" class="text-center py-4">
+                                <i class="bi bi-inbox fs-1 text-muted mb-3"></i>
+                                <p class="mb-0">Még nincsenek hírlevél feliratkozók.</p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" [class.show]="showDeleteConfirmation" [style.display]="showDeleteConfirmation ? 'block' : 'none'"
+    tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Feliratkozó törlése</h5>
+                <button type="button" class="btn-close" (click)="hideConfirmDelete()" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Biztosan törölni szeretnéd ezt a feliratkozót?</p>
+                <p *ngIf="subscriberToDelete" class="fw-bold">{{ subscriberToDelete.email }}</p>
+                <div class="alert alert-warning">
+                    <i class="bi bi-exclamation-triangle me-2"></i>
+                    Ez a művelet nem visszavonható! A feliratkozó véglegesen törlődik az adatbázisból.
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="hideConfirmDelete()">Mégse</button>
+                <button type="button" class="btn btn-danger" (click)="deleteSubscriber(subscriberToDelete?.id!)">
+                    <i class="bi bi-trash me-2"></i>
+                    Törlés megerősítése
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal-backdrop fade show" *ngIf="showDeleteConfirmation"></div>

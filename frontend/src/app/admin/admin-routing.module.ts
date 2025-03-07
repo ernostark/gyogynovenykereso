@@ -13,6 +13,7 @@ import { UsersComponent } from './users/users.component';
 import { CategoriesComponent } from './categories/categories.component';
 import { AdminMessagesComponent } from './messages/admin-messages/admin-messages.component';
 import { ProductCategoriesComponent } from './product-categories/product-categories.component';
+import { SubscribersComponent } from './dashboard/subscribers/subscribers.component';
 
 const routes: Routes = [
   { path: 'login', component: AdminAuthComponent },
@@ -31,6 +32,7 @@ const routes: Routes = [
       { path: 'orders', component: OrdersComponent },
       { path: 'users', component: UsersComponent },
       { path: 'admin-messages', component: AdminMessagesComponent },
+      { path: 'subscribers', component: SubscribersComponent },
       { path: '', redirectTo: 'posts', pathMatch: 'full' },
     ],
   },
