@@ -5,19 +5,13 @@
         <h5 class="mb-3">Blog</h5>
         <ul class="list-unstyled">
           <li class="mb-2">
-            <a href="/" class="text-light text-decoration-none"
-              >Legfrissebb bejegyzések</a
-            >
+            <a href="/" class="text-light text-decoration-none">Legfrissebb bejegyzések</a>
           </li>
           <li class="mb-2">
-            <a href="categories" class="text-light text-decoration-none"
-              >Kategóriák</a
-            >
+            <a href="categories" class="text-light text-decoration-none">Kategóriák</a>
           </li>
           <li class="mb-2">
-            <a href="/search" class="text-light text-decoration-none"
-              >Keresés</a
-            >
+            <a href="/search" class="text-light text-decoration-none">Keresés</a>
           </li>
         </ul>
       </div>
@@ -35,9 +29,7 @@
             <a href="#" class="text-light text-decoration-none">Akciók</a>
           </li>
           <li class="mb-2">
-            <a href="#" class="text-light text-decoration-none"
-              >Szállítási információk</a
-            >
+            <a href="#" class="text-light text-decoration-none">Szállítási információk</a>
           </li>
         </ul>
       </div>
@@ -46,31 +38,20 @@
         <h5 class="mb-3">Információk</h5>
         <ul class="list-unstyled">
           <li class="mb-2">
-            <a [routerLink]="['/about-us']" class="text-light text-decoration-none"
-              >Rólunk</a
-            >
+            <a [routerLink]="['/about-us']" class="text-light text-decoration-none">Rólunk</a>
           </li>
           <li class="mb-2">
-            <a [routerLink]="['/faq']" class="text-light text-decoration-none"
-              >GYIK</a
-            >
+            <a [routerLink]="['/faq']" class="text-light text-decoration-none">GYIK</a>
           </li>
           <li class="mb-2">
-            <a [routerLink]="['/contact']" class="text-light text-decoration-none"
-              >Kapcsolat</a
-            >
+            <a [routerLink]="['/contact']" class="text-light text-decoration-none">Kapcsolat</a>
           </li>
           <li class="mb-2">
-            <a
-            [routerLink]="['/privacy-policy']"
-              class="text-light text-decoration-none"
-              >Adatvédelmi nyilatkozat</a
-            >
+
+            <a [routerLink]="['/privacy-policy']" class="text-light text-decoration-none">Adatvédelmi nyilatkozat</a>
           </li>
           <li class="mb-2">
-            <a [routerLink]="['/terms']" class="text-light text-decoration-none"
-              >ÁSZF</a
-            >
+            <a [routerLink]="['/terms']" class="text-light text-decoration-none">ÁSZF</a>
           </li>
         </ul>
       </div>
@@ -89,13 +70,55 @@
           </li>
         </ul>
         <div class="mt-4">
-          <a href="#" class="text-light me-3"
-            ><i class="bi bi-facebook fs-5"></i
-          ></a>
-          <a href="#" class="text-light me-3"
-            ><i class="bi bi-instagram fs-5"></i
-          ></a>
+          <a href="#" class="text-light me-3"><i class="bi bi-facebook fs-5"></i></a>
+          <a href="#" class="text-light me-3"><i class="bi bi-instagram fs-5"></i></a>
           <a href="#" class="text-light"><i class="bi bi-youtube fs-5"></i></a>
+        </div>
+      </div>
+    </div>
+
+    <div class="row mt-5 mb-4">
+      <div class="col-12">
+        <div class="card bg-dark-subtle border-0 shadow-sm">
+          <div class="card-body p-4">
+            <div class="row align-items-center">
+              <div class="col-lg-6 mb-3 mb-lg-0">
+                <h4 class="text-dark mb-1">Iratkozz fel hírlevelünkre!</h4>
+                <p class="text-muted mb-0">
+                  Értesülj elsőként a legújabb termékekről, akciókról és gyógynövény-tippekről.
+                </p>
+              </div>
+              <div class="col-lg-6">
+                <form (ngSubmit)="subscribeNewsletter()" #newsletterForm="ngForm">
+                  <div class="input-group">
+                    <input type="email" class="form-control form-control-lg" placeholder="E-mail címed"
+                      aria-label="E-mail címed" required name="email" [(ngModel)]="newsletterEmail"
+                      pattern="[a-z0-9._%+\-]+@[a-z0-9\-\.]+\.[a-z]{2,}$" #email="ngModel">
+                      <button 
+                      class="btn btn-primary px-4" 
+                      type="submit"
+                      [disabled]="newsletterForm.invalid || isSubscribing"
+                    >
+                      <span *ngIf="isSubscribing" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                      <i *ngIf="!isSubscribing" class="bi bi-send me-2"></i>
+                      {{ isSubscribing ? 'Feldolgozás...' : 'Feliratkozás' }}
+                    </button>
+                  </div>
+                  <div *ngIf="email.invalid && (email.dirty || email.touched)" class="text-danger mt-1 small">
+                    <div *ngIf="email.errors?.['pattern']">Érvénytelen e-mail cím</div>
+                  </div>
+                  <div class="form-check mt-2">
+                    <input class="form-check-input" type="checkbox" id="privacy-agree" required name="privacy"
+                      [(ngModel)]="privacyAccepted">
+                    <label class="form-check-label small text-dark" for="privacy-agree">
+                      Elfogadom az <a [routerLink]="['/privacy-policy']" class="text-primary">adatvédelmi
+                        nyilatkozatot</a>
+                    </label>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -110,3 +133,16 @@
     </div>
   </div>
 </footer>
+
+<div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+  <div *ngIf="toastMessage" class="toast align-items-center text-bg-success border-0 show" role="alert"
+    aria-live="assertive" aria-atomic="true">
+    <div class="d-flex">
+      <div class="toast-body">
+        {{ toastMessage }}
+      </div>
+      <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"
+        (click)="closeToast()"></button>
+    </div>
+  </div>
+</div>

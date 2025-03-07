@@ -3,6 +3,7 @@
 use App\Http\Controllers\AdminAuthController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\NewsletterController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProductCategoryController;
 use App\Http\Controllers\ProductController;
@@ -50,6 +51,10 @@ Route::middleware(['auth:sanctum'])->prefix('admin')->group(function () {
     });
     Route::post('/users/{userId}/toggle-admin', [UserController::class, 'toggleAdminStatus']);
     Route::get('/users', [UserController::class, 'index']);
+
+    Route::get('/newsletter/subscribers', [NewsletterController::class, 'index']);
+    Route::delete('/newsletter/subscribers/{id}', [NewsletterController::class, 'destroy']);
+    Route::post('/newsletter/subscribers/{id}/toggle-status', [NewsletterController::class, 'toggleStatus']);
 });
 
 Route::get('posts/featured', [PostController::class, 'getFeaturedPosts']);
@@ -70,3 +75,6 @@ Route::get('/product-categories/{id}/products', [ProductCategoryController::clas
 
 Route::get('/products', [ProductController::class, 'index']);
 Route::get('/products/{id}', [ProductController::class, 'show']);
+
+Route::post('/newsletter/subscribe', [NewsletterController::class, 'subscribe']);
+Route::get('/newsletter/unsubscribe/{token}', [NewsletterController::class, 'unsubscribeWithToken']);
