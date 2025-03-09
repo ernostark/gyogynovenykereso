@@ -1,7 +1,5 @@
 .sidebar {
   border-right: 1px solid rgba(0, 0, 0, .1);
-  width: 16.666667%;
-  box-sizing: border-box;
   position: fixed;
   height: 100vh;
   overflow-y: auto;
@@ -15,9 +13,19 @@
 }
 
 main {
-  margin-left: 16.666667%;
   padding: 20px;
   box-sizing: border-box;
+}
+
+@media (min-width: 768px) {
+  .sidebar {
+    width: 250px !important;
+  }
+
+  main {
+    margin-left: 250px !important;
+    width: calc(100% - 250px) !important;
+  }
 }
 
 @media (max-width: 767.98px) {
@@ -34,6 +42,7 @@ main {
 
   main {
     margin-left: 0;
+    width: 100% !important;
   }
 }
 

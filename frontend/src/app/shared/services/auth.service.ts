@@ -11,6 +11,13 @@ export class AuthService {
 
   private apiUrl = `${environment.apiUrl}`;
 
+  getUserToken(loginData: { email: string, password: string }): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/login`, {
+      ...loginData,
+      request_type: 'auth_token'
+    });
+  }
+
   login(loginData: { email: string; password: string }): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/login`, loginData);
   }

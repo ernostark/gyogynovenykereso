@@ -1,64 +1,94 @@
-<div class="container py-4">
-    <div class="card shadow-sm border-0">
-        <div class="card-body">
-            <h4 class="mb-4 position-relative">
-                Felhasználók kezelése
-                <span class="position-absolute start-0 bottom-0 w-100"
-                    style="height: 3px; background: linear-gradient(90deg, rgba(113, 44, 249, 0.95), transparent); z-index: 1;">
-                </span>
-            </h4>
+<div class="container card shadow-sm border-0 mt-50">
+    <div class="d-flex justify-content-between align-items-center p-3 border-bottom">
+        <h4 class="mb-0">Felhasználók kezelése</h4>
+    </div>
 
-            <div *ngIf="loading" class="text-center py-5">
-                <div class="spinner-border text-primary" role="status">
-                    <span class="visually-hidden">Betöltés...</span>
+    <div *ngIf="loading" class="text-center py-5">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Betöltés...</span>
+        </div>
+    </div>
+
+    <div *ngIf="error" class="alert alert-danger m-3">{{ error }}</div>
+
+    <div class="d-none d-lg-block">
+        <table class="table table-hover align-middle mb-0">
+            <thead>
+                <tr class="bg-light">
+                    <th class="border-0 rounded-start ps-4">Név</th>
+                    <th class="border-0">Email</th>
+                    <th class="border-0">Regisztráció</th>
+                    <th class="border-0">Cím</th>
+                    <th class="border-0">Jogosultság</th>
+                    <th class="border-0" *ngIf="isSuperAdmin">Műveletek</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let user of users">
+                    <td class="ps-4 fw-medium">{{ user.name }}</td>
+                    <td>{{ user.email }}</td>
+                    <td>{{ user.created_at | date:'yyyy.MM.dd. HH:mm' }}</td>
+                    <td>
+                        <div class="small">
+                            <div>{{ user.country }}</div>
+                            <div>{{ user.postal_code }} {{ user.city }}</div>
+                            <div>{{ user.street }}</div>
+                            <div *ngIf="user.address_line_2">{{ user.address_line_2 }}</div>
+                        </div>
+                    </td>
+                    <td>
+                        <span class="badge" [ngClass]="user.is_admin ? 'bg-danger' : 'bg-success'">
+                            {{ user.is_admin ? 'Admin' : 'Felhasználó' }}
+                        </span>
+                    </td>
+                    <td *ngIf="isSuperAdmin">
+                        <button class="btn btn-sm" (click)="toggleAdminStatus(user.id)"
+                            [class.btn-danger]="!user.is_admin" [class.btn-warning]="user.is_admin">
+                            {{ user.is_admin ? 'Admin jog elvétele' : 'Admin jog adása' }}
+                        </button>
+                    </td>
+                </tr>
+                <tr *ngIf="users.length === 0">
+                    <td [attr.colspan]="isSuperAdmin ? 6 : 5" class="text-center py-4">
+                        <i class="bi bi-people fs-1 text-muted mb-2"></i>
+                        <p class="mb-0">Még nincsenek felhasználók.</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="d-lg-none">
+        <div class="card mb-3" *ngFor="let user of users">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <h6 class="mb-0">{{ user.name }}</h6>
+                    <span class="badge" [ngClass]="user.is_admin ? 'bg-danger' : 'bg-success'">
+                        {{ user.is_admin ? 'Admin' : 'Felhasználó' }}
+                    </span>
+                </div>
+
+                <div class="small mb-3">
+                    <div><strong>Email:</strong> {{ user.email }}</div>
+                    <div><strong>Regisztráció:</strong> {{ user.created_at | date:'yyyy.MM.dd. HH:mm' }}</div>
+                    <div class="mt-2"><strong>Cím:</strong></div>
+                    <div>{{ user.country }}</div>
+                    <div>{{ user.postal_code }} {{ user.city }}</div>
+                    <div>{{ user.street }}</div>
+                    <div *ngIf="user.address_line_2">{{ user.address_line_2 }}</div>
+                </div>
+
+                <div *ngIf="isSuperAdmin" class="d-grid">
+                    <button class="btn btn-sm" (click)="toggleAdminStatus(user.id)" [class.btn-danger]="!user.is_admin"
+                        [class.btn-warning]="user.is_admin">
+                        {{ user.is_admin ? 'Admin jog elvétele' : 'Admin jog adása' }}
+                    </button>
                 </div>
             </div>
-
-            <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
-
-            <div class="table-responsive" *ngIf="!loading && !error">
-                <table class="table table-hover">
-                    <thead>
-                        <tr>
-                            <th>Név</th>
-                            <th>Email</th>
-                            <th>Regisztráció</th>
-                            <th>Utolsó módosítás</th>
-                            <th>Cím</th>
-                            <th>Jogosultság</th>
-                            <th>Műveletek</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr *ngFor="let user of users">
-                            <td>{{ user.name }}</td>                            
-                            <td>{{ user.email }}</td>
-                            <td>{{ user.created_at | date:'yyyy.MM.dd. HH:mm' }}</td>
-                            <td>{{ user.updated_at | date:'yyyy.MM.dd. HH:mm' }}</td>
-                            <td>
-                                <div>{{ user.country }}</div>
-                                <div>{{ user.postal_code }} {{ user.city }}</div>
-                                <div>{{ user.street }}</div>
-                                <div *ngIf="user.address_line_2">{{ user.address_line_2 }}</div>
-                            </td>
-                            <td>
-                                <span class="badge" [ngClass]="user.is_admin ? 'bg-danger' : 'bg-success'">
-                                    {{ user.is_admin ? 'Admin' : 'Felhasználó' }}
-                                </span>
-                            </td>
-                            <td>
-                                <button class="btn btn-sm"
-                                    (click)="toggleAdminStatus(user.id)"
-                                    [class.btn-danger]="!user.is_admin"
-                                    [class.btn-warning]="user.is_admin"
-                                >
-                                    {{ user.is_admin ? 'Admin jog elvétele' : 'Admin jog adása' }}
-                                </button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+        </div>
+        <div *ngIf="users.length === 0" class="text-center py-4">
+            <i class="bi bi-people fs-1 text-muted mb-2"></i>
+            <p class="mb-0">Még nincsenek felhasználók.</p>
         </div>
     </div>
 </div>

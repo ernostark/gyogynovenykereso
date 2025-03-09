@@ -17,10 +17,14 @@ export class ContactComponent {
 
   constructor(private fb: FormBuilder, private http: HttpClient) {
     this.contactForm = this.fb.group({
-      name: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email]],
-      subject: ['', Validators.required],
-      message: ['', Validators.required],
+      name: ['', [Validators.required, Validators.maxLength(100)]],
+      email: ['', [
+        Validators.required,
+        Validators.maxLength(150),
+        Validators.pattern(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)
+      ]],
+      subject: ['', [Validators.required, Validators.maxLength(200)]],
+      message: ['', [Validators.required, Validators.maxLength(2000)]]
     });
   }
 
