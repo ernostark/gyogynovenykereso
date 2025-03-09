@@ -29,11 +29,14 @@ export class UsersComponent implements OnInit {
   users: any[] = [];
   loading = true;
   error: string | null = null;
+  isSuperAdmin: boolean = false;
+
 
   constructor(private http: HttpClient) { }
 
   ngOnInit() {
     this.loadUsers();
+    this.checkSuperAdminStatus();
   }
 
   loadUsers() {
@@ -50,6 +53,22 @@ export class UsersComponent implements OnInit {
           console.error('Hiba a felhasználók betöltése során:', error);
           this.error = 'Hiba történt a felhasználók betöltése során.';
           this.loading = false;
+        }
+      });
+  }
+
+  checkSuperAdminStatus() {
+    const token = localStorage.getItem('admin_token');
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+
+    this.http.get<{ is_super_admin: boolean }>(`${environment.apiUrl}/admin/check-super-admin`, { headers })
+      .subscribe({
+        next: (response) => {
+          this.isSuperAdmin = response.is_super_admin;
+        },
+        error: (error) => {
+          console.error('Hiba a jogosultság ellenőrzésekor:', error);
+          this.isSuperAdmin = false;
         }
       });
   }

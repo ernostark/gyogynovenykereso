@@ -49,6 +49,8 @@ Route::middleware(['auth:sanctum'])->prefix('admin')->group(function () {
         Route::put('/messages/{id}/read', 'markAsRead');
         Route::delete('/messages/{id}', 'destroy');
     });
+    
+    Route::get('/check-super-admin', [UserController::class, 'checkSuperAdmin']);
     Route::post('/users/{userId}/toggle-admin', [UserController::class, 'toggleAdminStatus']);
     Route::get('/users', [UserController::class, 'index']);
 
@@ -77,4 +79,3 @@ Route::get('/products', [ProductController::class, 'index']);
 Route::get('/products/{id}', [ProductController::class, 'show']);
 
 Route::post('/newsletter/subscribe', [NewsletterController::class, 'subscribe']);
-Route::get('/newsletter/unsubscribe/{token}', [NewsletterController::class, 'unsubscribeWithToken']);

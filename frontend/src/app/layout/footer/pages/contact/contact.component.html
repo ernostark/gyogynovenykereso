@@ -15,11 +15,12 @@
                 <i class="bi bi-person me-2 text-primary"></i>Név
               </label>
               <input type="text" class="form-control form-control-lg" id="name" formControlName="name"
-                placeholder="Add meg a neved"
+                placeholder="Add meg a neved" maxlength="100"
                 [ngClass]="{'is-invalid': contactForm.get('name')?.touched && contactForm.get('name')?.invalid}">
               <div class="invalid-feedback"
                 *ngIf="contactForm.get('name')?.touched && contactForm.get('name')?.invalid">
-                A név megadása kötelező!
+                <div *ngIf="contactForm.get('name')?.errors?.['required']">A név megadása kötelező!</div>
+                <div *ngIf="contactForm.get('name')?.errors?.['maxlength']">A név maximum 100 karakter lehet!</div>
               </div>
             </div>
 
@@ -28,11 +29,13 @@
                 <i class="bi bi-envelope me-2 text-primary"></i>Email cím
               </label>
               <input type="email" class="form-control form-control-lg" id="email" formControlName="email"
-                placeholder="Add meg az email címed"
+                placeholder="Add meg az email címed" maxlength="150"
                 [ngClass]="{'is-invalid': contactForm.get('email')?.touched && contactForm.get('email')?.invalid}">
               <div class="invalid-feedback"
                 *ngIf="contactForm.get('email')?.touched && contactForm.get('email')?.invalid">
-                Érvényes email cím megadása kötelező!
+                <div *ngIf="contactForm.get('email')?.errors?.['required']">Az email cím megadása kötelező!</div>
+                <div *ngIf="contactForm.get('email')?.errors?.['pattern']">Kérjük, érvényes email címet adj meg!</div>
+                <div *ngIf="contactForm.get('email')?.errors?.['maxlength']">Az email maximum 150 karakter lehet!</div>
               </div>
             </div>
 
@@ -41,11 +44,12 @@
                 <i class="bi bi-chat-left-text me-2 text-primary"></i>Tárgy
               </label>
               <input type="text" class="form-control form-control-lg" id="subject" formControlName="subject"
-                placeholder="Mi a megkeresésed tárgya?"
+                placeholder="Mi a megkeresésed tárgya?" maxlength="200"
                 [ngClass]="{'is-invalid': contactForm.get('subject')?.touched && contactForm.get('subject')?.invalid}">
               <div class="invalid-feedback"
                 *ngIf="contactForm.get('subject')?.touched && contactForm.get('subject')?.invalid">
-                A tárgy megadása kötelező!
+                <div *ngIf="contactForm.get('subject')?.errors?.['required']">A tárgy megadása kötelező!</div>
+                <div *ngIf="contactForm.get('subject')?.errors?.['maxlength']">A tárgy maximum 200 karakter lehet!</div>
               </div>
             </div>
 
@@ -54,11 +58,16 @@
                 <i class="bi bi-pencil me-2 text-primary"></i>Üzenet
               </label>
               <textarea class="form-control" id="message" formControlName="message" rows="6"
-                placeholder="Írd le üzeneted..."
+                placeholder="Írd le üzeneted..." maxlength="2000"
                 [ngClass]="{'is-invalid': contactForm.get('message')?.touched && contactForm.get('message')?.invalid}"></textarea>
               <div class="invalid-feedback"
                 *ngIf="contactForm.get('message')?.touched && contactForm.get('message')?.invalid">
-                Az üzenet nem lehet üres!
+                <div *ngIf="contactForm.get('message')?.errors?.['required']">Az üzenet nem lehet üres!</div>
+                <div *ngIf="contactForm.get('message')?.errors?.['maxlength']">Az üzenet maximum 2000 karakter lehet!
+                </div>
+              </div>
+              <div class="text-muted text-end mt-1 small">
+                <span>{{ contactForm.get('message')?.value?.length || 0 }}/2000</span>
               </div>
             </div>
 

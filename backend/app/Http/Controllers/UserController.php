@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\LoginUserRequest;
 use App\Http\Requests\RegisterUserRequest;
 use App\Http\Requests\UpdateUserProfile;
+use App\Models\Admin;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
@@ -47,20 +48,39 @@ class UserController extends Controller
         $user = $request->user();
         $expiresAt = Carbon::now()->addDay();
 
+        if ($request->has('request_type') && $request->request_type === 'user_token') {
+            $token = $user->createToken('auth_token', ['*'], $expiresAt)->plainTextToken;
+            return response()->json([
+                'message' => 'Sikeres bejelentkezés!',
+                'token' => $token,
+                'tokenType' => 'auth_token'
+            ], 200);
+        }
+
         if ($user->is_admin) {
             $token = $user->createToken('admin_token', ['*'], $expiresAt)->plainTextToken;
             $tokenType = 'admin_token';
+
+            $userToken = $user->createToken('auth_token', ['*'], $expiresAt)->plainTextToken;
+
+            return response()->json([
+                'message' => 'Sikeres bejelentkezés!',
+                'user' => $user,
+                'token' => $token,
+                'tokenType' => $tokenType,
+                'userToken' => $userToken
+            ], 200);
         } else {
             $token = $user->createToken('auth_token', ['*'], $expiresAt)->plainTextToken;
             $tokenType = 'auth_token';
-        }
 
-        return response()->json([
-            'message' => 'Sikeres bejelentkezés!',
-            'user' => $user,
-            'token' => $token,
-            'tokenType' => $tokenType
-        ], 200);
+            return response()->json([
+                'message' => 'Sikeres bejelentkezés!',
+                'user' => $user,
+                'token' => $token,
+                'tokenType' => $tokenType
+            ], 200);
+        }
     }
     public function logout(Request $request)
     {
@@ -142,8 +162,27 @@ class UserController extends Controller
             ], 500);
         }
     }
+    public function checkSuperAdmin()
+    {
+        $currentUserEmail = Auth::user()->email;
+        $isSuperAdmin = Admin::where('email', $currentUserEmail)->exists();
+
+        return response()->json([
+            'is_super_admin' => $isSuperAdmin
+        ]);
+    }
     public function toggleAdminStatus($userId)
     {
+        $currentUserEmail = Auth::user()->email;
+        $isSuperAdmin = Admin::where('email', $currentUserEmail)->exists();
+
+        if (!$isSuperAdmin) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Nincs jogosultságod az admin státusz módosításához!'
+            ], 403);
+        }
+
         $user = User::findOrFail($userId);
         $user->is_admin = !$user->is_admin;
         $user->save();

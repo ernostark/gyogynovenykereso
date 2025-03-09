@@ -26,7 +26,7 @@ declare var bootstrap: any;
 })
 
 export class AuthComponent implements OnInit {
-  
+
   private sharedService: SharedService;
   isAdminLoggedIn$;
 
@@ -45,7 +45,7 @@ export class AuthComponent implements OnInit {
     });
   }
 
-  @ViewChild('registerModal', { static: false }) registerModal!: ElementRef;
+  @ViewChild('registerModal') registerModal!: ElementRef;
 
   isAdminRoute: boolean = false;
   email: string = '';
@@ -133,6 +133,12 @@ export class AuthComponent implements OnInit {
             this.registerModal.nativeElement
           );
 
+          if (this.registerModal && this.registerModal.nativeElement) {
+            const modalInstance = bootstrap.Modal.getInstance(
+              this.registerModal.nativeElement
+            )
+          };
+
           if (modalInstance) {
             modalInstance.hide();
             setTimeout(() => {
@@ -184,12 +190,15 @@ export class AuthComponent implements OnInit {
           if (response.tokenType === 'admin_token') {
             localStorage.setItem('admin_token', response.token);
             this.sharedService.updateAdminStatus(true);
+
+            if (response.userToken) {
+              sessionStorage.setItem('auth_token', response.userToken);
+            }
           } else {
             sessionStorage.setItem('auth_token', response.token);
           }
 
           this.isLoggedIn = true;
-
           this.successMessage = response.message;
           this.errorMessage = null;
 

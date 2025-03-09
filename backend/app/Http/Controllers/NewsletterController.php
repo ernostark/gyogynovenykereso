@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\NewsletterWelcome;
 use App\Models\NewsletterSubscriber;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 
 class NewsletterController extends Controller
@@ -27,19 +29,23 @@ class NewsletterController extends Controller
                 'unsubscribed_at' => null
             ]);
 
+            Mail::to($existingSubscriber->email)->send(new NewsletterWelcome($existingSubscriber));
+
             return response()->json([
                 'success' => true,
                 'message' => 'Sikeresen újra feliratkoztál hírlevelünkre!'
             ]);
         }
 
-        NewsletterSubscriber::create([
+        $subscriber = NewsletterSubscriber::create([
             'email' => $request->email,
             'user_id' => auth()->check() ? auth()->id() : null,
             'token' => Str::random(64),
             'is_active' => true,
             'subscribed_at' => now()
         ]);
+
+        Mail::to($subscriber->email)->send(new NewsletterWelcome($subscriber));
 
         return response()->json([
             'success' => true,
@@ -53,10 +59,10 @@ class NewsletterController extends Controller
             ->first();
 
         if (!$subscriber) {
-            return response()->json([
+            return view('newsletter.unsubscribe', [
                 'success' => false,
                 'message' => 'Érvénytelen leiratkozási link vagy már leiratkoztál.'
-            ], 404);
+            ]);
         }
 
         $subscriber->update([
@@ -64,7 +70,7 @@ class NewsletterController extends Controller
             'unsubscribed_at' => now()
         ]);
 
-        return response()->json([
+        return view('newsletter.unsubscribe', [
             'success' => true,
             'message' => 'Sikeresen leiratkoztál hírlevelünkről.'
         ]);

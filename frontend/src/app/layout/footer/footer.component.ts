@@ -23,7 +23,7 @@ export class FooterComponent {
 
     setTimeout(() => {
       this.toastMessage = null;
-    }, 5000);
+    }, 6000);
   }
 
   closeToast(): void {
@@ -42,7 +42,7 @@ export class FooterComponent {
         next: (response) => {
           this.newsletterEmail = '';
           this.privacyAccepted = false;
-          this.showToast(response.message || 'Sikeres feliratkozás! Köszönjük!');
+          this.showToast('Sikeres feliratkozás! Elküldtünk egy üdvözlő emailt az email címedre.');
           this.isSubscribing = false;
         },
         error: (error) => {
@@ -51,14 +51,22 @@ export class FooterComponent {
 
           if (error.error && error.error.errors) {
             if (error.error.errors.email) {
-              this.showToast(error.error.errors.email[0]);
+              const errorMsg = error.error.errors.email[0];
+
+              if (errorMsg.includes('has already been taken')) {
+                this.showToast('Ez az email cím már feliratkozott a hírlevélre!');
+              } else if (errorMsg.includes('valid email')) {
+                this.showToast('Kérjük, adj meg egy érvényes email címet!');
+              } else {
+                this.showToast('Hiba az email címmel. Kérjük, ellenőrizd!');
+              }
+            } else if (error.error.errors.privacy_accepted) {
+              this.showToast('Kérjük, fogadd el az adatvédelmi nyilatkozatot!');
             } else {
               this.showToast('Hiba történt a feliratkozás során. Kérjük, próbáld újra!');
             }
-          } else if (error.error && error.error.message) {
-            this.showToast(error.error.message);
           } else {
-            this.showToast('Ismeretlen hiba történt. Kérjük, próbáld újra később!');
+            this.showToast('Hiba történt a feliratkozás során. Kérjük, próbáld újra később!');
           }
         }
       });
