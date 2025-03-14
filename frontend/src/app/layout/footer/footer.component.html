@@ -1,5 +1,71 @@
 <footer class="bg-dark text-light py-5 mt-auto">
   <div class="container">
+    <div class="row mb-4">
+      <div class="col-12">
+        <div class="card border-0 shadow-sm overflow-hidden">
+          <div class="row g-0">
+            <div class="col-lg-5 d-none d-lg-block">
+              <div class="h-100 position-relative newsletter-bg-image">
+                <div class="position-absolute top-0 start-0 w-100 h-100 bg-primary opacity-75"></div>
+                <div
+                  class="position-absolute top-0 start-0 w-100 h-100 d-flex flex-column justify-content-center p-3 text-white">
+                  <div class="mb-1">
+                    <i class="bi bi-envelope-paper fs-2"></i>
+                  </div>
+                  <h4 class="fw-bold mb-1">Maradj naprakész!</h4>
+                  <p class="mb-0 small">Hasznos tippek, akciók és újdonságok egyenesen a postaládádba.</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-7">
+              <div class="card-body p-3 p-lg-4 bg-light">
+                <h5 class="mb-2 d-lg-none">Iratkozz fel hírlevelünkre</h5>
+                <form (ngSubmit)="subscribeNewsletter()" #newsletterForm="ngForm" class="newsletter-form">
+                  <div class="mb-2">
+                    <label for="newsletter-email" class="form-label small fw-medium">E-mail címed</label>
+                    <div class="input-group">
+                      <span class="input-group-text bg-white">
+                        <i class="bi bi-at text-primary"></i>
+                      </span>
+                      <input type="email" class="form-control border-start-0" id="newsletter-email"
+                        placeholder="pelda@email.hu" required name="email" [(ngModel)]="newsletterEmail"
+                        pattern="[a-z0-9._%+\-]+@[a-z0-9\-\.]+\.[a-z]{2,}$" #email="ngModel">
+                    </div>
+                    <div *ngIf="email.invalid && (email.dirty || email.touched)" class="text-danger mt-1 small">
+                      <div *ngIf="email.errors?.['pattern']">Érvénytelen e-mail cím</div>
+                    </div>
+                  </div>
+
+                  <div class="mb-3">
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" id="privacy-agree" required name="privacy"
+                        [(ngModel)]="privacyAccepted">
+                      <label class="form-check-label small" for="privacy-agree">
+                        Elfogadom az <a [routerLink]="['/privacy-policy']" class="text-primary">adatvédelmi
+                          nyilatkozatot</a>
+                      </label>
+                    </div>
+                  </div>
+
+                  <button class="btn btn-primary w-100" type="submit"
+                    [disabled]="newsletterForm.invalid || isSubscribing">
+                    <span *ngIf="isSubscribing" class="spinner-border spinner-border-sm me-2" role="status"
+                      aria-hidden="true"></span>
+                    <i *ngIf="!isSubscribing" class="bi bi-envelope-check me-2"></i>
+                    {{ isSubscribing ? 'Feldolgozás...' : 'Feliratkozás a hírlevélre' }}
+                  </button>
+
+                  <div class="mt-2 text-center small text-muted">
+                    <i class="bi bi-shield-check me-1"></i> Soha nem osztjuk meg az adataidat harmadik féllel.
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="row">
       <div class="col-md-3 mb-4">
         <h5 class="mb-3">Blog</h5>
@@ -20,7 +86,7 @@
         <h5 class="mb-3">Webshop</h5>
         <ul class="list-unstyled">
           <li class="mb-2">
-            <a href="#" class="text-light text-decoration-none">Termékek</a>
+            <a href="/webshop" class="text-light text-decoration-none">Termékek</a>
           </li>
           <li class="mb-2">
             <a href="#" class="text-light text-decoration-none">Újdonságok</a>
@@ -73,52 +139,6 @@
           <a href="#" class="text-light me-3"><i class="bi bi-facebook fs-5"></i></a>
           <a href="#" class="text-light me-3"><i class="bi bi-instagram fs-5"></i></a>
           <a href="#" class="text-light"><i class="bi bi-youtube fs-5"></i></a>
-        </div>
-      </div>
-    </div>
-
-    <div class="row mt-5 mb-4">
-      <div class="col-12">
-        <div class="card bg-dark-subtle border-0 shadow-sm">
-          <div class="card-body p-4">
-            <div class="row align-items-center">
-              <div class="col-lg-6 mb-3 mb-lg-0">
-                <h4 class="text-dark mb-1">Iratkozz fel hírlevelünkre!</h4>
-                <p class="text-muted mb-0">
-                  Értesülj elsőként a legújabb termékekről, akciókról és gyógynövény-tippekről.
-                </p>
-              </div>
-              <div class="col-lg-6">
-                <form (ngSubmit)="subscribeNewsletter()" #newsletterForm="ngForm">
-                  <div class="input-group">
-                    <input type="email" class="form-control form-control-lg" placeholder="E-mail címed"
-                      aria-label="E-mail címed" required name="email" [(ngModel)]="newsletterEmail"
-                      pattern="[a-z0-9._%+\-]+@[a-z0-9\-\.]+\.[a-z]{2,}$" #email="ngModel">
-                      <button 
-                      class="btn btn-primary px-4" 
-                      type="submit"
-                      [disabled]="newsletterForm.invalid || isSubscribing"
-                    >
-                      <span *ngIf="isSubscribing" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-                      <i *ngIf="!isSubscribing" class="bi bi-send me-2"></i>
-                      {{ isSubscribing ? 'Feldolgozás...' : 'Feliratkozás' }}
-                    </button>
-                  </div>
-                  <div *ngIf="email.invalid && (email.dirty || email.touched)" class="text-danger mt-1 small">
-                    <div *ngIf="email.errors?.['pattern']">Érvénytelen e-mail cím</div>
-                  </div>
-                  <div class="form-check mt-2">
-                    <input class="form-check-input" type="checkbox" id="privacy-agree" required name="privacy"
-                      [(ngModel)]="privacyAccepted">
-                    <label class="form-check-label small text-dark" for="privacy-agree">
-                      Elfogadom az <a [routerLink]="['/privacy-policy']" class="text-primary">adatvédelmi
-                        nyilatkozatot</a>
-                    </label>
-                  </div>
-                </form>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
     </div>
