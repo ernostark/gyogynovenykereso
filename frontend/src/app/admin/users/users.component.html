@@ -42,10 +42,15 @@
                         </span>
                     </td>
                     <td *ngIf="isSuperAdmin">
-                        <button class="btn btn-sm" (click)="toggleAdminStatus(user.id)"
-                            [class.btn-danger]="!user.is_admin" [class.btn-warning]="user.is_admin">
-                            {{ user.is_admin ? 'Admin jog elvétele' : 'Admin jog adása' }}
-                        </button>
+                        <div class="d-flex gap-2">
+                            <button class="btn btn-sm" (click)="toggleAdminStatus(user.id)"
+                                [class.btn-danger]="!user.is_admin" [class.btn-warning]="user.is_admin">
+                                {{ user.is_admin ? 'Admin jog elvétele' : 'Admin jog adása' }}
+                            </button>
+                            <button class="btn btn-sm btn-outline-danger" (click)="deleteUser(user.id)">
+                                <i class="bi bi-trash"></i> Törlés
+                            </button>
+                        </div>
                     </td>
                 </tr>
                 <tr *ngIf="users.length === 0">
@@ -78,10 +83,13 @@
                     <div *ngIf="user.address_line_2">{{ user.address_line_2 }}</div>
                 </div>
 
-                <div *ngIf="isSuperAdmin" class="d-grid">
+                <div *ngIf="isSuperAdmin" class="d-grid gap-2">
                     <button class="btn btn-sm" (click)="toggleAdminStatus(user.id)" [class.btn-danger]="!user.is_admin"
                         [class.btn-warning]="user.is_admin">
                         {{ user.is_admin ? 'Admin jog elvétele' : 'Admin jog adása' }}
+                    </button>
+                    <button class="btn btn-sm btn-outline-danger" (click)="deleteUser(user.id)">
+                        <i class="bi bi-trash"></i> Törlés
                     </button>
                 </div>
             </div>

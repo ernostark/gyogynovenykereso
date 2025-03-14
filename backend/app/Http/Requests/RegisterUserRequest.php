@@ -25,7 +25,7 @@ class RegisterUserRequest extends FormRequest
     {
         return [
 
-            "name" => "required|min:3|max:30|regex:/^[\pL\s]+$/u|unique:users,name",
+            "name" => "required|min:3|max:30|regex:/^[\pL\s]+$/u",
             "email" => "required|email|unique:users,email",
             "password" => [
                 "required",
@@ -47,7 +47,6 @@ class RegisterUserRequest extends FormRequest
             "name.min" => "Minimum 3 karakter!",
             "name.max" => "Maximum 30 karakter!",
             "name.regex" => "A név csak betűket tartalmazhat!",
-            "name.unique" => "Hibás felhasználónév!",
             "email.required" => "Email cím megadása kötelező!",
             "email.email" => "Nem valós email cím!",
             "email.unique" => "Hibás email cím!",

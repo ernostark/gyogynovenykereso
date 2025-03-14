@@ -192,4 +192,24 @@ class UserController extends Controller
             'message' => 'Admin jogosultság módosítva!'
         ]);
     }
+
+    public function destroy($id)
+    {
+        try {
+            $user = User::findOrFail($id);
+
+            $user->delete();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Felhasználó sikeresen törölve!'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Hiba történt a felhasználó törlése során!',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
 }
