@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 import { SearchComponent } from './layout/header/search/search.component';
-import { HerbdetailComponent } from './layout/content/detail/post-single-view/post-single-view.component';
+import { PostSingleViewComponent } from './layout/content/detail/post-single-view/post-single-view.component';
 import { PostAccessGuard } from './guards/post-access.guard';
 import { HomeComponent } from './layout/home/home.component';
 import { CategoryDetailComponent } from './layout/content/detail/category-detail/category-detail.component';
@@ -25,7 +25,7 @@ export const routes: Routes = [
   },
   {
     path: 'posts/:id',
-    component: HerbdetailComponent,
+    component: PostSingleViewComponent,
     canActivate: [PostAccessGuard],
   },
   {

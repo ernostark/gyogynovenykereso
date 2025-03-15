@@ -3,20 +3,21 @@ import { ActivatedRoute } from '@angular/router';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { environment } from '../../../../../environments/environment.development';
+import { RelatedProductsComponent } from '../../../../related/related-products/related-products.component';
 
 @Component({
-  selector: 'app-herbdetail',
+  selector: 'app-post-single-view',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RelatedProductsComponent],
   templateUrl: './post-single-view.component.html',
   styleUrl: './post-single-view.component.css',
 })
-export class HerbdetailComponent implements OnInit {
+export class PostSingleViewComponent implements OnInit {
   post: any;
   loading: boolean = true;
   error: string | null = null;
 
-  constructor(private route: ActivatedRoute, private http: HttpClient) {}
+  constructor(private route: ActivatedRoute, private http: HttpClient) { }
 
   ngOnInit() {
     this.route.params.subscribe((params) => {
@@ -46,14 +47,14 @@ export class HerbdetailComponent implements OnInit {
 
   getFormattedDiseases(diseases: string[] | string | null): string {
     if (!diseases) {
-        return 'Nincsenek kapcsolódó betegségek';
+      return 'Nincsenek kapcsolódó betegségek';
     }
 
     if (Array.isArray(diseases)) {
-        return diseases.join(', ');
+      return diseases.join(', ');
     }
 
     return diseases;
-}
+  }
 
 }

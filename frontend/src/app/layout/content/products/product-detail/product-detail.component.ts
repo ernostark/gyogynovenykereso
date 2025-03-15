@@ -2,15 +2,15 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
-import { DomSanitizer } from '@angular/platform-browser';
 import { environment } from '../../../../../environments/environment.development';
+import { RelatedPostsComponent } from '../../../../related/related-posts/related-posts.component';
 
 @Component({
   selector: 'app-product-detail',
   templateUrl: './product-detail.component.html',
   styleUrls: ['./product-detail.component.css'],
   standalone: true,
-  imports: [CommonModule]
+  imports: [CommonModule, RelatedPostsComponent]
 })
 export class ProductDetailComponent implements OnInit {
   product: any = null;
@@ -22,7 +22,6 @@ export class ProductDetailComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private http: HttpClient,
-    private sanitizer: DomSanitizer
   ) { }
 
   ngOnInit(): void {

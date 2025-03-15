@@ -12,9 +12,9 @@ return new class extends Migration {
     {
         Schema::create('products', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('category_id')->nullable()->constrained('product_categories')->nullOnDelete();
+            $table->foreignId('category_id')->nullable();
             $table->string('name');
-            $table->string('slug')->unique();
+            $table->string('slug');
             $table->string('latin_name')->nullable();
             $table->text('description');
             $table->text('usage');
@@ -23,9 +23,9 @@ return new class extends Migration {
             $table->integer('stock_quantity')->default(0);
             $table->string('unit')->default('g');
             $table->boolean('is_available')->default(true);
-            $table->boolean('is_featured')->default(false)->after('is_available');
-            $table->integer('view_count')->default(0)->after('is_featured');
-            $table->integer('sale_count')->default(0)->after('view_count');
+            $table->boolean('is_featured')->default(false);
+            $table->integer('view_count')->default(0);
+            $table->integer('sale_count')->default(0);     
             $table->timestamps();
         });
 

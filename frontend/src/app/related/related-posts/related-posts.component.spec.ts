@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PostSingleViewComponent } from './post-single-view.component';
+import { RelatedPostsComponent } from './related-posts.component';
 
-describe('PostSingleViewComponent', () => {
-  let component: PostSingleViewComponent;
-  let fixture: ComponentFixture<PostSingleViewComponent>;
+describe('RelatedPostsComponent', () => {
+  let component: RelatedPostsComponent;
+  let fixture: ComponentFixture<RelatedPostsComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [PostSingleViewComponent]
+      imports: [RelatedPostsComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(PostSingleViewComponent);
+    fixture = TestBed.createComponent(RelatedPostsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
