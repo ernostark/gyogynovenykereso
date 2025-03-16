@@ -4,13 +4,14 @@ import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { environment } from '../../../../../environments/environment.development';
 import { RelatedPostsComponent } from '../../../../related/related-posts/related-posts.component';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-product-detail',
   templateUrl: './product-detail.component.html',
   styleUrls: ['./product-detail.component.css'],
   standalone: true,
-  imports: [CommonModule, RelatedPostsComponent]
+  imports: [CommonModule, RelatedPostsComponent, FormsModule]
 })
 export class ProductDetailComponent implements OnInit {
   product: any = null;
@@ -18,6 +19,7 @@ export class ProductDetailComponent implements OnInit {
   error: string | null = null;
   storageUrl = environment.storageUrl;
   selectedImageIndex: number = 0;
+  quantity: number = 1;
 
   constructor(
     private route: ActivatedRoute,
@@ -72,5 +74,45 @@ export class ProductDetailComponent implements OnInit {
 
   formatPrice(price: number): string {
     return price ? price.toLocaleString('hu-HU') + ' Ft' : '-';
+  }
+
+  increaseQuantity(): void {
+    if (this.quantity < this.product.stock_quantity) {
+      this.quantity++;
+    }
+  }
+
+  decreaseQuantity(): void {
+    if (this.quantity > 1) {
+      this.quantity--;
+    }
+  }
+
+  validateQuantity(): void {
+    if (this.quantity < 1) {
+      this.quantity = 1;
+    }
+
+    if (this.quantity > this.product.stock_quantity) {
+      this.quantity = this.product.stock_quantity;
+    }
+
+    this.quantity = Math.floor(this.quantity);
+  }
+
+  addToCart(): void {
+    if (this.quantity > 0 && this.quantity <= this.product.stock_quantity) {
+      console.log('Kosárba helyezve:', {
+        productId: this.product.id,
+        name: this.product.name,
+        quantity: this.quantity,
+        unit: this.product.unit,
+        price: this.product.discount_price || this.product.price
+      });
+
+      alert(`Sikeresen hozzáadva a kosárhoz: ${this.quantity} ${this.product.unit} ${this.product.name}`);
+
+      this.quantity = 1;
+    }
   }
 }

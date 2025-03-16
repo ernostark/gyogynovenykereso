@@ -48,13 +48,10 @@
                                     </div>
                                     <p class="mb-4 carousel-description">{{ product.description | slice:0:150 }}{{
                                         product.description.length > 150 ? '...' : '' }}</p>
-                                    <div class="btn-group btn-group-lg">
-                                        <a [routerLink]="['/products', product.id]" class="btn btn-outline-primary">
+                                    <div class="btn">
+                                        <a [routerLink]="['/products', product.id]" class="btn btn-outline-primary btn-lg">
                                             <i class="bi bi-eye me-2"></i> Részletek
-                                        </a>
-                                        <button class="btn btn-primary">
-                                            <i class="bi bi-cart-plus me-2"></i> Kosárba
-                                        </button>
+                                        </a>                                        
                                     </div>
                                     <div class="mt-4 pt-4 border-top d-none d-lg-block">
                                         <div class="row g-3">

@@ -55,18 +55,39 @@
                     <span class="ms-3" *ngIf="product.is_available">
                         <i class="bi bi-box me-1"></i>
                         <span [ngClass]="{'text-danger': product.stock_quantity < 5}">
-                            Készleten: {{ product.stock_quantity }} {{ product.unit }}
+                            <span *ngIf="product.stock_quantity < 10" class="text-danger fw-bold">
+                                Már csak {{ product.stock_quantity }} {{ product.unit }} van készleten!
+                            </span>
+                            <span *ngIf="product.stock_quantity >= 10" class="text-success">
+                                Készleten: {{ product.stock_quantity }} {{ product.unit }}
+                            </span>
                         </span>
                     </span>
                 </div>
             </div>
 
-            <div class="mb-5">
-                <button class="btn btn-primary btn-lg w-100 mb-2"
-                    [disabled]="!product.is_available || product.stock_quantity <= 0">
-                    <i class="bi bi-cart-plus me-2"></i>
-                    Kosárba
-                </button>
+            <div class="row mb-5">
+                <div class="col-md-6 mb-3 mb-md-0">
+                    <label for="quantity" class="form-label">Mennyiség ({{ product.unit }})</label>
+                    <div class="input-group">
+                        <button type="button" class="btn btn-outline-secondary" (click)="decreaseQuantity()"
+                            [disabled]="quantity <= 1">
+                            <i class="bi bi-dash"></i>
+                        </button>
+                        <input type="number" id="quantity" class="form-control text-center" [(ngModel)]="quantity"
+                            min="1" [max]="product.stock_quantity" (change)="validateQuantity()">
+                        <button type="button" class="btn btn-outline-secondary" (click)="increaseQuantity()"
+                            [disabled]="quantity >= product.stock_quantity">
+                            <i class="bi bi-plus"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="col-md-6 d-flex align-items-end">
+                    <button class="btn btn-primary w-100" [disabled]="quantity > product.stock_quantity || quantity < 1"
+                        (click)="addToCart()">
+                        <i class="bi bi-cart-plus me-2"></i>Kosárba
+                    </button>
+                </div>
             </div>
 
             <div class="card mb-4">
