@@ -13,14 +13,15 @@ import {
 import { CommonModule } from '@angular/common';
 import { LogoComponent } from '../logo/logo.component';
 import { SharedService } from '../../../shared/services/shared.service';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
+import { CartDropdownComponent } from "../../../webshop/cart/cart-dropdown/cart-dropdown.component";
 
 declare var bootstrap: any;
 
 @Component({
   standalone: true,
   selector: 'app-auth',
-  imports: [ReactiveFormsModule, CommonModule, FormsModule, LogoComponent, RouterLink],
+  imports: [ReactiveFormsModule, CommonModule, FormsModule, LogoComponent, RouterLink, CartDropdownComponent],
   templateUrl: './auth.component.html',
   styleUrl: './auth.component.css',
 })
@@ -33,7 +34,8 @@ export class AuthComponent implements OnInit {
   constructor(
     private authService: AuthService,
     private fb: FormBuilder,
-    sharedService: SharedService
+    sharedService: SharedService,
+    private router: Router
   ) {
     this.sharedService = sharedService;
     this.isAdminLoggedIn$ = this.sharedService.isAdminLoggedIn$;
@@ -287,6 +289,7 @@ export class AuthComponent implements OnInit {
         sessionStorage.removeItem('auth_token');
 
         this.isLoggedIn = false;
+        this.router.navigate(['/']);
       },
       error: (error) => {
         console.error('Hiba történt a kijelentkezés során:', error);

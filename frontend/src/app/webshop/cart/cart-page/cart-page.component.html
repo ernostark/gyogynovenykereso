@@ -1,0 +1,195 @@
+<div class="container py-5">
+    <div class="row">
+        <div class="col-12">
+            <h1 class="mb-4">Kosár</h1>
+        </div>
+    </div>
+
+    <div *ngIf="loading" class="text-center py-5">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Betöltés...</span>
+        </div>
+        <p class="mt-3 text-muted">Kosár betöltése...</p>
+    </div>
+
+    <div *ngIf="error" class="alert alert-danger">
+        {{ error }}
+    </div>
+
+    <div *ngIf="!loading && cartItems.length === 0 && !error" class="text-center py-5">
+        <div class="mb-4">
+            <i class="bi bi-cart3 display-1 text-muted"></i>
+        </div>
+        <h2 class="mb-3">A kosár üres</h2>
+        <p class="text-muted mb-4">Nézze meg webshopunkat, és adja hozzá a kívánt termékeket a kosárhoz.</p>
+        <a [routerLink]="['/webshop']" class="btn btn-primary btn-lg">
+            <i class="bi bi-shop me-2"></i> Vásárlás folytatása
+        </a>
+    </div>
+
+    <div *ngIf="!loading && cartItems.length > 0 && !error" class="row">
+        <div class="col-lg-8 mb-4 mb-lg-0">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Termékek</h5>
+                    <button class="btn btn-outline-danger btn-sm" (click)="clearCart()">
+                        <i class="bi bi-trash me-1"></i> Kosár ürítése
+                    </button>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th class="ps-4">Termék</th>
+                                    <th>Ár</th>
+                                    <th>Mennyiség</th>
+                                    <th>Összesen</th>
+                                    <th class="text-end pe-4">Műveletek</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let item of cartItems; trackBy: trackById">
+                                    <td class="ps-4">
+                                        <div class="d-flex align-items-center">
+                                            <div class="cart-item-image me-3">
+                                                <img [src]="item.product?.images && item.product.images.length > 0 ? storageUrl + '/storage/' + item.product.images[0].image_url : '/assets/img/placeholder-product.jpg'"
+                                                    [alt]="item.product?.name || 'Termék'" class="img-fluid rounded">
+
+                                            </div>
+                                            <div>
+                                                <h6 class="mb-0">{{ item.product?.name }}</h6>
+                                                <small class="text-muted" *ngIf="item.product?.latin_name">
+                                                    {{ item.product?.latin_name }}
+                                                </small>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div *ngIf="item.discount_price" class="d-flex flex-column">
+                                            <span class="text-danger fw-bold">
+                                                {{ formatPrice(item.discount_price) }}
+                                            </span>
+                                            <span class="text-decoration-line-through text-muted small">
+                                                {{ formatPrice(item.unit_price) }}
+                                            </span>
+                                            <span class="badge bg-danger mt-1 d-inline-block">
+                                                -{{ getDiscountPercentage(item.unit_price, item.discount_price) }}%
+                                            </span>
+                                        </div>
+                                        <div *ngIf="!item.discount_price">
+                                            {{ formatPrice(item.unit_price) }}
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="input-group input-group-sm cart-quantity">
+                                            <button class="btn btn-outline-secondary" (click)="decreaseQuantity(item)"
+                                                [disabled]="item.quantity <= 1">
+                                                <i class="bi bi-dash"></i>
+                                            </button>
+                                            <input type="number" class="form-control text-center"
+                                                [value]="item.quantity" (change)="handleQuantityChange(item, $event)"
+                                                min="1" [max]="item.product?.stock_quantity">
+                                            <button class="btn btn-outline-secondary" (click)="increaseQuantity(item)"
+                                                [disabled]="item.quantity >= item.product?.stock_quantity">
+                                                <i class="bi bi-plus"></i>
+                                            </button>
+                                        </div>
+                                        <small class="d-block text-muted mt-1">
+                                            {{ item.product?.unit }}
+                                        </small>
+                                        <div *ngIf="item.product?.stock_quantity < 10"
+                                            class="stock-warning mt-2 d-flex align-items-center">
+                                            <i class="bi bi-exclamation-triangle-fill text-warning me-2"></i>
+                                            <span class="small">Csak <strong>{{ item.product?.stock_quantity }} {{
+                                                    item.product?.unit }}</strong> van készleten!</span>
+                                        </div>
+                                    </td>
+                                    <td class="fw-bold">
+                                        {{ formatPrice((item.discount_price ? item.discount_price : item.unit_price) *
+                                        item.quantity) }}
+                                    </td>
+                                    <td class="text-end pe-4">
+                                        <button class="btn btn-sm btn-outline-danger" (click)="removeItem(item)">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="card-footer bg-white text-end py-3">
+                    <a [routerLink]="['/webshop']" class="btn btn-outline-primary">
+                        <i class="bi bi-arrow-left me-1"></i> Vásárlás folytatása
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-white py-3">
+                    <h5 class="mb-0">Összesítés</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Részösszeg:</span>
+                        <span>{{ formatPrice(subtotal) }}</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-3">
+                        <span>Szállítási költség:</span>
+                        <span *ngIf="shippingCost > 0">{{ formatPrice(shippingCost) }}</span>
+                        <span *ngIf="shippingCost === 0" class="text-success">Ingyenes</span>
+                    </div>
+                    <hr>
+                    <div class="d-flex justify-content-between mb-3">
+                        <span class="fw-bold">Fizetendő összeg:</span>
+                        <span class="fw-bold fs-5">{{ formatPrice(totalAmount) }}</span>
+                    </div>
+
+                    <a [routerLink]="['/checkout']" class="btn btn-primary btn-lg w-100">
+                        Tovább a pénztárhoz
+                    </a>
+                </div>
+            </div>
+
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <div *ngIf="subtotal < freeShippingThreshold" class="mb-3">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="text-muted">Ingyenes szállításig még:</span>
+                            <span class="text-primary fw-bold">{{ formatPrice(getFreeShippingRemainder()) }}</span>
+                        </div>
+                        <div class="progress" style="height: 10px;">
+                            <div class="progress-bar bg-primary" [style.width.%]="getFreeShippingProgress()"></div>
+                        </div>
+                        <small class="text-muted d-block mt-2">
+                            {{ formatPrice(freeShippingThreshold) }} felett ingyenes szállítás
+                        </small>
+                    </div>
+
+                    <div *ngIf="subtotal >= freeShippingThreshold" class="alert alert-success mb-3">
+                        <i class="bi bi-check-circle-fill me-2"></i>
+                        Az Ön kosara jogosult az ingyenes szállításra!
+                    </div>
+
+                    <div class="shipping-info">
+                        <div class="d-flex align-items-center mb-2">
+                            <i class="bi bi-truck text-primary me-2"></i>
+                            <span>2-3 munkanapos szállítás</span>
+                        </div>
+                        <div class="d-flex align-items-center mb-2">
+                            <i class="bi bi-shield-check text-primary me-2"></i>
+                            <span>Biztonságos fizetés</span>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <i class="bi bi-arrow-return-left text-primary me-2"></i>
+                            <span>14 napos visszatérítési garancia</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

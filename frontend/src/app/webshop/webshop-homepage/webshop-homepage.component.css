@@ -65,3 +65,10 @@
     z-index: -1;
     border-radius: 0.375rem;
 }
+.hover-scale {
+    transition: transform 0.3s ease;
+}
+
+.hover-scale:hover {
+    transform: translateY(-5px);
+}

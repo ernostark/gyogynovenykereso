@@ -1,0 +1,143 @@
+<div class="container-fluid py-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="mb-0">Szállítási módok</h2>
+    <button class="btn btn-primary" (click)="showAddForm()">
+      <i class="bi bi-plus-circle me-2"></i>Új szállítási mód
+    </button>
+  </div>
+
+  <div *ngIf="error" class="alert alert-danger alert-dismissible fade show" role="alert">
+    {{ error }}
+    <button type="button" class="btn-close" (click)="error = null"></button>
+  </div>
+
+  <div *ngIf="success" class="alert alert-success alert-dismissible fade show" role="alert">
+    {{ success }}
+    <button type="button" class="btn-close" (click)="success = null"></button>
+  </div>
+
+  <div *ngIf="showForm" class="card mb-4 border-0 shadow-sm">
+    <div class="card-header bg-white py-3">
+      <h5 class="mb-0">{{ editingId ? 'Szállítási mód szerkesztése' : 'Új szállítási mód' }}</h5>
+    </div>
+    <div class="card-body">
+      <form [formGroup]="methodForm" (ngSubmit)="saveMethod()">
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label for="name" class="form-label">Név *</label>
+            <input type="text" class="form-control" id="name" formControlName="name" placeholder="Szállítási mód neve">
+            <div *ngIf="methodForm.get('name')?.touched && methodForm.get('name')?.invalid" class="text-danger mt-1">
+              <small *ngIf="methodForm.get('name')?.errors?.['required']">A név megadása kötelező</small>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <label for="cost" class="form-label">Költség (Ft) *</label>
+            <input type="number" class="form-control" id="cost" formControlName="cost" min="0" step="100">
+            <div *ngIf="methodForm.get('cost')?.touched && methodForm.get('cost')?.invalid" class="text-danger mt-1">
+              <small *ngIf="methodForm.get('cost')?.errors?.['required']">A költség megadása kötelező</small>
+              <small *ngIf="methodForm.get('cost')?.errors?.['min']">A költség nem lehet negatív</small>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <label for="estimated_delivery_days" class="form-label">Szállítási idő (munkanap) *</label>
+            <input type="number" class="form-control" id="estimated_delivery_days"
+              formControlName="estimated_delivery_days" min="1">
+            <div
+              *ngIf="methodForm.get('estimated_delivery_days')?.touched && methodForm.get('estimated_delivery_days')?.invalid"
+              class="text-danger mt-1">
+              <small *ngIf="methodForm.get('estimated_delivery_days')?.errors?.['required']">A szállítási idő megadása
+                kötelező</small>
+              <small *ngIf="methodForm.get('estimated_delivery_days')?.errors?.['min']">A szállítási idő legalább 1
+                nap</small>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <label for="is_active" class="form-label d-block">Állapot</label>
+            <div class="form-check form-switch">
+              <input class="form-check-input" type="checkbox" id="is_active" formControlName="is_active">
+              <label class="form-check-label" for="is_active">
+                {{ methodForm.get('is_active')?.value ? 'Aktív' : 'Inaktív' }}
+              </label>
+            </div>
+          </div>
+          <div class="col-12">
+            <label for="description" class="form-label">Leírás</label>
+            <textarea class="form-control" id="description" formControlName="description" rows="3"
+              placeholder="Szállítási mód leírása"></textarea>
+          </div>
+          <div class="col-12 mt-4">
+            <div class="d-flex gap-2">
+              <button type="submit" class="btn btn-primary" [disabled]="isLoading">
+                <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2" role="status"
+                  aria-hidden="true"></span>
+                Mentés
+              </button>
+              <button type="button" class="btn btn-outline-secondary" (click)="cancelEdit()">Mégse</button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div *ngIf="isLoading && !showForm" class="text-center py-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Betöltés...</span>
+    </div>
+    <p class="mt-3 text-muted">Adatok betöltése...</p>
+  </div>
+
+  <div class="card border-0 shadow-sm">
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table table-hover mb-0">
+          <thead class="bg-light">
+            <tr>
+              <th scope="col" class="py-3">#</th>
+              <th scope="col" class="py-3">Név</th>
+              <th scope="col" class="py-3">Leírás</th>
+              <th scope="col" class="py-3">Költség</th>
+              <th scope="col" class="py-3">Szállítási idő</th>
+              <th scope="col" class="py-3">Állapot</th>
+              <th scope="col" class="py-3">Műveletek</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let method of shippingMethods">
+              <td>{{ method.id }}</td>
+              <td>{{ method.name }}</td>
+              <td>{{ method.description || '-' }}</td>
+              <td>{{ formatPrice(method.cost) }}</td>
+              <td>{{ method.estimated_delivery_days }} munkanap</td>
+              <td>
+                <span class="badge" [ngClass]="method.is_active ? 'bg-success' : 'bg-secondary'">
+                  {{ method.is_active ? 'Aktív' : 'Inaktív' }}
+                </span>
+              </td>
+              <td>
+                <div class="btn-group">
+                  <button class="btn btn-sm btn-outline-primary" (click)="editMethod(method)">
+                    <i class="bi bi-pencil"></i>
+                  </button>
+                  <button class="btn btn-sm btn-outline-danger" (click)="deleteMethod(method.id!)">
+                    <i class="bi bi-trash"></i>
+                  </button>
+                  <button class="btn btn-sm"
+                    [ngClass]="method.is_active ? 'btn-outline-secondary' : 'btn-outline-success'"
+                    (click)="toggleActive(method)" [title]="method.is_active ? 'Deaktiválás' : 'Aktiválás'">
+                    <i class="bi" [ngClass]="method.is_active ? 'bi-toggle-on' : 'bi-toggle-off'"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+            <tr *ngIf="!isLoading && shippingMethods.length === 0">
+              <td colspan="7" class="text-center py-4">
+                <p class="text-muted mb-0">Nincsenek szállítási módok az adatbázisban</p>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

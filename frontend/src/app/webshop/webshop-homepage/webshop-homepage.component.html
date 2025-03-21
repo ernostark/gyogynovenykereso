@@ -48,10 +48,14 @@
                                     </div>
                                     <p class="mb-4 carousel-description">{{ product.description | slice:0:150 }}{{
                                         product.description.length > 150 ? '...' : '' }}</p>
-                                    <div class="btn">
-                                        <a [routerLink]="['/products', product.id]" class="btn btn-outline-primary btn-lg">
-                                            <i class="bi bi-eye me-2"></i> Részletek
-                                        </a>                                        
+                                    <div class="btn-group w-100">
+                                        <a [routerLink]="['/products', product.id]" class="btn btn-outline-primary">
+                                            <i class="bi bi-eye me-1"></i> Részletek
+                                        </a>
+                                        <button class="btn btn-primary btn-sm" [disabled]="product.stock_quantity < 1"
+                                            (click)="addToCart(product, 1)">
+                                            <i class="bi bi-cart-plus me-1"></i> Kosárba
+                                        </button>
                                     </div>
                                     <div class="mt-4 pt-4 border-top d-none d-lg-block">
                                         <div class="row g-3">
@@ -142,7 +146,8 @@
                                 <a [routerLink]="['/products', product.id]" class="btn btn-outline-primary">
                                     <i class="bi bi-eye me-1"></i> Részletek
                                 </a>
-                                <button class="btn btn-primary">
+                                <button class="btn btn-primary btn-sm" [disabled]="product.stock_quantity < 1"
+                                    (click)="addToCart(product, 1)">
                                     <i class="bi bi-cart-plus me-1"></i> Kosárba
                                 </button>
                             </div>
@@ -278,7 +283,8 @@
                                     <a [routerLink]="['/products', product.id]" class="btn btn-outline-primary">
                                         <i class="bi bi-eye me-1"></i> Részletek
                                     </a>
-                                    <button class="btn btn-primary">
+                                    <button class="btn btn-primary btn-sm" [disabled]="product.stock_quantity < 1"
+                                        (click)="addToCart(product, 1)">
                                         <i class="bi bi-cart-plus me-1"></i> Kosárba
                                     </button>
                                 </div>
@@ -291,12 +297,15 @@
     </div>
 </div>
 
-<style>
-    .hover-scale {
-        transition: transform 0.3s ease;
-    }
-
-    .hover-scale:hover {
-        transform: translateY(-5px);
-    }
-</style>
+<div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+    <div *ngIf="toastMessage" class="toast align-items-center text-bg-success border-0 show" role="alert"
+        aria-live="assertive" aria-atomic="true">
+        <div class="d-flex">
+            <div class="toast-body">
+                {{ toastMessage }}
+            </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+                aria-label="Close" (click)="closeToast()"></button>
+        </div>
+    </div>
+</div>

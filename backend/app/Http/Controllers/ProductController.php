@@ -98,6 +98,8 @@ class ProductController extends Controller
         try {
             $product = Product::with(['category', 'images'])->findOrFail($id);
 
+            $product->increment('view_count');
+
             return response()->json($product);
         } catch (\Exception $e) {
             return response()->json([
