@@ -1,13 +1,23 @@
 <?php
 
+use App\Http\Controllers\Admin\PaymentMethodController;
+use App\Http\Controllers\Admin\ShippingMethodController;
+use App\Http\Controllers\Admin\AdminOrderController;
+use App\Http\Controllers\admin\StatisticsController;
 use App\Http\Controllers\AdminAuthController;
+use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\NewsletterController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProductCategoryController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\User\OrderController;
 use App\Http\Controllers\UserController;
+use App\Models\OrderStatus;
+use App\Models\PaymentMethod;
+use App\Models\ShippingMethod;
 use Illuminate\Support\Facades\Route;
 
 Route::controller(UserController::class)->group(function () {
@@ -16,6 +26,9 @@ Route::controller(UserController::class)->group(function () {
     Route::post('/logout', 'logout')->middleware('auth:sanctum');
     Route::put('/profile', 'updateProfile')->middleware('auth:sanctum');
     Route::get('/getprofile', 'getProfile')->middleware('auth:sanctum');
+
+    Route::get('/orders', [OrderController::class, 'index'])->middleware('auth:sanctum');
+    Route::get('/orders/{id}', [OrderController::class, 'show'])->middleware('auth:sanctum');
 });
 
 Route::post('/admin/login', [AdminAuthController::class, 'login']);
@@ -49,7 +62,30 @@ Route::middleware(['auth:sanctum'])->prefix('admin')->group(function () {
         Route::put('/messages/{id}/read', 'markAsRead');
         Route::delete('/messages/{id}', 'destroy');
     });
-    
+
+    Route::controller(ShippingMethodController::class)->group(function () {
+        Route::get('/shipping-methods', 'index');
+        Route::post('/shipping-methods', 'store');
+        Route::put('/shipping-methods/{id}', 'update');
+        Route::delete('/shipping-methods/{id}', 'destroy');
+        Route::put('/shipping-methods/{id}/toggle-active', 'toggleActive');
+    });
+
+    Route::controller(PaymentMethodController::class)->group(function () {
+        Route::get('/payment-methods', 'index');
+        Route::post('/payment-methods', 'store');
+        Route::put('/payment-methods/{id}', 'update');
+        Route::delete('/payment-methods/{id}', 'destroy');
+        Route::put('/payment-methods/{id}/toggle-active', 'toggleActive');
+    });
+
+    Route::controller(AdminOrderController::class)->group(function () {
+        Route::get('/orders', 'index');
+        Route::get('/orders/{id}', 'show');
+        Route::post('/orders/{id}/status', 'updateStatus');
+        Route::get('/order-statuses', 'getStatuses');
+    });
+
     Route::get('/check-super-admin', [UserController::class, 'checkSuperAdmin']);
     Route::post('/users/{userId}/toggle-admin', [UserController::class, 'toggleAdminStatus']);
     Route::get('/users', [UserController::class, 'index']);
@@ -58,6 +94,12 @@ Route::middleware(['auth:sanctum'])->prefix('admin')->group(function () {
     Route::get('/newsletter/subscribers', [NewsletterController::class, 'index']);
     Route::delete('/newsletter/subscribers/{id}', [NewsletterController::class, 'destroy']);
     Route::post('/newsletter/subscribers/{id}/toggle-status', [NewsletterController::class, 'toggleStatus']);
+
+    Route::get('/orders', [AdminOrderController::class, 'index'])->name('orders.index');
+    Route::get('/orders/{id}', [AdminOrderController::class, 'show'])->name('orders.show');
+    Route::post('/orders/{id}/status', [AdminOrderController::class, 'updateStatus'])->name('orders.updateStatus');
+
+    Route::get('/product-statistics', [StatisticsController::class, 'getProductStatistics']);
 });
 
 Route::get('posts/featured', [PostController::class, 'getFeaturedPosts']);
@@ -81,3 +123,27 @@ Route::get('/products', [ProductController::class, 'index']);
 Route::get('/products/{id}', [ProductController::class, 'show']);
 
 Route::post('/newsletter/subscribe', [NewsletterController::class, 'subscribe']);
+
+Route::get('/cart', [CartController::class, 'index']);
+Route::post('/cart/items', [CartController::class, 'addItem']);
+Route::put('/cart/items/{id}', [CartController::class, 'updateItem']);
+Route::delete('/cart/items/{id}', [CartController::class, 'removeItem']);
+Route::delete('/cart', [CartController::class, 'clear']);
+
+Route::post('/checkout', [CheckoutController::class, 'checkout']);
+
+Route::get('/shipping-methods', function () {
+    return ShippingMethod::where('is_active', true)
+        ->orderBy('name')
+        ->get();
+});
+Route::get('/payment-methods', function () {
+    return PaymentMethod::where('is_active', true)
+        ->orderBy('sort_order')
+        ->orderBy('name')
+        ->get();
+});
+
+Route::get('/order-statuses', function () {
+    return OrderStatus::orderBy('sort_order')->get();
+});

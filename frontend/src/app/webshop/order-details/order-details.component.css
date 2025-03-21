@@ -1,0 +1,46 @@
+.timeline {
+    position: relative;
+    padding-left: 30px;
+}
+
+.timeline::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 15px;
+    height: 100%;
+    width: 2px;
+    background: #e9ecef;
+}
+
+.timeline-item {
+    position: relative;
+    margin-bottom: 15px;
+}
+
+.timeline-marker {
+    position: absolute;
+    left: -30px;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    background: #6c757d;
+    border: 2px solid white;
+}
+
+.timeline-content {
+    padding-bottom: 15px;
+}
+
+.status-step {
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.status-step.completed {
+    color: #198754;
+}
+
+.status-step.active {
+    font-weight: bold;
+}

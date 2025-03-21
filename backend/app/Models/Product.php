@@ -30,6 +30,7 @@ class Product extends Model
         'is_available' => 'boolean',
         'stock_quantity' => 'integer',
     ];
+    protected $appends = ['primary_image'];
 
     public function category()
     {

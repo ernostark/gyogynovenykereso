@@ -1,0 +1,72 @@
+<div class="cart-item" [class.compact]="compact">
+  <div class="d-flex align-items-center">
+    <div class="cart-item-image me-3">
+      <img
+        [src]="storageUrl + '/storage/' + (item.product?.primary_image?.image_url || (item.product?.images && item.product.images.length > 0 ? item.product.images[0].image_url : ''))"
+        [alt]="item.product?.name || 'Termék'" class="img-fluid rounded"
+        onerror="this.src='assets/img/placeholder-product.jpg'">
+    </div>
+    <div class="cart-item-details">
+      <h6 class="mb-0">{{ item.product?.name }}</h6>
+      <small class="text-muted" *ngIf="item.product?.latin_name">
+        {{ item.product?.latin_name }}
+      </small>
+
+      <div *ngIf="!compact" class="cart-item-price mt-2">
+        <div *ngIf="item.discount_price" class="d-flex flex-column">
+          <span class="text-danger fw-bold">
+            {{ formatPrice(item.discount_price) }}
+          </span>
+          <span class="text-decoration-line-through text-muted small">
+            {{ formatPrice(item.unit_price) }}
+          </span>
+          <span class="badge bg-danger mt-1 d-inline-block">
+            -{{ getDiscountPercentage() }}%
+          </span>
+        </div>
+        <div *ngIf="!item.discount_price">
+          {{ formatPrice(item.unit_price) }}
+        </div>
+      </div>
+
+      <div *ngIf="compact" class="cart-item-price-compact">
+        <span *ngIf="item.discount_price" class="text-danger">
+          {{ formatPrice(item.discount_price) }}
+        </span>
+        <span *ngIf="!item.discount_price">
+          {{ formatPrice(item.unit_price) }}
+        </span>
+        <span *ngIf="item.discount_price" class="text-decoration-line-through text-muted ms-2 small">
+          {{ formatPrice(item.unit_price) }}
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <div class="cart-item-actions d-flex" *ngIf="showActions">
+    <div class="quantity-controls d-flex align-items-center">
+      <div class="input-group input-group-sm cart-quantity">
+        <button class="btn btn-outline-secondary" (click)="decreaseQuantity()" [disabled]="item.quantity <= 1">
+          <i class="bi bi-dash"></i>
+        </button>
+        <input type="number" class="form-control text-center" [value]="item.quantity"
+          (change)="handleQuantityChange($event)" min="1" [max]="item.product?.stock_quantity">
+        <button class="btn btn-outline-secondary" (click)="increaseQuantity()"
+          [disabled]="item.quantity >= item.product?.stock_quantity">
+          <i class="bi bi-plus"></i>
+        </button>
+      </div>
+      <span class="text-muted ms-2">
+        {{ item.product?.unit }}
+      </span>
+    </div>
+
+    <div class="subtotal text-end ms-auto">
+      <span class="fw-bold">{{ formatPrice(getItemSubtotal()) }}</span>
+
+      <button *ngIf="showRemove" class="btn btn-sm btn-outline-danger ms-3" (click)="removeItem()">
+        <i class="bi bi-trash"></i>
+      </button>
+    </div>
+  </div>
+</div>

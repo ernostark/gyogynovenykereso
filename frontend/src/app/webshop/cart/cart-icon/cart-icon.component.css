@@ -1,0 +1,36 @@
+.btn {
+    padding: 0.5rem 0.75rem;
+    background-color: transparent;
+    border-color: rgba(255, 255, 255, 0.5);
+    color: white;
+    margin-left: 0.5rem;
+}
+
+.btn:hover {
+    background-color: var(--bs-primary);
+    border-color: var(--bs-primary);
+    color: white;
+    transition: all 0.3s ease;
+}
+
+.badge {
+    font-size: 0.65rem;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.2);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+.badge {
+    animation: pulse 0.5s ease-out;
+}

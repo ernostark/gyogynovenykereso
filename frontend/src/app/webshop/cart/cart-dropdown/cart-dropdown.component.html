@@ -1,0 +1,45 @@
+<div class="cart-dropdown-container position-relative">
+    <button class="btn btn-outline-primary cart-icon" (click)="toggleDropdown($event)">
+        <i class="bi bi-cart3"></i>
+        <span class="visually-hidden">Kosár</span>
+        <span *ngIf="totalItems > 0"
+            class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+            {{ totalItems }}
+        </span>
+    </button>
+
+    <div class="cart-dropdown position-absolute end-0" [class.show]="isOpen">
+        <div class="cart-dropdown-header">
+            <h6 class="mb-0">Kosár <span *ngIf="totalItems > 0">({{ totalItems }} termék)</span></h6>
+            <button class="btn-close" aria-label="Close" (click)="closeDropdown()"></button>
+        </div>
+
+        <div class="cart-dropdown-body">
+            <div *ngIf="cartItems.length === 0" class="empty-cart text-center py-4">
+                <i class="bi bi-cart3 display-4 text-muted"></i>
+                <p class="mt-3 mb-0">A kosár üres</p>
+            </div>
+
+            <div *ngIf="cartItems.length > 0" class="cart-items">
+                <app-cart-item *ngFor="let item of cartItems" [item]="item" [compact]="true"
+                    (quantityChanged)="updateQuantity($event.item, $event.quantity)"
+                    (itemRemoved)="removeItem($event)"></app-cart-item>
+            </div>
+        </div>
+
+        <div *ngIf="cartItems.length > 0" class="cart-dropdown-footer">
+            <div class="cart-subtotal d-flex justify-content-between">
+                <span>Részösszeg:</span>
+                <strong>{{ formatPrice(subtotal) }}</strong>
+            </div>
+            <div class="cart-actions">
+                <a [routerLink]="['/cart']" class="btn btn-outline-primary btn-sm w-100 mb-2" (click)="closeDropdown()">
+                    Kosár részletei
+                </a>
+                <a [routerLink]="['/checkout']" class="btn btn-primary btn-sm w-100" (click)="closeDropdown()">
+                    Tovább a pénztárhoz
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

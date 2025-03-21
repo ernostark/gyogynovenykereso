@@ -1,0 +1,167 @@
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="mb-0">Termék statisztikák</h2>
+        <button class="btn btn-outline-primary" (click)="loadStatistics()">
+            <i class="bi bi-arrow-clockwise me-2"></i>Frissítés
+        </button>
+    </div>
+
+    <div *ngIf="isLoading" class="text-center py-5">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Betöltés...</span>
+        </div>
+        <p class="mt-3 text-muted">Statisztikák betöltése...</p>
+    </div>
+
+    <div *ngIf="!isLoading && !statistics.totalViews" class="alert alert-warning">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+        Nem sikerült betölteni a statisztikákat. Kérjük, próbáld újra később.
+    </div>
+
+    <div *ngIf="!isLoading && statistics.totalViews" class="row mb-4">
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body text-center py-4">
+                    <div class="mb-3">
+                        <i class="bi bi-eye" style="font-size: 2rem; color: #3B82F6;"></i>
+                    </div>
+                    <h5 class="text-muted mb-2">Összes megtekintés</h5>
+                    <h2 class="mb-0">{{ statistics.totalViews }}</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body text-center py-4">
+                    <div class="mb-3">
+                        <i class="bi bi-bag-check" style="font-size: 2rem; color: #10B981;"></i>
+                    </div>
+                    <h5 class="text-muted mb-2">Összes eladás</h5>
+                    <h2 class="mb-0">{{ statistics.totalSales }}</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body text-center py-4">
+                    <div class="mb-3">
+                        <i class="bi bi-star" style="font-size: 2rem; color: #F59E0B;"></i>
+                    </div>
+                    <h5 class="text-muted mb-2">Legtöbbet nézett</h5>
+                    <h3 class="mb-0" *ngIf="statistics.topViewedProducts && statistics.topViewedProducts.length > 0">
+                        {{ statistics.topViewedProducts[0]?.name }}
+                    </h3>
+                    <p class="text-muted mb-0"
+                        *ngIf="statistics.topViewedProducts && statistics.topViewedProducts.length > 0">
+                        {{ statistics.topViewedProducts[0]?.view_count }} megtekintés
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body text-center py-4">
+                    <div class="mb-3">
+                        <i class="bi bi-award" style="font-size: 2rem; color: #EC4899;"></i>
+                    </div>
+                    <h5 class="text-muted mb-2">Legtöbbet eladott</h5>
+                    <h3 class="mb-0" *ngIf="statistics.topSoldProducts && statistics.topSoldProducts.length > 0">
+                        {{ statistics.topSoldProducts[0]?.name }}
+                    </h3>
+                    <p class="text-muted mb-0"
+                        *ngIf="statistics.topSoldProducts && statistics.topSoldProducts.length > 0">
+                        {{ statistics.topSoldProducts[0]?.sale_count }} eladás
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="!isLoading && statistics.totalViews" class="row">
+        <div class="col-md-6 mb-4">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-header bg-white py-3 border-0">
+                    <h5 class="mb-0">Top termékek megtekintés szerint</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="viewsChart" width="400" height="300"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 mb-4">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-header bg-white py-3 border-0">
+                    <h5 class="mb-0">Top termékek eladás szerint</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="salesChart" width="400" height="300"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="!isLoading && statistics.totalViews" class="row">
+        <div class="col-md-6 mb-4">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-header bg-white py-3 border-0">
+                    <h5 class="mb-0">Legtöbbet nézett termékek</h5>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead class="bg-light">
+                                <tr>
+                                    <th scope="col" class="py-3">#</th>
+                                    <th scope="col" class="py-3">Termék</th>
+                                    <th scope="col" class="py-3">Megtekintések</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let product of statistics.topViewedProducts; let i = index">
+                                    <td class="py-3">{{ i + 1 }}</td>
+                                    <td class="py-3">{{ product.name }}</td>
+                                    <td class="py-3">{{ product.view_count }}</td>
+                                </tr>
+                                <tr *ngIf="!statistics.topViewedProducts || statistics.topViewedProducts.length === 0">
+                                    <td colspan="3" class="text-center py-4">Nincs megjeleníthető adat</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 mb-4">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-header bg-white py-3 border-0">
+                    <h5 class="mb-0">Legtöbbet eladott termékek</h5>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead class="bg-light">
+                                <tr>
+                                    <th scope="col" class="py-3">#</th>
+                                    <th scope="col" class="py-3">Termék</th>
+                                    <th scope="col" class="py-3">Eladások</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let product of statistics.topSoldProducts; let i = index">
+                                    <td class="py-3">{{ i + 1 }}</td>
+                                    <td class="py-3">{{ product.name }}</td>
+                                    <td class="py-3">{{ product.sale_count }}</td>
+                                </tr>
+                                <tr *ngIf="!statistics.topSoldProducts || statistics.topSoldProducts.length === 0">
+                                    <td colspan="3" class="text-center py-4">Nincs megjeleníthető adat</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

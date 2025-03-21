@@ -5,6 +5,7 @@ import { ActivatedRoute, Router, RouterLink, Params } from '@angular/router';
 import { FindPrimaryImagePipe } from '../../admin/products/products.component';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { CartService } from '../../shared/services/cart-service.service';
 
 declare var bootstrap: any;
 
@@ -17,6 +18,7 @@ declare var bootstrap: any;
 })
 export class WebshopHomepage implements OnInit, AfterViewInit {
   products: any[] = [];
+  product: any = null;
   filteredProducts: any[] = [];
   categories: any[] = [];
   featuredProducts: any[] = [];
@@ -26,11 +28,14 @@ export class WebshopHomepage implements OnInit, AfterViewInit {
   selectedCategory: string | null = null;
   searchTerm: string = '';
   sortOption: string = 'newest';
+  toastMessage: string | null = null;
+  quantity: number = 1;
 
   constructor(
     private http: HttpClient,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private cartService: CartService
   ) { }
 
   ngOnInit(): void {
@@ -40,6 +45,18 @@ export class WebshopHomepage implements OnInit, AfterViewInit {
       this.loadProducts();
       this.loadCategories();
     });
+  }
+
+  showToast(message: string): void {
+    this.toastMessage = message;
+
+    setTimeout(() => {
+      this.toastMessage = null;
+    }, 5000);
+  }
+
+  closeToast(): void {
+    this.toastMessage = null;
   }
 
   ngAfterViewInit() {
@@ -53,6 +70,38 @@ export class WebshopHomepage implements OnInit, AfterViewInit {
         });
       }
     }, 1000);
+  }
+
+  addToCart(product: any, quantity: number = 1): void {
+    if (!product) {
+      return;
+    }
+
+    if (product.stock_quantity < quantity) {
+      this.showToast('Nincs elegendő készleten!');
+      return;
+    }
+
+    this.cartService.addToCart(product.id, quantity).subscribe({
+      next: (response) => {
+        if (response.success) {
+          this.showToast('A termék sikeresen a kosárba került!');
+        } else {
+          this.showToast(response.message || 'Hiba történt a kosárba helyezés során.');
+        }
+      },
+      error: (err) => {
+        console.error('Kosárba helyezési hiba:', err);
+        this.showToast('Hiba történt a kosárba helyezés során. Kérjük, próbálja újra később!');
+      }
+    });
+  }
+
+  addToCartFromDetail(): void {
+    if (!this.product) {
+      return;
+    }
+    this.addToCart(this.product, this.quantity);
   }
 
   loadProducts(): void {

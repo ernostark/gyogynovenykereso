@@ -1,0 +1,190 @@
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <div>
+        <h2 class="mb-0">Rendelés részletei</h2>
+        <p class="text-muted mb-0" *ngIf="order">Rendelés azonosító: {{ order.order_number }}</p>
+      </div>
+      <a routerLink="/orders" class="btn btn-outline-secondary">
+        <i class="bi bi-arrow-left me-2"></i>Vissza a rendeléseimhez
+      </a>
+    </div>
+  
+    <div *ngIf="isLoading" class="text-center py-5">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Betöltés...</span>
+      </div>
+      <p class="mt-3 text-muted">Rendelés adatok betöltése...</p>
+    </div>
+  
+    <div *ngIf="!isLoading && order" class="card border-0 shadow-sm mb-4">
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center">
+          <div>
+            <span class="text-muted">Rendelés állapota:</span>
+            <h5 class="mb-0 mt-1">
+              <span class="badge" [style.background-color]="order.status.color">
+                {{ order.status.name }}
+              </span>
+            </h5>
+          </div>
+          <div class="text-end">
+            <span class="text-muted">Rendelés dátuma:</span>
+            <div>{{ order.created_at | date:'yyyy. MM. dd. HH:mm' }}</div>
+          </div>
+        </div>
+        <div class="mt-4">
+          <div class="progress position-relative" style="height: 30px;">
+            <div class="progress-bar" 
+                 [style.width]="getStatusProgress() + '%'"
+                 [style.background-color]="order.status.color">
+            </div>
+            <div class="position-absolute w-100 h-100 d-flex justify-content-between align-items-center px-2">
+              <span *ngFor="let status of getOrderStatusSteps(); let i = index" 
+                    class="status-step" 
+                    [class.completed]="isStatusCompleted(status.id)"
+                    [class.active]="isStatusActive(status.id)"
+                    [style.color]="isStatusActive(status.id) ? 'white' : 'inherit'">
+                {{ i + 1 }}. {{ status.name }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <div *ngIf="!isLoading && order" class="row">
+      <div class="col-md-6 mb-4">
+        <div class="card border-0 shadow-sm h-100">
+          <div class="card-header bg-white py-3">
+            <h5 class="mb-0">Szállítási és fizetési adatok</h5>
+          </div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-6">
+                <h6>Szállítási cím</h6>
+                <address>
+                  {{ order.shipping_name }}<br>
+                  {{ order.shipping_postal_code }} {{ order.shipping_city }}<br>
+                  {{ order.shipping_street }}
+                  <div *ngIf="order.shipping_address_line_2">
+                    {{ order.shipping_address_line_2 }}
+                  </div>
+                  <div *ngIf="order.shipping_phone">
+                    <abbr title="Telefon">Tel:</abbr> {{ order.shipping_phone }}
+                  </div>
+                </address>
+              </div>
+              <div class="col-md-6">
+                <h6>Számlázási cím</h6>
+                <address>
+                  {{ order.billing_name }}<br>
+                  {{ order.billing_postal_code }} {{ order.billing_city }}<br>
+                  {{ order.billing_street }}
+                  <div *ngIf="order.billing_address_line_2">
+                    {{ order.billing_address_line_2 }}
+                  </div>
+                  <div>
+                    <abbr title="Email">Email:</abbr> {{ order.billing_email }}
+                  </div>
+                  <div *ngIf="order.billing_phone">
+                    <abbr title="Telefon">Tel:</abbr> {{ order.billing_phone }}
+                  </div>
+                </address>
+              </div>
+            </div>
+            <div class="row mt-3">
+              <div class="col-md-6">
+                <h6>Szállítási mód</h6>
+                <p>{{ order.shipping_method?.name || '-' }}</p>
+              </div>
+              <div class="col-md-6">
+                <h6>Fizetési mód</h6>
+                <p>{{ order.payment_method?.name || '-' }}</p>
+              </div>
+            </div>
+            <div *ngIf="order.notes">
+              <h6>Megjegyzés</h6>
+              <p class="mb-0">{{ order.notes }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+  
+      <div class="col-md-6 mb-4">
+        <div class="card border-0 shadow-sm h-100">
+          <div class="card-header bg-white py-3">
+            <h5 class="mb-0">Rendelt termékek</h5>
+          </div>
+          <div class="card-body p-0">
+            <div class="table-responsive">
+              <table class="table mb-0">
+                <tbody>
+                  <tr *ngFor="let item of order.order_items">
+                    <td class="border-0">
+                      <div class="d-flex align-items-center">
+                        <div *ngIf="item.product?.images && item.product.images.length > 0" class="me-3">
+                          <img [src]="storageUrl + '/storage/' + item.product.images[0].image_url" class="img-fluid rounded" style="width: 50px; height: 50px; object-fit: cover;" [alt]="item.product_name">
+                        </div>
+                        <div>
+                          <div class="fw-bold">{{ item.product_name }}</div>
+                          <div class="small text-muted" *ngIf="item.product_latin_name">{{ item.product_latin_name }}</div>
+                          <div class="small">
+                            {{ item.quantity }} {{ item.unit }} x 
+                            {{ item.discount_price ? formatPrice(item.discount_price) : formatPrice(item.unit_price) }}
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                    <td class="text-end border-0">
+                      <strong>{{ formatPrice((item.discount_price || item.unit_price) * item.quantity) }}</strong>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="card-footer bg-white">
+            <div class="d-flex justify-content-between mb-2">
+              <span>Részösszeg:</span>
+              <span>{{ formatPrice(order.subtotal) }}</span>
+            </div>
+            <div class="d-flex justify-content-between mb-2">
+              <span>Szállítási költség:</span>
+              <span *ngIf="order.shipping_cost > 0">{{ formatPrice(order.shipping_cost) }}</span>
+              <span *ngIf="order.shipping_cost === 0" class="text-success">Ingyenes</span>
+            </div>
+            <div *ngIf="order.discount_amount > 0" class="d-flex justify-content-between mb-2">
+              <span>Kedvezmény:</span>
+              <span class="text-danger">-{{ formatPrice(order.discount_amount) }}</span>
+            </div>
+            <div class="d-flex justify-content-between fw-bold mt-2 pt-2 border-top">
+              <span>Végösszeg:</span>
+              <span>{{ formatPrice(order.total) }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+  
+      <div class="col-12 mb-4">
+        <div class="card border-0 shadow-sm">
+          <div class="card-header bg-white py-3">
+            <h5 class="mb-0">Rendelés története</h5>
+          </div>
+          <div class="card-body">
+            <div class="timeline">
+              <div class="timeline-item" *ngFor="let history of order.status_histories">
+                <div class="timeline-marker" [style.background-color]="history.status.color"></div>
+                <div class="timeline-content">
+                  <div class="d-flex justify-content-between">
+                    <h6 class="mb-0">{{ history.status.name }}</h6>
+                    <small class="text-muted">{{ history.created_at | date:'yyyy. MM. dd. HH:mm' }}</small>
+                  </div>
+                  <p *ngIf="history.comment" class="mb-0 small">{{ history.comment }}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

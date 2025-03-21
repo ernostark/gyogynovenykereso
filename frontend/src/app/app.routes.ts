@@ -12,6 +12,10 @@ import { PrivacyPolicyComponent } from './layout/footer/pages/privacy-policy/pri
 import { TermsComponent } from './layout/footer/pages/terms/terms.component';
 import { ProductDetailComponent } from './layout/content/products/product-detail/product-detail.component';
 import { WebshopHomepage } from './webshop/webshop-homepage/webshop-homepage.component';
+import { CartPageComponent } from './webshop/cart/cart-page/cart-page.component';
+import { CheckoutComponent } from './webshop/checkout/checkout/checkout.component';
+import { OrderDetailComponent } from './webshop/order-details/order-details.component';
+import { OrdersComponent } from './webshop/orders/orders.component';
 
 export const routes: Routes = [
   {
@@ -57,6 +61,22 @@ export const routes: Routes = [
   {
     path: 'webshop',
     component: WebshopHomepage,
+  },
+  {
+    path: 'cart',
+    component: CartPageComponent
+  },
+  {
+    path: 'checkout',
+    component: CheckoutComponent
+  },
+  {
+    path: 'orders',
+    component: OrdersComponent
+  },
+  {
+    path: 'orders/:id',
+    component: OrderDetailComponent
   },
   {
     path: '**',
