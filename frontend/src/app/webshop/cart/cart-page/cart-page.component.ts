@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CartService } from '../../../shared/services/cart-service.service';
 import { environment } from '../../../../environments/environment.development';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-cart-page',
@@ -12,7 +13,7 @@ import { environment } from '../../../../environments/environment.development';
   standalone: true,
   imports: [CommonModule, RouterModule, FormsModule]
 })
-export class CartPageComponent implements OnInit {
+export class CartPageComponent implements OnInit, OnDestroy {
   cartItems: any[] = [];
   subtotal: number = 0;
   shippingCost: number = 0;
@@ -24,18 +25,35 @@ export class CartPageComponent implements OnInit {
   freeShippingThreshold: number = 15000;
   defaultShippingCost: number = 1500;
 
-  constructor(private cartService: CartService) { }
+  private cartSubscription: Subscription | null = null;
+
+  constructor(private cartService: CartService) {}
 
   ngOnInit(): void {
-    this.loadCart();
+    this.loading = true;
 
-    this.cartService.cart$.subscribe(cart => {
-      if (cart) {
-        this.cartItems = cart.items || [];
-        this.subtotal = cart.subtotal || 0;
+    this.cartSubscription = this.cartService.cart$.subscribe(cart => {
+      if (cart && cart.items) {
+        this.cartItems = cart.items;
+        this.subtotal = cart.subtotal;
         this.calculateTotals();
+        this.loading = false;
       }
     });
+
+    this.cartService.loadCart().subscribe({
+      error: (err) => {
+        this.error = 'Hiba történt a kosár betöltése során. Kérjük, próbálja újra később!';
+        this.loading = false;
+        console.error('Kosár betöltési hiba:', err);
+      }
+    });
+  }
+
+  ngOnDestroy(): void {
+    if (this.cartSubscription) {
+      this.cartSubscription.unsubscribe();
+    }
   }
 
   trackById(index: number, item: any): number {
@@ -49,25 +67,6 @@ export class CartPageComponent implements OnInit {
     if (!isNaN(newQuantity)) {
       this.updateQuantity(item, newQuantity);
     }
-  }
-
-  loadCart(): void {
-    this.loading = true;
-    this.cartService.loadCart().subscribe({
-      next: (response) => {
-        if (response && response.success) {
-          this.cartItems = response.cart.items || [];
-          this.subtotal = response.subtotal || 0;
-          this.calculateTotals();
-        }
-        this.loading = false;
-      },
-      error: (err) => {
-        this.error = 'Hiba történt a kosár betöltése során. Kérjük, próbálja újra később!';
-        this.loading = false;
-        console.error('Kosár betöltési hiba:', err);
-      }
-    });
   }
 
   calculateTotals(): void {
@@ -86,17 +85,8 @@ export class CartPageComponent implements OnInit {
 
     if (item.quantity !== newQuantity) {
       this.cartService.updateCartItem(item.id, newQuantity).subscribe({
-        next: (response) => {
-          if (response && response.success) {
-            this.cartItems = response.cart.items || [];
-            this.subtotal = response.subtotal || 0;
-            this.calculateTotals();
-          }
-          this.loading = false;
-        },
         error: (err) => {
           this.error = 'Hiba történt a mennyiség frissítése során.';
-          this.loading = false;
           console.error('Mennyiség frissítési hiba:', err);
         }
       });
@@ -107,14 +97,6 @@ export class CartPageComponent implements OnInit {
     if (confirm('Biztosan el szeretné távolítani a terméket a kosárból?')) {
       this.loading = true;
       this.cartService.removeCartItem(item.id).subscribe({
-        next: (response) => {
-          if (response && response.success) {
-            this.cartItems = response.cart.items || [];
-            this.subtotal = response.subtotal || 0;
-            this.calculateTotals();
-          }
-          this.loading = false;
-        },
         error: (err) => {
           this.error = 'Hiba történt a termék eltávolítása során.';
           this.loading = false;
@@ -128,14 +110,6 @@ export class CartPageComponent implements OnInit {
     if (confirm('Biztosan szeretné kiüríteni a kosarat?')) {
       this.loading = true;
       this.cartService.clearCart().subscribe({
-        next: (response) => {
-          if (response && response.success) {
-            this.cartItems = [];
-            this.subtotal = 0;
-            this.calculateTotals();
-          }
-          this.loading = false;
-        },
         error: (err) => {
           this.error = 'Hiba történt a kosár kiürítése során.';
           this.loading = false;

@@ -1,30 +1,225 @@
+.posts-table-container {
+  overflow-x: auto;
+  max-width: 100%;
+}
+
+.table {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
 .table th {
   font-weight: 500;
   text-transform: uppercase;
-  font-size: 12px;
+  font-size: 11px;
   letter-spacing: 0.5px;
+  color: #555;
+  padding: 8px 6px;
+  text-align: left;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .table td {
-  padding-top: 1rem;
-  padding-bottom: 1rem;
+  padding: 10px 6px;
+  vertical-align: middle;
+  border-top: 1px solid #e9ecef;
+  border-bottom: 1px solid #e9ecef;
+  font-size: 13px;
 }
 
-.badge {
-  padding: 0.5rem 0.8rem;
+.table th:nth-child(1), .table td:nth-child(1) { width: 50px; }
+.table th:nth-child(2), .table td:nth-child(2) { width: 50px; }
+.table th:nth-child(3), .table td:nth-child(3) { width: 13%; } 
+.table th:nth-child(4), .table td:nth-child(4) { width: 17%; }
+.table th:nth-child(5), .table td:nth-child(5) { width: 8%; }
+.table th:nth-child(6), .table td:nth-child(6) { width: 15%; }
+.table th:nth-child(7), .table td:nth-child(7) { width: 10%; } 
+.table th:nth-child(8), .table td:nth-child(8) { width: 7%; }
+.table th:nth-child(9), .table td:nth-child(9) { width: 8%; }
+.table th:nth-child(10), .table td:nth-child(10) { width: 8%; }
+.table th:nth-child(11), .table td:nth-child(11) { width: 120px; }
+
+.id-cell {
+  color: #6c757d;
+  font-size: 12px;
+}
+
+.title-cell, .excerpt-cell, .category-cell, 
+.diseases-cell, .author-cell, .featured-cell, 
+.date-cell, .status-cell {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: break-word;
+  max-height: 40px;
+}
+
+.title-cell, .excerpt-cell {
+  display: block;
+  position: relative;
+  line-height: 1.25;
+  max-height: 2.5em;
+  overflow: hidden;
+}
+
+.title-cell::after, .excerpt-cell::after {
+  content: "...";
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  background: white;
+  padding-left: 3px;
+}
+
+.title-cell {
   font-weight: 500;
 }
 
-.btn-light {
+.excerpt-cell {
+  color: #6c757d;
+}
+
+.category-cell {
   background: #f8f9fa;
   border: 1px solid #e9ecef;
+  border-radius: 4px;
+  padding: 3px 6px;
+  display: inline-block;
+  max-width: 100%;
+  text-align: center;
+  font-size: 12px;
 }
 
-.btn-light:hover {
-  background: #e9ecef;
-  border-color: #dee2e6;
+.diseases-cell {
+  line-height: 1.4;
+  font-size: 12px;
+  color: #495057;
+  overflow-wrap: break-word;
+  white-space: normal;
+  max-height: 4.2em;
+  position: relative;
+  overflow: hidden;
 }
 
-.object-fit-cover {
-  object-fit: cover;
+.diseases-cell::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 30%;
+  height: 1.4em;
+  background: linear-gradient(to right, transparent, white);
+}
+
+.author-cell {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.featured-tag, .not-featured-tag {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 500;
+  text-align: center;
+}
+
+.featured-tag {
+  background-color: #d1e7dd;
+  color: #0f5132;
+}
+
+.not-featured-tag {
+  background-color: #fff3cd;
+  color: #664d03;
+}
+
+.date-cell {
+  text-align: center;
+  color: #6c757d;
+  font-size: 12px;
+}
+
+.status-published, .status-draft, .status-archived {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 8px;
+  border-radius: 15px;
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.status-published {
+  background-color: #d1e7dd;
+  color: #0f5132;
+}
+
+.status-draft {
+  background-color: #fff3cd;
+  color: #664d03;
+}
+
+.status-archived {
+  background-color: #e2e3e5;
+  color: #41464b;
+}
+
+.status-published i, .status-draft i, .status-archived i {
+  margin-right: 4px;
+}
+
+.actions-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.view-btn, .edit-btn, .delete-btn {
+  padding: 4px 8px;
+  font-size: 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  text-decoration: none;
+}
+
+.view-btn {
+  background-color: #0d6efd;
+  color: white;
+  border: none;
+}
+
+.edit-btn {
+  background-color: #f8f9fa;
+  color: #212529;
+  border: 1px solid #dee2e6;
+}
+
+.delete-btn {
+  background-color: #f8f9fa;
+  color: #dc3545;
+  border: 1px solid #dee2e6;
+}
+
+.view-btn:hover {
+  background-color: #0b5ed7;
+}
+
+.edit-btn:hover {
+  background-color: #e9ecef;
+}
+
+.delete-btn:hover {
+  background-color: #e9ecef;
 }

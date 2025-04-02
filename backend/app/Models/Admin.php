@@ -9,7 +9,7 @@ use Illuminate\Notifications\Notifiable;
 
 class Admin extends Authenticatable
 {
-    public $timestamps = false;
+    public $timestamps = true;
     use HasApiTokens, HasFactory, Notifiable;
 
     /**

@@ -1,113 +1,104 @@
 <div class="container card shadow-sm border-0 mt-50">
   <div class="d-none d-lg-block">
-    <table class="table table-hover align-middle mb-0">
-      <thead>
-        <tr class="bg-light">
-          <th class="border-0 rounded-start ps-4">Kép</th>
-          <th class="border-0">ID</th>
-          <th class="border-0">Cím</th>
-          <th class="border-0">Kivonat</th>
-          <th class="border-0">Kategória</th>
-          <th class="border-0">Betegségek</th>
-          <th class="border-0">Szerző</th>
-          <th class="border-0">Kiemelt</th>
-          <th class="border-0">Közzétéve</th>
-          <th class="border-0">Állapot</th>
-          <th class="border-0" colspan="2">Műveletek</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let post of posts">
-          <td class="ps-4">
-            <img [src]="
-                post.image_path
-                  ? storageUrl + '/storage/' + post.image_path
-                  : storageUrl + '/storage/images/default.png'
-              " alt="Bejegyzés képe" width="40" height="40" class="rounded-circle object-fit-cover" />
-          </td>
-          <td class="text-muted">#{{ post.id }}</td>
-          <td>
-            <span class="fw-medium">{{ post.title }}</span>
-          </td>
-          <td>
-            <span class="text-muted">{{ post.excerpt | slice : 0 : 50
-              }}{{ post.excerpt.length > 50 ? "..." : "" }}</span>
-          </td>
-          <td>
-            <span class="badge bg-light text-dark border">
-              {{ post.category?.name || "Nincs kategória" }}
-            </span>
-          </td>
-          <td>
-            <span class="text-muted">
-              {{ getFormattedDiseases(post.diseases) }}
-            </span>
-          </td>
-          <td>
-            <div class="d-flex align-items-center gap-2">
-              <div class="rounded-circle bg-light d-flex align-items-center justify-content-center"
-                style="width: 32px; height: 32px">
-                <i class="bi bi-person text-muted"></i>
+    <div class="posts-table-container">
+      <table class="table table-hover align-middle mb-0">
+        <thead>
+          <tr class="bg-light">
+            <th class="border-0 rounded-start">Kép</th>
+            <th class="border-0">ID</th>
+            <th class="border-0">Cím</th>
+            <th class="border-0">Kivonat</th>
+            <th class="border-0">Kategória</th>
+            <th class="border-0">Betegségek</th>
+            <th class="border-0">Szerző</th>
+            <th class="border-0">Kiemelt</th>
+            <th class="border-0">Közzétéve</th>
+            <th class="border-0">Állapot</th>
+            <th class="border-0">Műveletek</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let post of posts">
+            <td>
+              <img [src]="
+                  post.image_path
+                    ? storageUrl + '/storage/' + post.image_path
+                    : storageUrl + '/storage/images/default.png'
+                " alt="Bejegyzés képe" width="36" height="36" class="rounded-circle object-fit-cover" />
+            </td>
+            <td class="id-cell">#{{ post.id }}</td>
+            <td>
+              <div class="title-cell">{{ post.title }}</div>
+            </td>
+            <td>
+              <div class="excerpt-cell">
+                {{ post.excerpt | slice : 0 : 70 }}{{ post.excerpt.length > 70 ? "..." : "" }}
               </div>
-              <span>{{ post.author_name || post.author?.name || "Ismeretlen" }}</span>
-            </div>
-          </td>
-
-          <td>
-            <span class="badge" [ngClass]="post.featured ? 'bg-success' : 'bg-warning'">
-              {{ post.featured ? 'Kiemelt' : 'Nem kiemelt' }}
-            </span>
-          </td>
-
-          <td>
-            <span class="text-muted">
-              {{
-              post.published_at
-              ? (post.published_at | date : "yyyy.MM.dd.")
-              : "N/A"
-              }}
-            </span>
-          </td>
-          <td>
-            <span class="badge rounded-pill" [ngClass]="{
-                'bg-success-subtle text-success': post.status === 'published',
-                'bg-warning-subtle text-warning': post.status === 'draft',
-                'bg-secondary-subtle text-secondary': post.status === 'archived'
-              }">
-              <i class="bi" [ngClass]="{
-                  'bi-check-circle-fill': post.status === 'published',
-                  'bi-pencil-fill': post.status === 'draft',
-                  'bi-archive-fill': post.status === 'archived'
+            </td>
+            <td>
+              <div class="category-cell">
+                {{ post.category?.name || "Nincs kategória" }}
+              </div>
+            </td>
+            <td>
+              <div class="diseases-cell">
+                {{ getFormattedDiseases(post.diseases) }}
+              </div>
+            </td>
+            <td>
+              <div class="author-cell">
+                <i class="bi bi-person-circle me-1"></i>
+                {{ post.author_name || post.author?.name || "Ismeretlen" }}
+              </div>
+            </td>
+            <td>
+              <div class="featured-cell">
+                <span [ngClass]="post.featured ? 'featured-tag' : 'not-featured-tag'">
+                  {{ post.featured ? 'Kiemelt' : 'Nem' }}
+                </span>
+              </div>
+            </td>
+            <td>
+              <div class="date-cell">
+                {{ post.published_at ? (post.published_at | date : "yyyy.MM.dd.") : "N/A" }}
+              </div>
+            </td>
+            <td>
+              <div class="status-cell">
+                <span [ngClass]="{
+                  'status-published': post.status === 'published',
+                  'status-draft': post.status === 'draft',
+                  'status-archived': post.status === 'archived'
                 }">
-              </i>
-              {{
-              post.status === "published"
-              ? "Közzétéve"
-              : post.status === "draft"
-              ? "Vázlat"
-              : "Archivált"
-              }}
-            </span>
-          </td>
-          <td class="text-end">
-            <div class="d-flex gap-2">
-              <a [routerLink]="['/posts', post.id]" class="btn btn-primary btn-sm" target="_blank">
-                Megtekintés
-              </a>
-              <button class="btn btn-light btn-sm d-flex align-items-center gap-1" (click)="openEditModal(post)">
-                <i class="bi bi-pencil"></i>
-                Módosítás
-              </button>
-              <button class="btn btn-light btn-sm text-danger d-flex align-items-center gap-1"
-                (click)="onDeletePost(post.id)">
-                <i class="bi bi-trash"></i>
-                Törlés
-              </button>
-            </div>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+                  <i class="bi" [ngClass]="{
+                    'bi-check-circle-fill': post.status === 'published',
+                    'bi-pencil-fill': post.status === 'draft',
+                    'bi-archive-fill': post.status === 'archived'
+                  }"></i>
+                  {{
+                  post.status === "published" ? "Közzétéve" :
+                  post.status === "draft" ? "Vázlat" : "Archivált"
+                  }}
+                </span>
+              </div>
+            </td>
+            <td>
+              <div class="actions-cell">
+                <a [routerLink]="['/posts', post.id]" class="view-btn" target="_blank">
+                  <i class="bi bi-eye"></i> Megtekintés
+                </a>
+                <button class="edit-btn" (click)="openEditModal(post)">
+                  <i class="bi bi-pencil"></i> Módosítás
+                </button>
+                <button class="delete-btn" (click)="onDeletePost(post.id)">
+                  <i class="bi bi-trash"></i> Törlés
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </div>
 

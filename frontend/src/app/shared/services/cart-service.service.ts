@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { BehaviorSubject, Observable, of } from 'rxjs';
+import { tap, shareReplay } from 'rxjs/operators';
 import { environment } from '../../../environments/environment.development';
 
 @Injectable({
@@ -13,10 +13,11 @@ export class CartService {
   public cart$ = this.cartSubject.asObservable();
 
   private cartId: string | null = null;
+  public cartLoaded = false;
+  private cartRequest: Observable<any> | null = null;
 
   constructor(private http: HttpClient) {
     this.cartId = localStorage.getItem('cart_id');
-    this.loadCart().subscribe();
   }
 
   private getCurrentUser(): any {
@@ -57,24 +58,34 @@ export class CartService {
   }
 
   loadCart(): Observable<any> {
+
+    if (this.cartLoaded && this.cartSubject.value) {
+      return of(this.cartSubject.value);
+    }
+
+    if (this.cartRequest) {
+      return this.cartRequest;
+    }
+
     const url = this.getUrlWithParams('/cart');
-    return this.http.get(url, { headers: this.getAuthHeaders(), withCredentials: true }).pipe(
+    this.cartRequest = this.http.get(url, { headers: this.getAuthHeaders(), withCredentials: true }).pipe(
       tap((response: any) => {
         if (response.success) {
           if (response.cart_id) {
-            this.cartId = response.cart_id.toString();
-            if (this.cartId) {
-              localStorage.setItem('cart_id', this.cartId);
-            }
+            const cartId = this.cartId = response.cart_id.toString();
+            localStorage.setItem('cart_id', cartId);
           }
           this.cartSubject.next({
             items: response.cart.items,
             totalItems: response.total_items,
             subtotal: response.subtotal
           });
+          this.cartLoaded = true;
         }
-      })
+      }),
+      shareReplay(1),
     );
+    return this.cartRequest;
   }
 
   addToCart(productId: number, quantity: number): Observable<any> {
