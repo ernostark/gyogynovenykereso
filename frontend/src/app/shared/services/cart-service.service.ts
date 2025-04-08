@@ -57,6 +57,11 @@ export class CartService {
     return `${this.apiUrl}${endpoint}${queryString ? '?' + queryString : ''}`;
   }
 
+  resetCartRequest() {
+    this.cartRequest = null;
+    this.cartLoaded = false;
+  }
+
   loadCart(): Observable<any> {
 
     if (this.cartLoaded && this.cartSubject.value) {

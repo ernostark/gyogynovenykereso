@@ -1,6 +1,6 @@
 import { Component, OnInit, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { CartService } from '../../../shared/services/cart-service.service';
 import { CartItemComponent } from "../cart-item/cart-item.component";
 
@@ -17,7 +17,7 @@ export class CartDropdownComponent implements OnInit {
   totalItems: number = 0;
   subtotal: number = 0;
 
-  constructor(private cartService: CartService) { }
+  constructor(private cartService: CartService, private router: Router) { }
 
   ngOnInit(): void {
     this.cartService.cart$.subscribe(cart => {
@@ -32,6 +32,9 @@ export class CartDropdownComponent implements OnInit {
   toggleDropdown(event: Event): void {
     event.preventDefault();
     event.stopPropagation();
+    if (this.router.url.includes('/checkout')) {
+      return;
+    }
     this.isOpen = !this.isOpen;
   }
 

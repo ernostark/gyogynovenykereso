@@ -43,10 +43,28 @@
   padding: 5px 0;
 }
 
+.nav-link,
+.menu-button,
+.webshop-highlight {
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+}
+
 @media (max-width: 991.98px) {
-  .navbar-nav {
-    gap: 8px;
-    padding: 10px 0;
+
+  .dropdown-menu {
+    left: auto !important;
+    right: 0 !important;
+  }
+
+  .mobile-cart-container {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding-top: 10px;
+    margin-top: 10px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
   }
 
   .menu-button,

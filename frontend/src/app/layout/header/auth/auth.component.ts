@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
 import { AuthService } from '../../../shared/services/auth.service';
 import {
   AbstractControl,
@@ -13,7 +13,7 @@ import {
 import { CommonModule } from '@angular/common';
 import { LogoComponent } from '../logo/logo.component';
 import { SharedService } from '../../../shared/services/shared.service';
-import { Router, RouterLink } from '@angular/router';
+import { NavigationEnd, Router, RouterLink } from '@angular/router';
 import { CartDropdownComponent } from "../../../webshop/cart/cart-dropdown/cart-dropdown.component";
 
 declare var bootstrap: any;
@@ -30,12 +30,13 @@ export class AuthComponent implements OnInit {
 
   private sharedService: SharedService;
   isAdminLoggedIn$;
+  isMenuOpen = false;
 
   constructor(
     private authService: AuthService,
     private fb: FormBuilder,
     sharedService: SharedService,
-    private router: Router
+    private router: Router,
   ) {
     this.sharedService = sharedService;
     this.isAdminLoggedIn$ = this.sharedService.isAdminLoggedIn$;
@@ -44,6 +45,12 @@ export class AuthComponent implements OnInit {
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(8)]],
       confirm_password: ['', [Validators.required]],
+    });
+
+    this.router.events.subscribe((event) => {
+      if (event instanceof NavigationEnd) {
+        this.isMenuOpen = false;
+      }
     });
   }
 
@@ -58,6 +65,26 @@ export class AuthComponent implements OnInit {
   successMessage: string | null = null;
   toastMessage: string | null = null;
   isLoggedIn: boolean = false;
+  isMenuCollapsed = true;
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent) {
+    const navbar = document.querySelector('.navbar');
+    const toggler = document.querySelector('.navbar-toggler');
+    const target = event.target as HTMLElement;
+
+    if (toggler && (toggler === target || toggler.contains(target))) {
+      return;
+    }
+
+    if (this.isMenuOpen && navbar && !navbar.contains(target)) {
+      this.isMenuOpen = false;
+    }
+  }
+
+  toggleMenu() {
+    this.isMenuCollapsed = !this.isMenuCollapsed;
+  }
 
   ngOnInit(): void {
 

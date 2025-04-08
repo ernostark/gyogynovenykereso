@@ -36,6 +36,6 @@ export class CategoryDetailComponent implements OnInit {
     if (imagePath) {
       return `${environment.apiUrl}/storage/${imagePath}`;
     }
-    return '/storage/images/default_category.png';
+    return '/assets/default_category.png';
   }
 }

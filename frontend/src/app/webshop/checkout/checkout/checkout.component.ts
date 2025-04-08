@@ -62,6 +62,9 @@ export class CheckoutComponent implements OnInit {
     private cartService: CartService,
     private authService: AuthService
   ) {
+
+    this.cartService.resetCartRequest();
+
     this.checkoutForm = this.fb.group({
       billing_name: ['', [Validators.required]],
       billing_email: ['', [Validators.required, Validators.email]],

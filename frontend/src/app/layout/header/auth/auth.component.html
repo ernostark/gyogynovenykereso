@@ -2,11 +2,10 @@
   <div class="container-fluid bg-dark rounded-bottom custom-shadow">
     <nav class="navbar navbar-expand-lg navbar-dark">
       <app-logo></app-logo>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <button class="navbar-toggler" type="button" (click)="isMenuOpen = !isMenuOpen">
         <span class="navbar-toggler-icon"></span>
       </button>
-      <div class="collapse navbar-collapse" id="navbarNav">
+      <div class="collapse navbar-collapse" [ngClass]="{'show': isMenuOpen}" id="navbarNav">
         <ul class="navbar-nav me-auto">
           <li class="nav-item">
             <a class="nav-link menu-button" aria-current="page" [routerLink]="['/']">
@@ -49,18 +48,16 @@
               <i class="bi bi-box-arrow-right me-1"></i> Kijelentkezés
             </a>
           </li>
-        </ul>
-
-        <ul class="navbar-nav">
           <li class="nav-item">
             <a class="nav-link webshop-highlight" aria-current="page" [routerLink]="['/webshop']">
               <i class="bi bi-shop me-1"></i> Webshop
             </a>
           </li>
-          <li class="nav-item">
-            <app-cart-dropdown></app-cart-dropdown>
-          </li>
         </ul>
+
+        <div class="mobile-cart-container">
+          <app-cart-dropdown></app-cart-dropdown>
+        </div>
       </div>
     </nav>
   </div>
