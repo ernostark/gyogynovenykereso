@@ -1,22 +1,20 @@
 # GYÓGYNÖVÉNYKERESŐ WEBALKALMAZÁS TESZTELÉSI DOKUMENTÁCIÓ
 **Projekt neve:** Gyógynövénykereső Webalkalmazás
-**Dokumentum verziószáma:** 1.0
+**Dokumentum verziószáma:** 1.1
 **Tesztelési időszak:** 2025. március 1-20.
 **Készítette:** Markó Dániel
 
 ## 1. TESZTÖSSZEFOGLALÓ
 
-Az alkalmazás tesztelése során alapos vizsgálatokat végeztünk, lefedve a funkcionális, felhasználói élmény, terhelési és biztonsági szempontokat. A tesztelés célja az volt, hogy biztosítsuk a webshop alkalmazás stabil, felhasználóbarát és biztonságos működését.
+Az alkalmazás tesztelése során alapos vizsgálatokat végeztünk, lefedve a funkcionális, felhasználói élmény, és biztonsági szempontokat. A tesztelés célja az volt, hogy biztosítsuk a webshop alkalmazás stabil, felhasználóbarát és biztonságos működését.
 
 ### 1.1 Tesztelési módszerek
 
 * **Manuális tesztelés:** A felhasználói felület és funkciók manuális ellenőrzése
-* **Terheléses tesztelés:** Az alkalmazás teljesítményének vizsgálata terhelés alatt
 * **Biztonsági tesztelés:** Az alkalmazás védelmi mechanizmusainak ellenőrzése
 
 ### 1.2 Tesztelési környezet
 
-* **Tesztkörnyezet:** Staging szerver
 * **Böngészők:** Chrome 122, Firefox 124, Safari 17.4, Edge 122
 * **Eszközök:** Dell Latitude E6540 (Windows 10), iPad Pro 12.9", Samsung Galaxy A16 5G, iPhone 14 Pro
 * **Hálózat:** 1 Gbps LAN, 100 Mbps WiFi, 5G mobilhálózat
@@ -34,7 +32,7 @@ Az alkalmazás tesztelése során alapos vizsgálatokat végeztünk, lefedve a f
 
 #### TC-F-001: Kezdőlap tartalmainak megjelenítése
 
-**Tesztelő:** Markó Dániel
+**Tesztelő:** Markó Dániel  
 **Tesztelés dátuma:** 2025.03.01. 10:30  
 **Prioritás:** Magas  
 **Státusz:** Sikeres
@@ -52,22 +50,18 @@ Ellenőrizni, hogy a kezdőlap megfelelően jeleníti-e meg a kiemelt és legúj
 3. A legújabb bejegyzések megjelenítésének ellenőrzése
 4. Betöltési idő mérése
 
-**Elvárt eredmény:**  
-- A kiemelt és legújabb bejegyzések listája megjelenik
-- A betöltési idő < 2 másodperc
-- A megjelenített adatok relevánsak és helyesek
-
-**Tényleges eredmény:**  
-- A kiemelt és legújabb bejegyzések helyesen megjelentek
-- A betöltési idő átlagosan 1.3 másodperc volt 10 próbálkozás során
-- A megjelenített adatok relevánsak és helyesek voltak
+**Eredmény:**  
+1. A kezdőlap sikeresen betöltődött minden tesztelt eszközön
+2. A kiemelt bejegyzések helyesen megjelentek, az adatok relevánsak és helyesek voltak
+3. A legújabb bejegyzések helyesen megjelentek, az adatok relevánsak és helyesek voltak
+4. A betöltési idő átlagosan 1.3 másodperc volt 10 próbálkozás során, ami a 2 másodperces határérték alatt maradt
 
 **Megjegyzések:**  
 A betöltési idő a várakozásoknak megfelelően alakult minden tesztelt eszközön és hálózaton.
 
 #### TC-F-002: Keresési funkció tesztelése
 
-**Tesztelő:** Markó Dániel
+**Tesztelő:** Markó Dániel  
 **Tesztelés dátuma:** 2025.03.03. 14:15  
 **Prioritás:** Magas  
 **Státusz:** Sikeres
@@ -85,22 +79,18 @@ Ellenőrizni a keresési funkció működését és a keresési eredmények rele
 3. Keresés indítása
 4. A keresési eredmények és a betöltési idő ellenőrzése
 
-**Elvárt eredmény:**  
-- A releváns keresési kulcsszavakra megfelelő találatok jelennek meg
-- Nem létező termékre történő keresés esetén üres találati lista "Nincs találat" üzenettel
-- A keresés < 2 másodpercen belül eredményt ad
-
-**Tényleges eredmény:**  
-- A keresés releváns találatokat adott a létező kulcsszavakra
-- Nemlétező termékekre megfelelően üres találati listát és "Nincs találat" üzenetet kaptunk
-- A keresés átlagosan 0.8 másodpercen belül eredményt adott
+**Eredmény:**  
+1. A keresőmező minden tesztelt eszközön elérhető és használható volt
+2. A különböző keresőkifejezések beírása problémamentesen működött
+3. A keresés indítása sikeresen működött minden esetben
+4. A keresés releváns találatokat adott a létező kulcsszavakra, nemlétező termékekre megfelelően üres találati listát és "Nincs találat" üzenetet kaptunk, a keresés átlagosan 0.8 másodpercen belül eredményt adott
 
 **Megjegyzések:**  
 A keresési algoritmus hatékonyan működött különböző keresési mintázatok esetén is.
 
 #### TC-F-003: Kosár funkcióinak tesztelése
 
-**Tesztelő:** Markó Dániel
+**Tesztelő:** Markó Dániel  
 **Tesztelés dátuma:** 2025.03.05. 11:20  
 **Prioritás:** Kritikus  
 **Státusz:** Sikeres
@@ -120,25 +110,20 @@ A kosár funkcióinak tesztelése: termékek hozzáadása, mennyiség módosít�
 5. Több különböző termék kosárba helyezése
 6. A kosár adatainak szinkronitásának ellenőrzése az API-val
 
-**Elvárt eredmény:**  
-- A termékek sikeresen hozzáadhatók a kosárhoz
-- A mennyiség módosítása helyesen változtatja a kosár tartalmát és végösszeget
-- A termék eltávolítása frissíti a kosár tartalmát
-- A kosár adatai szinkronban vannak az API-val
-- A cartItems mindig az aktuális állapotot mutatja
-
-**Tényleges eredmény:**  
-- A termékek hozzáadása, mennyiségének módosítása és eltávolítása megfelelően működött
-- A kosár végösszege és a szállítási költségek helyesen számolódtak
-- A cartItems megfelelően frissült minden művelet után
-- A kosár adatai szinkronban voltak az API-val
+**Eredmény:**  
+1. A termékek sikeresen hozzáadhatók voltak a kosárhoz
+2. A mennyiség növelése 1-ről 3-ra sikeresen működött, a végösszeg megfelelően frissült
+3. A mennyiség csökkentése 3-ról 2-re sikeresen működött, a végösszeg megfelelően frissült
+4. A termék eltávolítása frissítette a kosár tartalmát, a termék sikeresen eltűnt a kosárból
+5. Több különböző termék kosárba helyezése sikeresen működött, mindegyik megjelent a kosárban
+6. A kosár adatai minden művelet után szinkronban voltak az API-val, a cartItems megfelelően frissült
 
 **Megjegyzések:**  
 A kosár funkcionalitása minden tesztelt esetben stabilan működött, a számítások pontosak voltak.
 
 #### TC-F-004: Vásárlási folyamat tesztelése
 
-**Tesztelő:** Markó Dániel
+**Tesztelő:** Markó Dániel  
 **Tesztelés dátuma:** 2025.03.07. 09:45  
 **Prioritás:** Kritikus  
 **Státusz:** Sikeres
@@ -156,28 +141,21 @@ A teljes vásárlási folyamat tesztelése a termék kiválasztásától a siker
 2. Szállítási adatok megadása a checkoutForm-ban
 3. Fizetési adatok megadása
 4. Rendelés elküldése
-5. Visszaigazolás ellenőrzése
 
-**Elvárt eredmény:**  
-- A checkoutForm megfelelően kezeli a kitöltött adatokat
-- A rendelés sikeresen feldolgozásra kerül
-- Rendelési szám (orderNumber) generálódik
-- A rendszer visszaigazolást ad a sikeres rendelésről
-
-**Tényleges eredmény:**  
-- A checkoutForm hibátlanul működött, megfelelően validálta az adatokat
-- A rendelés leadása sikeres volt
-- A rendelési szám generálódott (pl. #ORD-2025-03542)
-- A rendszer megfelelő visszaigazolást adott emailben és a felületen is
+**Eredmény:**  
+1. A pénztárhoz való továbblépés gomb megfelelően működött, a pénztár oldal betöltődött
+2. A checkoutForm hibátlanul működött, megfelelően validálta az adatokat
+3. A fizetési adatok megadása sikeresen működött minden tesztelt fizetési móddal
+4. A rendelés leadása sikeres volt, a rendelési szám generálódott (pl. #ORD-2025-03542)
 
 **Megjegyzések:**  
-A vásárlási folyamat lépései között a navigáció intuitív volt, a folyamat minden tesztelt fizetési módszerrel sikeresen lezajlott (bankkártya, PayPal, utalás).
+A vásárlási folyamat lépései között a navigáció intuitív volt, a folyamat minden tesztelt fizetési módszerrel sikeresen lezajlott.
 
 ### 2.2 Felhasználói élmény tesztek
 
 #### TC-UX-001: Navigáció tesztelése
 
-**Tesztelő:** Markó Dániel
+**Tesztelő:** Markó Dániel  
 **Tesztelés dátuma:** 2025.03.10. 13:40  
 **Prioritás:** Magas  
 **Státusz:** Sikeres
@@ -194,24 +172,18 @@ Az alkalmazás navigációs rendszerének tesztelése különböző eszközökö
 3. Oldalbetöltési idők mérése
 4. Navigáció tesztelése különböző képernyőméreteken
 
-**Elvárt eredmény:**  
-- A navigáció minden eszközön zökkenőmentesen működik
-- Az oldalak gyorsan betöltődnek (< 3 másodperc)
-- Az útvonalak hibamentesen vezetik a felhasználót a megfelelő oldalakra
-- A menüpontok logikus elrendezésűek
-
-**Tényleges eredmény:**  
-- A navigáció minden tesztelt eszközön megfelelően működött
-- Az oldalbetöltési idők átlagosan 1.8 másodperc alatt maradtak
-- Az útvonalak minden esetben a megfelelő oldalakra vezettek
-- A menüpontok elrendezése logikus és könnyen használható volt
+**Eredmény:**  
+1. A navigálás minden főbb oldalra sikeresen működött minden tesztelt eszközön
+2. A menüpontok és linkek minden esetben a megfelelő oldalakra vezettek
+3. Az oldalbetöltési idők átlagosan 1.8 másodperc alatt maradtak, ami az elvárt 3 másodperces határérték alatt van
+4. A navigáció minden tesztelt képernyőméreten (desktop, tablet, mobil) megfelelően működött
 
 **Megjegyzések:**  
 A mobilnézetben a hamburger menü megfelelően működött, a hierarchikus navigáció jól használható volt.
 
 #### TC-UX-002: Reszponzív design tesztelése
 
-**Tesztelő:** Markó Dániel
+**Tesztelő:** Markó Dániel  
 **Tesztelés dátuma:** 2025.03.12. 15:10  
 **Prioritás:** Magas  
 **Státusz:** Részben sikeres
@@ -228,98 +200,20 @@ Az alkalmazás reszponzív designjának tesztelése különböző eszközökön 
 3. Tipográfia és színek ellenőrzése
 4. Gombok, ikonok és interaktív elemek használhatóságának ellenőrzése
 
-**Elvárt eredmény:**  
-- Az alkalmazás megfelelően alkalmazkodik a különböző képernyőméretekhez
-- A vizuális elemek (gombok, ikonok) egységesek és felhasználóbarátok
-- A színek és tipográfia kellemes vizuális élményt nyújt
-- Minden funkció használható minden eszköztípuson
-
-**Tényleges eredmény:**  
-- Az alkalmazás nagy részben megfelelően alkalmazkodott a különböző képernyőméretekhez
-- A vizuális elemek egységesek és jól használhatók voltak
-- **Probléma:** Samsung Galaxy A16 5G készüléken a termékgaléria nem megfelelően jelent meg fekvő módban
-- A színek és tipográfia kellemes vizuális élményt nyújtott
+**Eredmény:**  
+1. Az alkalmazás sikeresen betöltődött minden tesztelt eszközön (asztali gép, tablet, mobil)
+2. Az oldalak elrendezése a legtöbb eszközön megfelelő volt, de Samsung Galaxy A16 5G készüléken a termékgaléria nem megfelelően jelent meg fekvő módban
+3. A tipográfia és színek kellemes vizuális élményt nyújtottak minden eszközön
+4. A gombok, ikonok és interaktív elemek egységesek és jól használhatók voltak minden eszközön
 
 **Megjegyzések:**  
 A termékgaléria hibája a Samsung Galaxy A16 5G készüléken fekvő módban javításra szorul. A hiba csak ezen az egy eszközön jelentkezett. (Bug ID: BUG-2025-032)
-
-### 2.3 Terhelési tesztek
-
-#### TC-L-001: API terheléses teszt
-
-**Tesztelő:** A teljes fejlesztői csapat (Nádassy Ilona, Markó Dániel, Stark Ernő)
-**Tesztelés dátuma:** 2025.03.15. 02:30  
-**Prioritás:** Magas  
-**Státusz:** Sikeres
-
-**Teszt célja:**  
-Az API terhelhetőségének tesztelése nagy számú párhuzamos kérés mellett.
-
-**Előfeltételek:**  
-1. Az API elérhető a tesztkörnyezetben
-2. A terheléses tesztelő eszközök beállítva
-
-**Tesztlépések:**  
-1. Szimulált felhasználók számának fokozatos növelése (100, 500, 1000, 5000)
-2. Különböző API végpontok terhelése párhuzamos kérésekkel
-3. Válaszidők és hibaarány mérése
-4. Rendszerviselkedés monitorozása magas terhelés mellett
-
-**Elvárt eredmény:**  
-- Az API stabilan működik nagy számú párhuzamos kérés mellett
-- A válaszidők elfogadható szinten maradnak (< 2 másodperc)
-- Adatvesztés nem fordul elő
-- A rendszer automatikusan skálázódik szükség esetén
-
-**Tényleges eredmény:**  
-- Az API 1000 párhuzamos felhasználóig stabilan működött
-- 5000 párhuzamos felhasználónál a válaszidők átlagosan 1.8 másodpercre nőttek
-- Adatvesztés nem történt
-- Az automatikus skálázás megfelelően működött, újabb konténerek indultak magas terhelés esetén
-
-**Megjegyzések:**  
-A backend rendszerek skálázhatósága biztosított, a jelenlegi technológiai stack segítségével a rendszer képes kezelni a várható terhelést.
-
-#### TC-L-002: Weboldal terheléses teszt
-
-**Tesztelő:** A teljes fejlesztői csapat (Nádassy Ilona, Markó Dániel, Stark Ernő)
-**Tesztelés dátuma:** 2025.03.16. 03:15  
-**Prioritás:** Magas  
-**Státusz:** Sikeres
-
-**Teszt célja:**  
-A webshop oldal terhelhetőségének tesztelése nagy látogatószám mellett.
-
-**Előfeltételek:**  
-1. A weboldal elérhető a tesztkörnyezetben
-2. A terheléses tesztelő eszközök beállítva
-
-**Tesztlépések:**  
-1. Szimulált látogatók számának fokozatos növelése (100, 500, 1000, 5000)
-2. Különböző oldalbetöltések, keresések és kosárműveletek szimulálása
-3. Oldalbetöltési idők és hibaarány mérése
-4. CDN és gyorsítótár hatékonyságának vizsgálata
-
-**Elvárt eredmény:**  
-- A webshop oldala stabil teljesítményt nyújt nagy látogatószám mellett
-- Az oldalak gyorsan töltenek be (< 3 másodperc)
-- A rendszer megfelelően reagál nagyobb terhelésre
-- A CDN és gyorsítótár hatékony működése
-
-**Tényleges eredmény:**  
-- Az oldal 5000 párhuzamos felhasználóig is stabil maradt
-- Az oldalbetöltési idők 2.2-2.8 másodperc között maradtak még magas terhelés mellett is
-- A CDN és gyorsítótár megfelelően működött, csökkentve a backend terhelését
-- Nem fordult elő kiszolgálási hiba vagy túlterhelés
-
-**Megjegyzések:**  
-A terheléses tesztek alapján a rendszer várhatóan képes lesz kezelni a szezonális forgalmi csúcsokat is (pl. Black Friday, karácsonyi időszak).
 
 ### 2.4 Biztonsági tesztek
 
 #### TC-S-001: Hitelesítés és jogosultságkezelés tesztelése
 
-**Tesztelő:** Markó Dániel
+**Tesztelő:** Markó Dániel  
 **Tesztelés dátuma:** 2025.03.18. 10:00  
 **Prioritás:** Kritikus  
 **Státusz:** Sikeres
@@ -338,22 +232,15 @@ Az alkalmazás hitelesítési és jogosultságkezelési rendszerének tesztelés
 4. Session kezelés és timeout tesztelése
 5. Jelszóvisszaállítási folyamat tesztelése
 
-**Elvárt eredmény:**  
-- Az alkalmazás megfelelően ellenőrzi a hitelesítést minden API-hívásnál
-- Csak a jogosult felhasználók férnek hozzá a védett tartalmakhoz
-- Az adatok titkosított csatornákon keresztül kerülnek továbbításra
-- A jelszavak biztonságosan tárolódnak
-- A session kezelés megfelelően működik
-
-**Tényleges eredmény:**  
-- Az alkalmazás minden API-hívásnál megfelelően ellenőrizte a hitelesítést
-- A jogosulatlan hozzáférési kísérletek blokkolt állapottal és hibaüzenettel végződtek
-- Minden adat HTTPS protokollon keresztül került továbbításra
-- A jelszavak bcrypt algoritmussal, megfelelő salt értékkel kerültek tárolásra
-- A session timeout megfelelően működött (30 perc inaktivitás után)
+**Eredmény:**  
+1. A bejelentkezés megfelelően működött helyes adatokkal, helytelen adatokkal pedig megfelelő hibaüzenetet adott
+2. A jogosulatlan hozzáférési kísérletek blokkolt állapottal és hibaüzenettel végződtek
+3. Az alkalmazás minden API-hívásnál megfelelően ellenőrizte a hitelesítést
+4. A session timeout megfelelően működött (30 perc inaktivitás után), a rendszer biztonságosan kezelte a session-öket
+5. A jelszóvisszaállítási folyamat megfelelően működött, biztonságos módon lehetett új jelszót beállítani
 
 **Megjegyzések:**  
-Nem történt jogosulatlan adat-hozzáférés a tesztek során.
+Nem történt jogosulatlan adat-hozzáférés a tesztek során. A jelszavak bcrypt algoritmussal, megfelelő salt értékkel kerültek tárolásra. Minden adat HTTPS protokollon keresztül került továbbításra.
 
 ## 3. ÖSSZEFOGLALÁS ÉS JAVASLATOK
 
@@ -365,9 +252,7 @@ A webshop alkalmazás tesztelése során a következő eredményeket kaptuk:
 
 2. **Felhasználói élmény tesztek:** Az alkalmazás navigációs rendszere és design-ja a legtöbb eszközön megfelelően működik. Egy kisebb hiba javítása szükséges a termékgaléria megjelenítésében bizonyos mobileszközökön.
 
-3. **Terhelési tesztek:** Az alkalmazás API-ja és weboldalai megfelelően teljesítettek nagy terhelés mellett is. A skálázhatóság biztosított a jelenlegi architektúrában.
-
-4. **Biztonsági tesztek:** Az alkalmazás hitelesítési és jogosultságkezelési rendszere megfelelően működik.
+3. **Biztonsági tesztek:** Az alkalmazás hitelesítési és jogosultságkezelési rendszere megfelelően működik.
 
 ### 3.2 Azonosított problémák és javaslatok
 
@@ -387,5 +272,3 @@ A webshop alkalmazás tesztelése során a következő eredményeket kaptuk:
 A webshop alkalmazás a tesztelés alapján megfelelő minőségű, és a kritikus funkcionalitások megbízhatóan működnek. Az azonosított hibák kijavítása után az alkalmazás alkalmas a produkciós környezetben való üzemeltetésre.
 
 **Tesztelési jelentés státusza:** Elfogadásra javasolt, a jelzett hibák javításával!
-
----

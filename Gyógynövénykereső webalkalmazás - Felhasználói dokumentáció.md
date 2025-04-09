@@ -60,17 +60,34 @@ A Gyógynövénykereső böngészőalapú, tehát nincs szükség külön letöl
 
 #### Regisztráció:
 - Kattints a **Regisztráció** menüpontra.
+
+![Regisztráció gomb](md_images/regisztracio_gomb.jpg)
+
 - Add meg a nevedet, email címedet és jelszavadat.
+
+![Regisztrációs űrlap](md_images/regisztracio_form.jpg)
+
 - További adataidat megadhatod bejelentkezés után a **Profilom** menüpont alatt.
 
 #### Belépés:
 - Kattints a **Belépés** menüpontra.
+
+![Belépés gomb](md_images/bejelentkezes_gomb.jpg)
+
 - Add meg az e-mail címedet és jelszavadat.
+
+![Belépési űrlap](md_images/bejelentkezes_form.jpg)
 
 ### Keresőfunkció használata
 
+- Kattints a Keresés gombra a felső menüben.
+
+![Keresés gomb](md_images/kereses_gomb.jpg)
+
 #### Keresés betegségek alapján:
 - Megadhatsz betegségeket vesszővel elválasztva (pl. megfázás, fejfájás, köhögés), hogy olyan gyógynövényeket találj, amelyek segíthetnek ezek kezelésében.
+
+![Keresési űrlap](md_images/kereses_form.jpg)
 
 #### Keresés gyógynövények között:
 - Kulcsszavak alapján kereshetsz a gyógynövények leírásában és címében (pl. kamilla, levendula).
@@ -80,18 +97,26 @@ A Gyógynövénykereső böngészőalapú, tehát nincs szükség külön letöl
 - Feliratkozhatsz hírlevelünkre, ahol megadhatod az e-mail címedet, és elfogadhatod az adatvédelmi nyilatkozatot.
 - Tippeket, akciókat és újdonságokat kaphatsz közvetlenül a postaládádba.
 
+![Hírlevél feliratkozás](md_images/hirlevel_feliratkozas.jpg)
+
 ### Blog használata
 
 #### Legfrissebb bejegyzések:
 - A főoldalon a legújabb blogbejegyzések jelennek meg.
 
+![Blog bejegyzések](md_images/blog_bejegyzesek.jpg)
+
 #### Kategóriák:
 - Böngészhetsz a bejegyzések különböző kategóriái között.
+
+![Blog footer](md_images/blog_footer.jpg)
 
 ### Webshop használata
 
 #### Főoldal:
 - Az összes elérhető terméket megtalálhatod itt.
+
+![Webáruház gomb](md_images/webaruhaz_gomb.jpg)
 
 #### Akciók:
 - Kiemelt ajánlatainkat és kedvezményes termékeinket a Webshop legfelső részén találod, lapozható formában.
@@ -105,28 +130,28 @@ A Gyógynövénykereső böngészőalapú, tehát nincs szükség külön letöl
 - Rendezheted ár vagy név szerint
 - Szűrhetsz termékkategóriák szerint
 
-### Információs oldalak
+![Webáruház termékkategóriák](md_images/webaruhaz_termekkategoriak.jpg)
 
-#### Rólunk:
-- Olvasd el az oldal történetét, célját, és információkat a működéséről.
+#### Webshop lábléc linkek
+- A Termékek linkre kattintva a Webshop főoldalára jutsz
+- A Kiemelt termékeink linkre kattintva, a kiemelt termékek listáját láthatod
+- Az Akciós termékeink linkre kattintva, az akciós termékek listáját láthatod
 
-#### GYIK:
-- Gyakran ismételt kérdések és válaszok segítenek a leggyakoribb problémák megoldásában.
-
-#### Kapcsolat:
-- Add meg a neved, e-mail címed, a megkeresés tárgyát, és írd le az üzenetedet.
-
-#### Adatvédelmi nyilatkozat:
-- Részletek az adatkezelésről, melyet feliratkozáskor elfogadhatsz.
-
-#### ÁSZF:
-- Az Általános Szerződési Feltételek elérhetők itt.
+![Webáruház lábéc linkek](md_images/webshp_lablec_linkek.jpg)
 
 ### Kosár és vásárlás
 
 #### Termékek hozzáadása:
 - A kosárba helyezett termékek, például C-vitamin, megjelennek árukkal és mennyiségükkel.
 - Az összesítés tartalmazza a részösszeget, szállítási költséget és végösszeget.
+
+![Rendelés részletek és kosárba gomb](md_images/rendeles_reszletek_es_kosarba_gomb.jpg)
+
+![Kosárba gomb a termék részletes nézetében](md_images/rendeles_kosarba_gomb_termek_single_view.jpg)
+
+![Kosár ikon a weboldal jobb felső sarkában](md_images/rendeles_kosar_ikon_a_weboldal_jobb_felso_sarkaban.jpg)
+
+![Tovább a pénztárhoz](md_images/rendeles_tovabb_a_penztarhoz.jpg)
 
 #### Szállítási és fizetési információk:
 - **Szállítási mód:** pl. Postai kézbesítés – költsége 1500 Ft.
@@ -139,13 +164,19 @@ A Gyógynövénykereső böngészőalapú, tehát nincs szükség külön letöl
 - Számlázási és szállítási adatok kitöltése (piros csillaggal jelölt mezők kötelezőek).
 - Példa: Teszt Tamás, 1234 Budapest, Példa utca 123.
 
+![Rendelés véglegesítése - adatok](md_images/rendeles_veglegesitese_adatok.jpg)
+
 #### Szállítási és fizetési opciók kiválasztása:
 - Szállítási mód (pl. Postai kézbesítés).
 - Fizetési mód (pl. Kártyás fizetés).
 
+![Rendelés véglegesítése - szállítás és fizetés](md_images/rendeles_veglegesitese_szallitas_es_fizetes.jpg)
+
 #### Rendelés véglegesítése:
 - Ellenőrizd az összesített rendelési adatokat.
 - Fogadd el az Általános Szerződési Feltételeket és Adatvédelmi Szabályzatot.
+
+![Rendelés véglegesítése - összesítés](md_images/rendeles_veglegesitese_osszesites.jpg)
 
 #### Rendeléseim:
 - A leadott rendeléseket listázza a rendelési azonosítóval, dátummal, összeggel és státusszal.
@@ -156,6 +187,29 @@ A Gyógynövénykereső böngészőalapú, tehát nincs szükség külön letöl
 #### Profil frissítése:
 - Új jelszó megadása és megerősítése.
 - Személyes adatok, például cím és elérhetőség módosítása.
+
+### Információs oldalak
+
+#### Rólunk:
+- Olvasd el az oldal történetét, célját, és információkat a működéséről.
+
+#### GYIK:
+- Gyakran ismételt kérdések és válaszok segítenek a leggyakoribb problémák megoldásában.
+
+![Gyakran ismételt kérdések](md_images/gyakran_ismetelt_kerdesek.jpg)
+
+#### Kapcsolat:
+- Add meg a neved, e-mail címed, a megkeresés tárgyát, és írd le az üzenetedet.
+
+![Kapcsolati űrlap](md_images/kapcsolat_form.jpg)
+
+#### Adatvédelmi nyilatkozat:
+- Részletek az adatkezelésről, melyet feliratkozáskor elfogadhatsz.
+
+#### ÁSZF:
+- Az Általános Szerződési Feltételek elérhetők itt.
+
+![Információk a láblécben](md_images/informaciok_footer.jpg)
 
 ## Adminisztrátori útmutató
 
@@ -175,6 +229,8 @@ A Gyógynövénykereső böngészőalapú, tehát nincs szükség külön letöl
 6. **Betegségek listázása:** Sorold fel az érintett betegségeket vesszővel elválasztva (pl. cukorbetegség, magas vérnyomás, asztma).
 7. **Kiemelés:** Jelöld ki a bejegyzést kiemeltként, ha azt szeretnéd.
 
+![Új bejegyzés létrehozása](md_images/uj_bejegyzes_admin.jpg)
+
 ### Kategóriák kezelése
 
 #### Kategória létrehozása:
@@ -183,6 +239,8 @@ A Gyógynövénykereső böngészőalapú, tehát nincs szükség külön letöl
 #### Kategóriák megtekintése és kezelése:
 - A már meglévő kategóriák listája a táblázatban jelenik meg.
 - Minden kategória neve mellett megtalálható a törlés gomb.
+
+![Blog kategóriák kezelése](md_images/blog_kategoriak_admin.jpg)
 
 ### Termékek kezelése
 
@@ -199,6 +257,8 @@ A Gyógynövénykereső böngészőalapú, tehát nincs szükség külön letöl
   - Kiemelt
   - Műveletek (megtekintés, szerkesztés, törlés)
 
+![Termékek kezelése](md_images/termekek-admin.jpg)
+
 #### Új termék létrehozása:
 1. Kattints az "Új termék létrehozása" gombra.
 2. Töltsd ki az alábbi mezőket:
@@ -214,6 +274,8 @@ A Gyógynövénykereső böngészőalapú, tehát nincs szükség külön letöl
    - **Termék leírása:** Írd be a termék részletes ismertetését.
    - **Felhasználási javaslat:** Adj meg javaslatokat a termék használatára.
    - **Termék képei:** Tölts fel képeket (max. 2MB/kép).
+
+![Új termék létrehozása](md_images/uj_termek_admin.jpg)
 
 #### Termék képek feltöltése:
 - A képeket egyszerűen áthúzhatod a feltöltési területre, vagy kattinthatsz, hogy manuálisan válassz fájlokat.
@@ -232,6 +294,8 @@ A Gyógynövénykereső böngészőalapú, tehát nincs szükség külön letöl
   - Leírás
   - Műveletek (törlés)
 
+![Termékkategóriák kezelése](md_images/termekkategoria_admin.jpg)
+
 ### Rendelések kezelése
 
 #### Rendelések áttekintése:
@@ -242,6 +306,8 @@ A Gyógynövénykereső böngészőalapú, tehát nincs szükség külön letöl
   - Összeg (a rendelés teljes értéke Ft-ban)
   - Státusz (a rendelés aktuális státusza, pl. Új rendelés)
   - Műveletek (szerkesztés, törlés, státusz módosítása, megjegyzés)
+
+![Rendelések kezelése](md_images/rendelesek_admin.jpg)
 
 #### Státusz szűrő:
 - A státusz szűrővel az adatbázisban lévő rendeléseket különböző státuszok alapján szűrheted.
@@ -296,6 +362,8 @@ A Gyógynövénykereső böngészőalapú, tehát nincs szükség külön letöl
   - Állapot (aktív vagy inaktív)
   - Műveletek (szerkesztés és törlés)
 
+![Szállítási módok kezelése](md_images/szallitasimodok_admin.jpg)
+
 #### Új szállítási mód létrehozása:
 1. Kattints az **Új szállítási mód** gombra.
 2. Töltsd ki az alábbi mezőket:
@@ -320,6 +388,8 @@ A Gyógynövénykereső böngészőalapú, tehát nincs szükség külön letöl
   - Állapot (aktív vagy inaktív)
   - Műveletek (szerkesztés és törlés)
 
+![Fizetési módok kezelése](md_images/fizetesimodok_admin.jpg)
+
 #### Új fizetési mód létrehozása:
 1. Kattints az **Új fizetési mód** gombra.
 2. Töltsd ki az alábbi mezőket:
@@ -342,6 +412,8 @@ A Gyógynövénykereső böngészőalapú, tehát nincs szükség külön letöl
   - Cím (a felhasználóhoz társított cím, ha megadott)
   - Jogosultság (a felhasználó jogosultsági szintje, pl. Admin)
 
+![Felhasználók kezelése](md_images/felhasznalok_admin.jpg)
+
 #### Szuper Admin lehetőségei:
 - Felhasználó kezelése: A rendszerben elérhető funkciókkal a felhasználók szerkesztése, admin jog kiosztása/elvétele vagy felhasználó törlése lehetséges.
 
@@ -357,6 +429,8 @@ A Gyógynövénykereső böngészőalapú, tehát nincs szükség külön letöl
   - Státusz (az üzenet feldolgozottsági állapota)
   - Műveletek (lehetőség az üzenetek kezelésére, például olvasottnak jelölés vagy törlés)
 
+![Kapcsolati üzenetek kezelése](md_images/uzenetek_admin.jpg)
+
 ### Feliratkozások kezelése
 
 #### Feliratkozások áttekintése:
@@ -368,12 +442,16 @@ A Gyógynövénykereső böngészőalapú, tehát nincs szükség külön letöl
   - Leiratkozás ideje (ha a feliratkozó leiratkozott, itt jelenik meg az időpont; ellenkező esetben "N/A")
   - Műveletek (lehetővé teszi a feliratkozások módosítását vagy törlését)
 
+![Hírlevél feliratkozások kezelése](md_images/hirlevel_admin.jpg)
+
 ### Termékstatisztikák
 
 #### Statisztikai adatok áttekintése:
 - A statisztikák segítségével nyomon követheted a termékek teljesítményét:
   - Összes megtekintés (az oldalon belüli összes termékmegtekintés száma)
   - Összes eladás (az összes eladott termék mennyisége)
+
+![Termékstatisztikák](md_images/statisztika_admin.jpg)
 
 #### Legnépszerűbb termékek:
 - **Legtöbbet nézett:** Az a termék, amelyet a legtöbbször tekintettek meg

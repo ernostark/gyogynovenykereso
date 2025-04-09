@@ -68,6 +68,7 @@ A Gyógynövénykereső célja, hogy egy átfogó, intuitív és hatékony platf
 
 - **Backend**: Stark Ernő
 - **Frontend**: Nádassy Ilona és Markó Dániel
+- **Tesztek**: Markó Dániel
 
 ---
 

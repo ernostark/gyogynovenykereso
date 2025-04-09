@@ -4,18 +4,7 @@
       <h4 class="position-relative mb-4 py-2">
         <i class="bi bi-heart-pulse text-primary me-2"></i>
         Keresés betegségek alapján
-        <span
-          class="position-absolute start-0 bottom-0 w-100"
-          style="
-            height: 3px;
-            background: linear-gradient(
-              90deg,
-              rgba(113, 44, 249, 0.95),
-              transparent
-            );
-            z-index: 1;
-          "
-        ></span>
+        <span class="gradient-underline"></span>
       </h4>
 
       <p class="text-muted mb-4">
@@ -29,12 +18,8 @@
             <span class="input-group-text bg-light border-0">
               <i class="bi bi-search text-primary"></i>
             </span>
-            <input
-              type="text"
-              class="form-control border-0 bg-light"
-              formControlName="diseases"
-              placeholder="Pl.: megfázás, fejfájás, köhögés..."
-            />
+            <input type="text" class="form-control border-0 bg-light" formControlName="diseases"
+              placeholder="Pl.: megfázás, fejfájás, köhögés..." />
           </div>
         </div>
         <button type="submit" class="btn btn-primary btn-lg px-4">
@@ -49,18 +34,7 @@
       <h4 class="position-relative mb-4 py-2">
         <i class="bi bi-flower1 text-primary me-2"></i>
         Keresés gyógynövények között
-        <span
-          class="position-absolute start-0 bottom-0 w-100"
-          style="
-            height: 3px;
-            background: linear-gradient(
-              90deg,
-              rgba(113, 44, 249, 0.95),
-              transparent
-            );
-            z-index: 1;
-          "
-        ></span>
+        <span class="gradient-underline"></span>
       </h4>
 
       <p class="text-muted mb-4">
@@ -68,25 +42,19 @@
         alapján.
       </p>
 
-      <div class="search-container">
+      <!-- Ezt a részt form tagbe helyezzük -->
+      <form (ngSubmit)="onSearchInContent()">
         <div class="input-group input-group-lg mb-4">
           <span class="input-group-text bg-light border-0">
             <i class="bi bi-search text-primary"></i>
           </span>
-          <input
-            type="text"
-            [(ngModel)]="searchQuery"
-            placeholder="Pl.: kamilla, levendula..."
-            class="form-control border-0 bg-light"
-          />
+          <input type="text" [(ngModel)]="searchQuery" name="searchQuery" placeholder="Pl.: kamilla, levendula..."
+            class="form-control border-0 bg-light" />
         </div>
-        <button
-          (click)="onSearchInContent()"
-          class="btn btn-primary btn-lg px-4"
-        >
+        <button type="submit" class="btn btn-primary btn-lg px-4">
           <i class="bi bi-search me-2"></i>Keresés tartalomban
         </button>
-      </div>
+      </form>
     </div>
   </div>
 
@@ -111,11 +79,7 @@
               </span>
             </td>
             <td>
-              <a
-                [routerLink]="['/posts', post.id]"
-                class="btn btn-sm btn-primary"
-                target="_blank"
-              >
+              <a [routerLink]="['/posts', post.id]" class="btn btn-sm btn-primary" target="_blank">
                 <i class="bi bi-eye me-1"></i>Megtekintés
               </a>
             </td>
@@ -133,21 +97,12 @@
 
 <div aria-live="polite" aria-atomic="true" class="position-relative">
   <div class="toast-container position-fixed bottom-0 end-0 p-3">
-    <div
-      id="toastMessage"
-      class="toast align-items-center text-white bg-primary border-0"
-      role="alert"
-      aria-live="assertive"
-      aria-atomic="true"
-    >
+    <div id="toastMessage" class="toast align-items-center text-white bg-primary border-0" role="alert"
+      aria-live="assertive" aria-atomic="true">
       <div class="d-flex">
         <div class="toast-body" id="toastBody"></div>
-        <button
-          type="button"
-          class="btn-close btn-close-white me-2 m-auto"
-          data-bs-dismiss="toast"
-          aria-label="Close"
-        ></button>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+          aria-label="Close"></button>
       </div>
     </div>
   </div>

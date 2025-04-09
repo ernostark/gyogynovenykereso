@@ -16,6 +16,8 @@ import { CartPageComponent } from './webshop/cart/cart-page/cart-page.component'
 import { CheckoutComponent } from './webshop/checkout/checkout/checkout.component';
 import { OrderDetailComponent } from './webshop/order-details/order-details.component';
 import { OrdersComponent } from './webshop/orders/orders.component';
+import { DiscountedProductsComponent } from './webshop/discounted-products/discounted-products/discounted-products.component';
+import { FeaturedProductsComponent } from './webshop/featured-products/featured-products/featured-products.component';
 
 export const routes: Routes = [
   {
@@ -50,6 +52,16 @@ export const routes: Routes = [
   { path: 'contact', component: ContactComponent },
   { path: 'privacy-policy', component: PrivacyPolicyComponent },
   { path: 'terms', component: TermsComponent },
+  {
+    path: 'akcios-termekek',
+    component: DiscountedProductsComponent,
+    title: 'Akciós termékeink'
+  },
+  {
+    path: 'kiemelt-termekek',
+    component: FeaturedProductsComponent,
+    title: 'Kiemelt termékeink'
+  },
   {
     path: 'categories',
     component: CategoryDetailComponent,

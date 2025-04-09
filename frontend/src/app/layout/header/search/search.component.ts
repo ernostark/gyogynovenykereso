@@ -17,7 +17,7 @@ import { environment } from '../../../../environments/environment.development';
   standalone: true,
   imports: [FormsModule, ReactiveFormsModule, RouterLink, CommonModule],
   templateUrl: './search.component.html',
-  styleUrl: './search.component.css',
+  styleUrls: ['./search.component.css'],
 })
 export class SearchComponent {
   searchForm: FormGroup;
@@ -119,13 +119,17 @@ export class SearchComponent {
     }
 
     this.http
-      .get(`${environment.apiUrl}/posts/search?q=${this.searchQuery}`)
+      .get(`${environment.apiUrl}/posts/search?q=${encodeURIComponent(this.searchQuery.trim())}`)
       .subscribe({
         next: (response: any) => {
-          this.searchResults = response.posts;
+          this.searchResults = response.posts || [];
+          if (this.searchResults.length === 0) {
+            this.showToast('Nincs találat a keresési feltételekre.');
+          }
         },
         error: (error) => {
           console.error('Hiba történt a keresés során:', error);
+          this.showToast('Hiba történt a keresés során.');
         },
       });
   }
