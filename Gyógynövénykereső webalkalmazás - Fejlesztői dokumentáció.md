@@ -23,11 +23,19 @@
 
 - Backend: 
 - composer install
+- .env fájl létrehozása és adatbázis adatok beállítása
+- adatbázist kiszolgáló szerver elindítása ( pl. fejlesztői környezetben XAMPP )
 - php artisan app:setup
 
-Miután a setup közben létrehoztuk a Szuper Admint, a következő linken léphetünk be:
+Miután a telepítés közben létrehoztuk a Szuper Admint, a következő linken léphetünk be:
 
-http://localhost:4200/admin/login
+{Frontend URL}/admin/login ( pl.: http://localhost:4200/admin/login )
+
+- amennyiben a Szuper Admin létrehozása nem futott volna le, vagy újabbat szeretnénk létrehozni
+( a Szuper Admin tud Admin jogot adni regisztrált felhasználóknak az Admin Panel felületén ),
+akkor a következő paranccsl índíthatunk egy újabb létrehozást:
+
+- php artisan admin:create
 
 ---
 

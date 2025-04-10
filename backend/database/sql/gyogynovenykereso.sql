@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Gép: 127.0.0.1
--- Létrehozás ideje: 2025. Ápr 09. 19:10
+-- Létrehozás ideje: 2025. Ápr 10. 15:38
 -- Kiszolgáló verziója: 10.4.32-MariaDB
 -- PHP verzió: 8.2.12
 
@@ -40,46 +40,6 @@ INSERT INTO `categories` (`id`, `name`, `slug`, `description`, `parent_id`, `cre
 (4, 'Egészséges életmód', 'egeszseges-eletmod', NULL, NULL, '2025-04-02 16:59:54', '2025-04-02 16:59:54'),
 (5, 'Népi gyógyászat', 'nepi-gyogyaszat', NULL, NULL, '2025-04-02 17:00:06', '2025-04-02 17:00:06'),
 (6, 'Betegségek természetes kezelése', 'betegsegek-termeszetes-kezelese', NULL, NULL, '2025-04-02 17:00:19', '2025-04-02 17:00:19');
-
---
--- A tábla adatainak kiíratása `migrations`
---
-
-INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
-(1, '0001_01_01_000000_create_users_table', 1),
-(2, '0001_01_01_000001_create_cache_table', 1),
-(3, '2019_12_14_000001_create_personal_access_tokens_table', 1),
-(4, '2025_01_20_195018_create_product_categories_table', 1),
-(5, '2025_01_20_195019_create_products_table', 1),
-(6, '2025_01_20_195020_create_product_images_table', 1),
-(7, '2025_01_27_125556_create_admins_table', 1),
-(8, '2025_01_27_131600_create_categories_table', 1),
-(9, '2025_01_27_131726_create_posts_table', 1),
-(10, '2025_01_27_133230_create_tags_table', 1),
-(11, '2025_01_27_133250_create_post_tag_table', 1),
-(12, '2025_01_27_133303_create_comments_table', 1),
-(13, '2025_01_27_133320_create_media_table', 1),
-(14, '2025_02_08_122540_create_contacts_table', 1),
-(15, '2025_02_27_195214_create_order_statuses_table', 1),
-(16, '2025_02_27_195347_create_shipping_methods_table', 1),
-(17, '2025_02_27_195428_create_payment_methods_table', 1),
-(18, '2025_02_27_195504_create_orders_table', 1),
-(19, '2025_02_27_195911_create_order_items_table', 1),
-(20, '2025_02_27_200027_create_order_status_histories_table', 1),
-(21, '2025_03_07_172845_create_newsletter_subscribers_table', 1),
-(22, '2025_03_16_124725_create_carts_table', 1),
-(23, '2025_03_16_124813_create_cart_items_table', 1);
-
---
--- A tábla adatainak kiíratása `order_statuses`
---
-
-INSERT INTO `order_statuses` (`id`, `name`, `color`, `description`, `sort_order`, `created_at`, `updated_at`) VALUES
-(1, 'Új rendelés', '#3490dc', NULL, 1, '2025-04-02 09:52:41', '2025-04-02 09:52:41'),
-(2, 'Feldolgozás alatt', '#f6993f', NULL, 2, '2025-04-02 09:52:41', '2025-04-02 09:52:41'),
-(3, 'Kiszállítás alatt', '#38c172', NULL, 3, '2025-04-02 09:52:41', '2025-04-02 09:52:41'),
-(4, 'Teljesítve', '#4dc0b5', NULL, 4, '2025-04-02 09:52:41', '2025-04-02 09:52:41'),
-(5, 'Törölve', '#e3342f', NULL, 5, '2025-04-02 09:52:41', '2025-04-02 09:52:41');
 
 --
 -- A tábla adatainak kiíratása `payment_methods`
