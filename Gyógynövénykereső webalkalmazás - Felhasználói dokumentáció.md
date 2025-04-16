@@ -54,7 +54,7 @@ A Gyógynövénykereső böngészőalapú, tehát nincs szükség külön letöl
 ### Az oldal elérése
 
 1. Nyisd meg az internetes böngészőt a választott eszközödön.
-2. Írd be az oldal URL-címét: [www.gyogynovenyaruhaz.hu](http://www.gyogynovenyaruhaz.hu), majd nyomd meg az Enter gombot.
+2. Írd be az oldal URL-címét: [gyogynovenyaruhaz.hu](https://gyogynovenyaruhaz.hu), majd nyomd meg az Enter gombot.
 
 ### Regisztráció és bejelentkezés
 
@@ -70,9 +70,9 @@ A Gyógynövénykereső böngészőalapú, tehát nincs szükség külön letöl
 - További adataidat megadhatod bejelentkezés után a **Profilom** menüpont alatt.
 
 #### Belépés:
-- Kattints a **Belépés** menüpontra.
+- Kattints a **Bejelentkezés** menüpontra.
 
-![Belépés gomb](md_images/bejelentkezes_gomb.jpg)
+![Bejelentkezés gomb](md_images/bejelentkezes_gomb.jpg)
 
 - Add meg az e-mail címedet és jelszavadat.
 
@@ -354,7 +354,7 @@ A Gyógynövénykereső böngészőalapú, tehát nincs szükség külön letöl
 
 #### Szállítási módok áttekintése:
 - Az összes szállítási mód egy táblázatban jelenik meg:
-  - # (azonosító sorszám)
+  - azonosító sorszám
   - Név (a szállítási mód megnevezése)
   - Leírás (a szállítási mód rövid ismertetése)
   - Költség (a szállítás díja Ft-ban)
@@ -381,7 +381,7 @@ A Gyógynövénykereső böngészőalapú, tehát nincs szükség külön letöl
 
 #### Fizetési módok áttekintése:
 - Az összes elérhető fizetési mód táblázatos formában jelenik meg:
-  - # (azonosító sorszám)
+  - azonosító sorszám
   - Név (a fizetési mód neve)
   - Leírás (rövid ismertető a fizetési módról)
   - Sorrend (az a sorrend, amelyben a fizetési módok megjelennek)

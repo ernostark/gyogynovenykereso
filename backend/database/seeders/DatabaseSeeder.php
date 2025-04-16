@@ -13,7 +13,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        $sql = File::get(database_path('sql\gyogynovenykereso.sql'));
+        $sql = File::get(database_path('sql/gyogynovenykereso.sql'));
 
         $statements = array_filter(array_map('trim', explode(';', $sql)));
 

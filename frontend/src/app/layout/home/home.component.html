@@ -8,72 +8,40 @@
     <div *ngIf="error" class="alert alert-danger">
       {{ error }}
     </div>
-    <div
-      id="featuredCarousel"
-      class="carousel slide carousel-fade pt-2 shadow"
-      data-bs-ride="carousel"
-      data-bs-interval="4000"
-      *ngIf="featuredPosts.length > 0"
-    >
+    <div id="featuredCarousel" class="carousel slide carousel-fade pt-2 shadow" data-bs-ride="carousel"
+      data-bs-interval="4000" *ngIf="featuredPosts.length > 0">
       <div class="carousel-indicators">
-        <button
-          *ngFor="let post of featuredPosts; let i = index"
-          type="button"
-          data-bs-target="#featuredCarousel"
-          [attr.data-bs-slide-to]="i"
-          [class.active]="i === 0"
-          [attr.aria-current]="i === 0 ? 'true' : null"
-          [attr.aria-label]="'Slide ' + (i + 1)"
-        ></button>
+        <button *ngFor="let post of featuredPosts; let i = index" type="button" data-bs-target="#featuredCarousel"
+          [attr.data-bs-slide-to]="i" [class.active]="i === 0" [attr.aria-current]="i === 0 ? 'true' : null"
+          [attr.aria-label]="'Slide ' + (i + 1)"></button>
       </div>
       <div class="carousel-inner">
-        <div
-          class="carousel-item"
-          *ngFor="let post of featuredPosts; let i = index"
-          [class.active]="i === 0"
-        >
-          <img
-            [src]="
+        <div class="carousel-item" *ngFor="let post of featuredPosts; let i = index" [class.active]="i === 0">
+          <img [src]="
               post.image_path
                 ? storageUrl + '/storage/' + post.image_path
                 : storageUrl + '/storage/images/default.png'
-            "
-            class="d-block w-100"
-            style="height: 400px; object-fit: cover"
-            [alt]="post.title"
-          />
-          <div class="carousel-caption">
-            <h3>{{ post.title }}</h3>
-            <p>{{ post.excerpt }}</p>
-            <a [routerLink]="['/posts', post.id]" class="btn btn-light"
-              >Tovább olvasom</a
-            >
+            " class="d-block w-100" style="height: 400px; object-fit: cover" [alt]="post.title" />
+          <div class="carousel-caption d-flex align-items-center justify-content-center">
+            <div class="caption-backdrop"></div>
+            <div class="caption-content">
+              <h3 class="text-shadow">{{ post.title }}</h3>
+              <p class="text-shadow">{{ post.excerpt }}</p>
+              <a [routerLink]="['/posts', post.id]" class="btn btn-light">Tovább olvasom</a>
+            </div>
           </div>
         </div>
       </div>
-      <button
-        class="carousel-control-prev"
-        type="button"
-        data-bs-target="#featuredCarousel"
-        data-bs-slide="prev"
-      >
+      <button class="carousel-control-prev" type="button" data-bs-target="#featuredCarousel" data-bs-slide="prev">
         <span class="carousel-control-prev-icon" aria-hidden="true"></span>
         <span class="visually-hidden">Előző</span>
       </button>
-      <button
-        class="carousel-control-next"
-        type="button"
-        data-bs-target="#featuredCarousel"
-        data-bs-slide="next"
-      >
+      <button class="carousel-control-next" type="button" data-bs-target="#featuredCarousel" data-bs-slide="next">
         <span class="carousel-control-next-icon" aria-hidden="true"></span>
         <span class="visually-hidden">Következő</span>
       </button>
     </div>
-    <div
-      *ngIf="!loading && featuredPosts.length === 0"
-      class="alert alert-info"
-    >
+    <div *ngIf="!loading && featuredPosts.length === 0" class="alert alert-info">
       Nincs megjeleníthető kiemelt bejegyzés.
     </div>
   </div>
@@ -84,9 +52,7 @@
     <div class="d-flex align-items-center mb-3">
       <h3 class="position-relative pb-2 mb-0">
         Legfrissebb bejegyzések
-        <span
-          class="position-absolute start-0 bottom-0 w-100"
-          style="
+        <span class="position-absolute start-0 bottom-0 w-100" style="
             height: 3px;
             background: linear-gradient(
               90deg,
@@ -95,8 +61,7 @@
             );
             z-index: 1;
             overflow: visible;
-          "
-        >
+          ">
         </span>
       </h3>
     </div>
@@ -109,22 +74,13 @@
 
     <div class="row row-cols-1 row-cols-md-3 g-4">
       <div class="col" *ngFor="let post of latestPosts">
-        <a
-          style="text-decoration: none"
-          [routerLink]="['/posts', post.id]"
-          class=""
-        >
+        <a style="text-decoration: none" [routerLink]="['/posts', post.id]" class="">
           <div class="card h-100 shadow-sm">
-            <img
-              [src]="
+            <img [src]="
                 post.image_path
                   ? storageUrl + '/storage/' + post.image_path
                   : storageUrl + '/storage/images/default.png'
-              "
-              class="card-img-top"
-              style="height: 200px; object-fit: cover"
-              [alt]="post.title"
-            />
+              " class="card-img-top" style="height: 200px; object-fit: cover" [alt]="post.title" />
             <div class="card-body">
               <h5 class="card-title">{{ post.title }}</h5>
               <p class="card-text text-muted small mb-2">
@@ -140,10 +96,7 @@
                     {{ post.category?.name || "Nincs kategória" }}
                   </span>
                 </div>
-                <a
-                  [routerLink]="['/posts', post.id]"
-                  class="btn btn-light btn-sm"
-                >
+                <a [routerLink]="['/posts', post.id]" class="btn btn-light btn-sm">
                   Tovább olvasom
                 </a>
               </div>
@@ -153,10 +106,7 @@
       </div>
     </div>
 
-    <div
-      *ngIf="!loadingLatest && latestPosts.length === 0"
-      class="text-center py-5"
-    >
+    <div *ngIf="!loadingLatest && latestPosts.length === 0" class="text-center py-5">
       <p class="text-muted">Nincs megjeleníthető bejegyzés.</p>
     </div>
   </div>

@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Component } from '@angular/core';
+import { Component, ElementRef, ViewChild, AfterViewInit } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -12,6 +12,7 @@ import { RouterLink } from '@angular/router';
 import * as bootstrap from 'bootstrap';
 import { environment } from '../../../../environments/environment.development';
 
+
 @Component({
   selector: 'app-search',
   standalone: true,
@@ -19,7 +20,11 @@ import { environment } from '../../../../environments/environment.development';
   templateUrl: './search.component.html',
   styleUrls: ['./search.component.css'],
 })
-export class SearchComponent {
+export class SearchComponent implements AfterViewInit {
+
+  @ViewChild('resultsSection') resultsSection!: ElementRef;
+  @ViewChild('searchBottom') searchBottom!: ElementRef;
+
   searchForm: FormGroup;
   searchQuery: string = '';
   searchResults: any[] = [];
@@ -30,6 +35,9 @@ export class SearchComponent {
     });
   }
 
+  ngAfterViewInit() {
+  }
+
   showToast(message: string) {
     const toastEl = document.getElementById('toastMessage') as HTMLElement;
     const toastBody = document.getElementById('toastBody') as HTMLElement;
@@ -37,6 +45,20 @@ export class SearchComponent {
       toastBody.textContent = message;
       const toast = new bootstrap.Toast(toastEl);
       toast.show();
+    }
+  }
+
+  scrollToResults() {
+    if (this.searchResults.length > 0) {
+      const resultsPosition = this.resultsSection.nativeElement.getBoundingClientRect().top + window.scrollY;
+      const searchBottomPosition = this.searchBottom.nativeElement.getBoundingClientRect().top + window.scrollY;
+
+      const scrollTarget = Math.min(resultsPosition, searchBottomPosition);
+
+      window.scrollTo({
+        top: scrollTarget,
+        behavior: 'smooth'
+      });
     }
   }
 
@@ -81,6 +103,7 @@ export class SearchComponent {
         next: (response: any) => {
           console.log('Teljes válasz:', response);
           this.searchResults = response.posts || [];
+          setTimeout(() => this.scrollToResults(), 100);
         },
         error: (error) => {
           console.error('Hiba a keresés során:', error);
@@ -125,6 +148,8 @@ export class SearchComponent {
           this.searchResults = response.posts || [];
           if (this.searchResults.length === 0) {
             this.showToast('Nincs találat a keresési feltételekre.');
+          } else {
+            setTimeout(() => this.scrollToResults(), 100);
           }
         },
         error: (error) => {

@@ -17,25 +17,28 @@
 
 #### Frontend
 - Angular keretrendszer ^19.1.0
+- Bootstrap ^5.3.3
+- Chart.js ^4.4.8
+- @popperjs/core ^2.11.8
 
 #### Telepítés
-- Frontend: npm install
+- **Frontend**:
+  - `npm install`
+  - `ng serve` (fejlesztői szerver indítása, alapértelmezett URL: `http://localhost:4200`)
 
-- Backend: 
-- composer install
-- .env fájl létrehozása és adatbázis adatok beállítása
-- adatbázist kiszolgáló szerver elindítása ( pl. fejlesztői környezetben XAMPP )
-- php artisan app:setup
+- **Backend**:
+  - `composer install`
+  - `.env` fájl létrehozása és adatbázis adatok beállítása
+  - Adatbázist kiszolgáló szerver elindítása (pl. fejlesztői környezetben XAMPP)
+  - `php artisan app:setup`
 
 Miután a telepítés közben létrehoztuk a Szuper Admint, a következő linken léphetünk be:
 
-{Frontend URL}/admin/login ( pl.: http://localhost:4200/admin/login )
+`{Frontend URL}/admin/login` (pl.: `http://localhost:4200/admin/login`)
 
-- amennyiben a Szuper Admin létrehozása nem futott volna le, vagy újabbat szeretnénk létrehozni
-( a Szuper Admin tud Admin jogot adni regisztrált felhasználóknak az Admin Panel felületén ),
-akkor a következő paranccsl índíthatunk egy újabb létrehozást:
+- Amennyiben a Szuper Admin létrehozása nem futott volna le, vagy újabbat szeretnénk létrehozni (a Szuper Admin tud Admin jogot adni regisztrált felhasználóknak az Admin Panel felületén), akkor a következő paranccsal indíthatunk egy újabb létrehozást:
 
-- php artisan admin:create
+  - `php artisan admin:create`
 
 ---
 
@@ -43,8 +46,15 @@ akkor a következő paranccsl índíthatunk egy újabb létrehozást:
 
 1. [Bevezető](#1-bevezető)
 2. [Backend](#2-backend)
+   - [Backend projekt struktúra](#backend-projekt-struktúra)
    - [Adatbázis szerkezete](#adatbázis-szerkezete-táblák-neve-és-mezőnevek)
-   - [Végpontok](#végpontok-megnevezése-és-leírása)
+   - [Modellek és kapcsolataik](#modellek-és-kapcsolataik)
+   - [Vezérlők (Controllers)](#vezérlők-controllers)
+   - [Middleware komponensek](#middleware-komponensek)
+   - [Console Commandok](#console-commandok)
+   - [Útvonalak (Routes)](#útvonalak-routes)
+   - [Email küldési rendszer](#email-küldési-rendszer)
+   - [Végpontok megnevezése és leírása](#végpontok-megnevezése-és-leírása)
 3. [Frontend](#3-frontend)
    - [Az alkalmazás struktúrája és alapszerkezete](#az-alkalmazás-struktúrája-és-alapszerkezete)
    - [A fejléc és a keresési funkciók](#a-fejléc-és-a-keresési-funkciók)
@@ -55,6 +65,10 @@ akkor a következő paranccsl índíthatunk egy újabb létrehozást:
    - [Hitelesítési és adminisztrációs funkciók](#hitelesítési-és-adminisztrációs-funkciók)
    - [Kapcsolódó tartalmak kezelése](#kapcsolódó-tartalmak-kezelése)
    - [Komponensek és osztályváltozók listája](#komponensek-és-osztályváltozók-listája)
+   - [Frontend projekt struktúra](#frontend-projekt-struktúra)
+   - [Fontos frontend fájlok](#fontos-frontend-fájlok)
+   - [Adminisztrációs felület komponensei](#adminisztrációs-felület-komponensei)
+   - [Webshop komponensei](#webshop-komponensei)
 
 ---
 
@@ -84,21 +98,75 @@ A Gyógynövénykereső célja, hogy egy átfogó, intuitív és hatékony platf
 
 Az oldal adatbázisszerkezete és végpontjai gondosan lettek kialakítva, hogy egyszerűvé és hatékonnyá tegyék a felhasználói interakciókat, valamint az adminisztrációs folyamatokat. Az adatbázis jól strukturált táblákból áll, amelyek egymással összekapcsolódnak, így biztosítva az összes szükséges adat tárolását és feldolgozását.
 
-Az adatbázis alapját a `users` tábla adja, amely a regisztrált felhasználók adatait tárolja. Itt szerepel minden felhasználó neve, email címe, valamint, hogy rendelkezik-e admin jogosultsággal. A felhasználó címe (ország, irányítószám, város, utca és kiegészítő információk) szintén ebben a táblában található. Az adminok speciális jogosultságokat kapnak, amelyek lehetővé teszik számukra, hogy hozzáférjenek az oldal adminisztrációs funkcióihoz. A rendszer biztonságát az `email_verified_at` mező növeli, amely az email-cím hitelesítésének idejét tárolja, míg a jelszavak a `password` mezőben kerülnek tárolásra titkosítva.
+### Backend projekt struktúra
 
-A termékek kezelésére szolgál a `products` tábla, amely a termékek legfontosabb adatait tartalmazza. Ide tartozik a termék neve, leírása, ára, készletmennyisége és a kedvezményes ár is. A termékek kategorizálva kerülnek tárolásra a `product_categories` táblában, amely a kategóriák nevét és egyedi azonosítóját (slug) tartalmazza. Ez a szerkezet lehetővé teszi, hogy a termékeket logikusan rendszerezzük, és könnyen hozzáférhetővé tegyük a felhasználók számára.
+A Laravel projekt standard MVC (Model-View-Controller) architektúrát követ, az alábbi főbb könyvtárszerkezettel:
 
-A vásárlási élmény fokozása érdekében az oldal rendeléskezelési funkciókat is kínál, amelyeket az `orders` és az `order_items` táblák kezelnek. Az `orders` tábla tartalmazza a rendelési folyamat adatait, például a számlázási és szállítási információkat, valamint a rendelés státuszát. Az egyes rendelésekhez tartozó tételeket az `order_items` tábla tárolja, amely rögzíti a termékeket, azok mennyiségét és árát. Ezek az adatok az adminisztrátorok számára is könnyen elérhetőek, akik frissíthetik a rendelési státuszokat, vagy elemezhetik az eladási adatokat.
+```
+backend/
+├── app/                     # Az alkalmazás fő könyvtára
+│   ├── Console/             # Konzol parancsok
+│   │   └── Commands/        # Egyedi parancsok definíciói
+│   ├── Exceptions/          # Kivételkezelés
+│   ├── Http/                # HTTP kapcsolódó kódok
+│   │   ├── Controllers/     # Vezérlők - üzleti logika
+│   │   │   ├── Admin/       # Admin vezérlők
+│   │   │   └── User/        # Felhasználói vezérlők
+│   │   ├── Middleware/      # Kérések köztes feldolgozása
+│   │   └── Requests/        # Űrlap kérések validációja
+│   ├── Mail/                # Email sablonok és logika
+│   ├── Models/              # Adatbázis modellek
+│   └── Providers/           # Szolgáltatás-szolgáltatók
+├── bootstrap/               # Alkalmazás indítási szkriptek
+├── config/                  # Konfigurációs fájlok
+├── database/                # Adatbázis-kapcsolódó fájlok
+│   ├── factories/           # Modellek gyártó osztályai
+│   ├── migrations/          # Adatbázis migrációs fájlok
+│   ├── seeders/             # Adatbázis kezdeti feltöltés
+│   └── sql/                 # SQL dump fájlok
+├── public/                  # Nyilvánosan elérhető fájlok
+│   └── storage/             # Feltöltött fájlok tárolása
+├── resources/               # Nyers erőforrások
+│   ├── css/                 # CSS fájlok
+│   ├── js/                  # JavaScript fájlok
+│   └── views/               # Blade nézetsablonok
+├── routes/                  # Útvonal definíciók
+│   ├── api.php              # API útvonalak
+│   └── web.php              # Web útvonalak
+├── storage/                 # Alkalmazás által generált fájlok
+└── tests/                   # Tesztfájlok
+```
 
-A blogbejegyzések kezelése szintén fontos részét képezi az oldal működésének. A `posts` tábla tárolja a blogbejegyzéseket, beleértve a bejegyzések címét, tartalmát, kivonatát (excerpt), kategóriáját és publikálási státuszát. A blogbejegyzésekhez tartozó kategóriák a `categories` táblában találhatók, míg a hozzászólások a `comments` táblában kerülnek mentésre, ahol azok státusza (elfogadott, függőben, spam) is nyomon követhető. A címkék kezelésére a `tags` tábla szolgál, amely lehetővé teszi a blogbejegyzések pontosabb csoportosítását.
+#### Console Commands
 
-A hírlevél-feliratkozás a `newsletter_subscribers` táblában kerül rögzítésre. Ez tartalmazza a feliratkozók email címét, aktív státuszát, valamint az előfizetés és leiratkozás időpontját. Ezen adatok segítségével a hírlevélkezelés egyszerűen és hatékonyan megvalósítható.
+A projekt két fontos egyedi konzolos parancsot tartalmaz:
 
-A rendszerhez tartozó API-végpontok az adatokat JSON formátumban kezelik, amely biztosítja az adatcsere gyorsaságát és egyszerűségét. Például a `POST /register` végpont lehetővé teszi a felhasználók regisztrációját olyan adatokkal, mint a név, email cím és jelszó. A `POST /login` végponttal a felhasználók bejelentkezhetnek, és egy érvényes tokennel biztonságosan hozzáférhetnek az oldalon elérhető funkciókhoz. Az adminisztrátorok számára a `POST /admin/posts` végpont lehetővé teszi új blogbejegyzések létrehozását, míg a `DELETE /admin/posts/{id}` végponttal törölhetik azokat.
+1. **CreateAdmin** (`app/Console/Commands/CreateAdmin.php`): Szuper Admin felhasználó létrehozására szolgál, opcionálisan létrehozhat felhasználót is admin joggal.
+2. **SetupCommand** (`app/Console/Commands/SetupCommand.php`): Az alkalmazás kezdeti beállítását végzi, migrációkat futtat, betölti az SQL dump-ot és létrehoz egy admin felhasználót.
 
-A rendeléskezelési végpontok szintén fontos szerepet játszanak az API rendszerében. A `POST /checkout` végponttal a vásárlók leadhatják rendeléseiket, megadva a számlázási és szállítási információkat, valamint a kosár tartalmát. A rendelési adatokat az adminisztrátorok a `GET /admin/orders` végponton keresztül érhetik el, ahol szűrési lehetőségek állnak rendelkezésükre.
+#### Controllers
 
-Összességében az oldal strukturált adatbázis-szerkezete és jól definiált API-végpontjai biztosítják a felhasználók és az adminisztrátorok számára szükséges funkcionalitásokat. A rendszer rugalmas, skálázható és felhasználóbarát, amely lehetővé teszi az egyszerű navigációt és a hatékony adminisztrációt. A biztonságos hitelesítési folyamatok és a részletes adatkezelési lehetőségek hozzájárulnak az oldal magas színvonalú működéséhez.
+A vezérlők a következő fő csoportokra oszthatók:
+
+1. **Admin vezérlők**: Admin felülethez kapcsolódó műveletek
+   - AdminOrderController
+   - PaymentMethodController
+   - ShippingMethodController
+   - StatisticsController
+
+2. **Autentikációs vezérlők**:
+   - AdminAuthController
+   - UserController (regisztráció, bejelentkezés, profil)
+
+3. **Közös vezérlők**: 
+   - CartController (kosárkezelés)
+   - CategoryController (kategóriák)
+   - CheckoutController (fizetés)
+   - ContactController (kapcsolatfelvétel)
+   - PostController (blogbejegyzések)
+   - ProductController (termékek)
+   - ProductCategoryController (termékkategóriák)
+   - NewsletterController (hírlevélkezelés)
 
 ### Adatbázis szerkezete, táblák neve és mezőnevek
 
@@ -166,22 +234,30 @@ A rendeléskezelési végpontok szintén fontos szerepet játszanak az API rends
    - sale_count: Eladásszám
    - created_at, updated_at: Létrehozási és módosítási idő
 
-8. **admins** - Adminok adatai
+8. **product_images** - Termékképek tárolása
+   - id: Azonosító
+   - product_id: Kapcsolat a termékhez
+   - image_url: Kép útvonala
+   - is_primary: Elsődleges kép jelzés
+   - display_order: Megjelenítési sorrend
+   - created_at, updated_at: Létrehozási és módosítási idő
+
+9. **admins** - Adminok adatai
    - id: Azonosító
    - name: Név
    - email: Email cím
    - password: Jelszó
    - created_at, updated_at: Létrehozási és módosítási idő
 
-9. **categories** - Blogbejegyzések kategóriáinak tárolása
-   - id: Azonosító
-   - name: Kategória neve
-   - slug: Egyedi URL azonosító
-   - description: Leírás
-   - parent_id: Szülő kategória azonosító
-   - created_at, updated_at: Létrehozási és módosítási idő
+10. **categories** - Blogbejegyzések kategóriáinak tárolása
+    - id: Azonosító
+    - name: Kategória neve
+    - slug: Egyedi URL azonosító
+    - description: Leírás
+    - parent_id: Szülő kategória azonosító
+    - created_at, updated_at: Létrehozási és módosítási idő
 
-10. **posts** - Blogbejegyzések tárolása
+11. **posts** - Blogbejegyzések tárolása
     - id: Azonosító
     - title: Bejegyzés címe
     - slug: Egyedi URL azonosító
@@ -197,7 +273,7 @@ A rendeléskezelési végpontok szintén fontos szerepet játszanak az API rends
     - status: Státusz (draft/published/archived)
     - created_at, updated_at: Létrehozási és módosítási idő
 
-11. **comments** - Hozzászólások tárolása
+12. **comments** - Hozzászólások tárolása
     - id: Azonosító
     - post_id: Kapcsolat bejegyzéshez
     - user_id: Kapcsolat felhasználóhoz
@@ -205,15 +281,220 @@ A rendeléskezelési végpontok szintén fontos szerepet játszanak az API rends
     - status: Státusz (approved/pending/spam)
     - created_at, updated_at: Létrehozási és módosítási idő
 
-12. **order_items**, **order_status_histories** és **newsletter_subscribers** - Ezek további rendelési tételek, státusztörténetek és hírlevél előfizetők kezelésére szolgálnak.
+13. **tags és post_tag** - Címkék és blog-címke kapcsolat táblák
+    - A tags tábla: id, name, slug
+    - A post_tag tábla: id, post_id, tag_id
+
+14. **contacts** - Kapcsolatfelvételi üzenetek
+    - id: Azonosító
+    - name: Név
+    - email: Email cím
+    - subject: Tárgy
+    - message: Üzenet 
+    - is_read: Olvasottság jelzése
+    - created_at, updated_at: Létrehozási és módosítási idő
+
+15. **order_statuses** - Rendelési státuszok
+    - id: Azonosító
+    - name: Státusz neve
+    - color: Színkód
+    - description: Leírás
+    - sort_order: Megjelenítési sorrend
+    - created_at, updated_at: Létrehozási és módosítási idő
+
+16. **shipping_methods** - Szállítási módok
+    - id: Azonosító
+    - name: Szállítási mód neve
+    - description: Leírás
+    - cost: Szállítási költség
+    - estimated_delivery_days: Becsült szállítási idő napokban
+    - is_active: Aktív státusz
+    - created_at, updated_at: Létrehozási és módosítási idő
+
+17. **payment_methods** - Fizetési módok
+    - id: Azonosító
+    - name: Fizetési mód neve
+    - description: Leírás
+    - is_active: Aktív státusz
+    - sort_order: Megjelenítési sorrend
+    - created_at, updated_at: Létrehozási és módosítási idő
+
+18. **orders** - Rendelések
+    - id: Azonosító
+    - order_number: Rendelésszám
+    - user_id: Kapcsolat a felhasználóhoz
+    - status_id: Kapcsolat a státuszhoz
+    - shipping_method_id: Kapcsolat a szállítási módhoz
+    - payment_method_id: Kapcsolat a fizetési módhoz
+    - billing_* és shipping_*: Számlázási és szállítási adatok
+    - subtotal, shipping_cost, tax_amount, discount_amount, total: Összegek
+    - notes: Megjegyzés
+    - paid_at, shipped_at, completed_at: Fontos dátumok
+    - created_at, updated_at: Létrehozási és módosítási idő
+
+19. **order_items** - Rendelési tételek
+    - id: Azonosító
+    - order_id: Kapcsolat a rendeléshez
+    - product_id: Kapcsolat a termékhez
+    - product_name, product_latin_name: Termék neve és latin neve
+    - quantity: Mennyiség
+    - unit: Egység
+    - unit_price, discount_price: Árak
+    - subtotal: Részösszeg
+    - created_at, updated_at: Létrehozási és módosítási idő
+
+20. **order_status_histories** - Rendelési státuszváltozások
+    - id: Azonosító
+    - order_id: Kapcsolat a rendeléshez
+    - status_id: Kapcsolat a státuszhoz
+    - user_id: A státuszt módosító felhasználó
+    - comment: Megjegyzés
+    - created_at, updated_at: Létrehozási és módosítási idő
+
+21. **newsletter_subscribers** - Hírlevél-feliratkozók
+    - id: Azonosító
+    - email: Email cím
+    - user_id: Kapcsolat a felhasználóhoz (ha regisztrált)
+    - is_active: Aktív státusz
+    - token: Egyedi token leiratkozáshoz
+    - subscribed_at: Feliratkozás ideje
+    - unsubscribed_at: Leiratkozás ideje
+    - created_at, updated_at: Létrehozási és módosítási idő
+
+22. **carts** - Kosarak tárolása
+    - id: Azonosító
+    - user_id: Kapcsolat a felhasználóhoz
+    - session_id: Munkamenet azonosító
+    - status: Státusz (active/converted)
+    - expires_at: Lejárat ideje
+    - created_at, updated_at: Létrehozási és módosítási idő
+
+23. **cart_items** - Kosártételek tárolása
+    - id: Azonosító
+    - cart_id: Kapcsolat a kosárhoz
+    - product_id: Kapcsolat a termékhez
+    - quantity: Mennyiség
+    - unit_price: Egységár
+    - discount_price: Kedvezményes ár
+    - created_at, updated_at: Létrehozási és módosítási idő
+
+### Modellek és kapcsolataik
+
+Az alkalmazás számos modellt használ az adatbázis tábláinak kezeléséhez. A legfontosabb modellek és kapcsolataik:
+
+1. **User**
+   - Egy felhasználónak lehet több rendelése (one-to-many)
+   - Lehet admin joga (is_admin attribútum)
+   - Lehetnek közvetlen blog bejegyzései (polymorphic relationship)
+
+2. **Admin**
+   - Különálló model az adminisztrátorok kezelésére
+   - Lehetnek blog bejegyzései (polymorphic relationship)
+
+3. **Product**
+   - Tartozik egy termékkategóriához (belongs-to)
+   - Lehetnek képei (has-many)
+   - Lehet a kosárban és rendelési tételekben
+   - Virtual attributeok: primary_image, current_price, is_on_sale, discount_percentage
+
+4. **ProductCategory**
+   - Lehetnek termékei (has-many)
+   - Lehet szülő-gyermek kapcsolata (self-referencing)
+
+5. **Post**
+   - Tartozik egy kategóriához (belongs-to)
+   - Tartozik egy szerzőhöz (polymorphic relationship)
+   - Lehetnek címkéi (many-to-many)
+   - Lehetnek hozzászólásai (has-many)
+
+6. **Category**
+   - Lehetnek blogbejegyzései (has-many)
+   - Lehet szülő-gyermek kapcsolata (self-referencing)
+
+7. **Cart és CartItem**
+   - Egy kosárnak lehetnek tételei (has-many)
+   - A CartItem tartozik egy kosárhoz és egy termékhez (belongs-to)
+
+8. **Order és OrderItem**
+   - Egy rendelésnek lehetnek tételei (has-many)
+   - Az OrderItem tartozik egy rendeléshez és egy termékhez (belongs-to)
+   - Egy rendelésnek lehet státusza és státusztörténete
+
+### Vezérlők (Controllers)
+
+A backend vezérlők kezelik a bejövő kéréseket, végrehajtják az üzleti logikát és visszaadják a megfelelő válaszokat. A főbb vezérlők:
+
+1. **AdminAuthController**: Admin bejelentkezés és kijelentkezés kezelése
+   - `login()`: Admin bejelentkeztetése token létrehozással
+   - `logout()`: Admin kijelentkeztetése token törlésével
+
+2. **CartController**: Kosárkezelés
+   - `index()`: Kosár tartalmának lekérése
+   - `addItem()`: Termék kosárba helyezése
+   - `updateItem()`: Kosárban lévő termék mennyiségének módosítása
+   - `removeItem()`: Termék eltávolítása a kosárból
+   - `clear()`: Kosár teljes kiürítése
+
+3. **CheckoutController**: Rendelési folyamat
+   - `checkout()`: Rendelés feldolgozása, mentése, kosár konvertálása
+
+4. **PostController**: Blogbejegyzések kezelése
+   - `index()`, `show()`: Bejegyzések listázása és részletes megtekintése
+   - `store()`, `update()`, `destroy()`: Bejegyzések kezelése (CRUD)
+   - `getFeaturedPosts()`, `getLatestPosts()`: Kiemelt és legújabb bejegyzések lekérése
+   - `searchByDiseases()`, `searchInContent()`: Keresési funkciók
+
+5. **ProductController**: Termékek kezelése
+   - CRUD műveletek termékekhez
+   - Képek kezelése
+   - Megtekintések számolása
+
+6. **Admin/AdminOrderController**: Admin rendeléskezelés
+   - `index()`, `show()`: Rendelések listázása és részletes megtekintése
+   - `updateStatus()`: Rendelési státusz módosítása
+   - `getStatuses()`: Státuszok lekérése
+
+7. **User/OrderController**: Felhasználói rendelések
+   - `index()`, `show()`: Bejelentkezett felhasználó rendeléseinek listázása és részletes megtekintése
+
+8. **NewsletterController**: Hírlevél kezelése
+   - `subscribe()`: Feliratkozás kezelése
+   - `unsubscribeWithToken()`: Leiratkozás egyedi token alapján
+   - `toggleStatus()`: Feliratkozás státuszának módosítása
+
+### Middleware komponensek
+
+A middleware komponensek a kérések feldolgozását segítik a végpontok elérése előtt vagy után. A fontosabb middleware-ek:
+
+1. **AdminMiddleware**: Ellenőrzi, hogy a kérés admin felhasználótól származik-e
+   - Teszteli a kérést a `admin` guardból vagy az `is_admin` attribútumot a `sanctum` token alapján
+   - Egyes útvonalakhoz Szuper Admin jogosultságot követel meg
+
+2. **Authenticate**: Hitelesítést végez az aktuális guard alapján
+   - Ha a kérés nem hitelesített, a bejelentkezési oldalra irányít
+
+3. **EncryptCookies**: A sütik titkosítását végzi
+
+4. **TrustProxies**: Proxy szerverektől érkező kérések kezelését segíti
+
+5. **ValidateSignature**: Aláírt URL-ek ellenőrzésére szolgál
+
+### Console Commandok
+
+A Laravel artisan konzolos parancsai fontos szerepet játszanak a fejlesztésben és telepítésben:
+
+1. **admin:create**: Szuper Admin létrehozása
+   - Paraméterek: `--name`, `--email`
+   - Létrehozza a szükséges admin felhasználót és opcionálisan egy regular user-t is admin joggal
+
+2. **app:setup**: Alkalmazás telepítését segítő parancs
+   - Ellenőrzi az .env fájl létezését
+   - Létrehozza az alkalmazás kulcsot
+   - Futtatja a migrációkat
+   - Betölti a seeder adatokat
+   - Opcionálisan létrehoz egy Szuper Admint
 
 ### Végpontok megnevezése és leírása
-
-1. **POST /register** - Felhasználók regisztrációjához: {name: '...', email: '...', password: '...'}
-2. **POST /login** - Bejelentkezés: {email: '...', password: '...'}
-3. **GET /posts/latest** - Legújabb blogbejegyzések: {id: 1, title: '...', excerpt: '...', published_at: '...'}
-4. **GET /products/{id}** - Termék részletei: {id: 1, name: '...', price: '...', stock_quantity: '...'}
-5. **POST /checkout** - Rendelés leadása: {billing_name: '...', shipping_name: '...', payment_method_id: 1}
 
 | Végpont | Metódus | Kapcsolat típusa | Leírás |
 |---------|---------|-----------------|--------|
@@ -261,142 +542,213 @@ A rendeléskezelési végpontok szintén fontos szerepet játszanak az API rends
 | /posts/latest | GET | Nyilvános | Legújabb blogbejegyzések lekérése |
 | /products | GET | Nyilvános | Termékek listázása |
 | /products/{id} | GET | Nyilvános | Egy termék részleteinek lekérése |
+| /cart | GET | Nyilvános | Kosár tartalmának lekérése |
+| /cart/items | POST | Nyilvános | Termék hozzáadása a kosárhoz |
+| /cart/items/{id} | PUT | Nyilvános | Kosárban lévő tétel frissítése |
+| /cart/items/{id} | DELETE | Nyilvános | Tétel eltávolítása a kosárból |
+| /cart | DELETE | Nyilvános | Kosár tartalmának törlése |
+| /checkout | POST | Nyilvános | Rendelés leadása |
+| /shipping-methods | GET | Nyilvános | Elérhető szállítási módok lekérése |
+| /payment-methods | GET | Nyilvános | Elérhető fizetési módok lekérése |
+| /newsletter/subscribe | POST | Nyilvános | Feliratkozás a hírlevélre |
+| /newsletter/unsubscribe/{token} | GET | Nyilvános | Leiratkozás a hírlevélről token alapján |
+| /contact | POST | Nyilvános | Kapcsolatfelvételi üzenet küldése |
 
 ---
 
 ## 3. Frontend
 
-A weboldal egy modern, webes felületre készült alkalmazás, amely teljes mértékben reszponzív kialakítással rendelkezik. Ennek köszönhetően optimalizáltan működik különböző eszközökön, beleértve az asztali számítógépeket, táblagépeket és okostelefonokat, biztosítva a kiváló felhasználói élményt minden platformon.
+A frontend az Angular keretrendszerre épül, amely egy modern, komponensalapú architektúrát biztosít a Gyógynövénykereső weboldal és webáruház számára. A felület reszponzív, Bootstrap alapú dizájnnal készült, és támogatja mind a publikus, mind az adminisztrációs funkciókat. Az alkalmazás biztosítja a keresési funkciókat, a kosárkezelést, a rendelések kezelését és a tartalomkezelést, miközben intuitív felhasználói élményt nyújt.
 
 ### Az alkalmazás struktúrája és alapszerkezete
 
-A `frontend/src/app/app.component.ts` a teljes alkalmazás gyökérkomponense, amely az oldal szerkezetét definiálja. Ez a komponens tartalmazza a fejlécet, amely az oldal tetején helyezkedik el, valamint a láblécet, ami az oldal alján található. Emellett a `RouterOutlet` nevű Angular elem használatával az oldalak tartalmát az útvonalak alapján jeleníti meg. A `title` változó az alkalmazás neveként szolgál, jelen esetben "gyogynovenykereso". Ennek a komponensnek az a feladata, hogy keretet adjon az alkalmazás számára, miközben biztosítja a fejléc és lábléc konzisztens megjelenését az összes oldalon.
+Az Angular alkalmazás modularizált felépítésű, külön modulokkal az adminisztrációs és publikus felületek számára. A fő komponensek a `src/app` mappában találhatók, és a következő főbb részekre oszlanak:
 
-A navigációs útvonalak konfigurációját a `frontend/src/app/app.routes.ts` állítja be. Ez határozza meg, hogy az egyes URL-ekhez milyen komponensek tartoznak, például a `/home` útvonal a kezdőlapot, míg a `/cart` a kosár oldalt jeleníti meg. A különböző oldalak navigációs logikáját az Angular által biztosított `Routes` struktúrában definiáljuk.
+- **Admin**: Adminisztrációs felület komponensei és szolgáltatásai
+- **Webshop**: Webáruházhoz kapcsolódó komponensek (pl. terméklista, kosár, rendelések)
+- **Layout**: Általános elrendezési komponensek (fejléc, lábléc, kezdőlap)
+- **Shared**: Közös szolgáltatások és segédosztályok
+- **Related**: Kapcsolódó tartalmak kezelése (pl. kapcsolódó bejegyzések, termékek)
 
 ### A fejléc és a keresési funkciók
 
-A fejléc a `frontend/src/app/layout/header/header/header.component.ts`-ben található, és az oldal tetején helyezkedik el. Ez felel az oldal navigációs elemének megjelenítéséért, mint például a keresőmező vagy a kosár ikon. Bár maga a `HeaderComponent` egyszerű struktúrával rendelkezik, kulcsszerepet játszik az oldal navigációs élményének javításában.
-
-A keresőfunkciókat a `SearchComponent` valósítja meg, amely lehetővé teszi, hogy a felhasználók kulcsszavak alapján keressenek a termékek vagy cikkek között. Ennek a komponensnek az egyik fő funkciója, hogy az űrlapban megadott keresési adatokat feldolgozza, majd azokat elküldi az API-nak. A `searchResults` változó az API-ból visszakapott keresési eredményeket tárolja. A keresési eredmények rendezhetők és szűrhetők, ami kényelmesebbé teszi a felhasználók számára a releváns termékek megtalálását.
+A fejléc (`header.component`) tartalmazza a navigációs menüt, a keresősávot (`search.component`) és a felhasználói autentikációval kapcsolatos elemeket (`auth.component`). A keresési funkció lehetővé teszi a termékek és blogbejegyzések szűrését név, leírás vagy betegségek alapján. A keresősáv valós idejű szűrést biztosít, és a találatok a `webshop-homepage.component` vagy a `post-single-view.component` komponensekben jelennek meg.
 
 ### Kezdőlap és termékmegtekintés
 
-Az alkalmazás kezdőlapját a `HomeComponent` valósítja meg. Ez a komponens kiemelt szerepet játszik a látogatók első benyomásának kialakításában. A kiemelt és legújabb blogbejegyzéseket tölti be az API-n keresztül, és azokat vizuálisan vonzó módon jeleníti meg. A `featuredPosts` és `latestPosts` változók tárolják a kiemelt és legújabb tartalmakat, míg a `loadFeaturedPosts` és `loadLatestPosts` metódusok az API-ból történő adatlekérést kezelik.
-
-A termék részleteinek megjelenítéséért a `ProductDetailComponent` felel. Ez a komponens a felhasználók számára részletes információkat nyújt egy adott termékről, beleértve annak árát, kedvezményét, készletinformációit és képeit. A `quantity` változóval a felhasználók beállíthatják, hogy hány darabot szeretnének a kosárba helyezni. Az `addToCart` metódus a termék kosárba helyezésének logikáját kezeli, ami biztosítja az adatok szinkronizálását a backenddel.
+A kezdőlap (`home.component`) kiemelt termékeket és blogbejegyzéseket jelenít meg, dinamikusan betöltve az adatokat a backend API-n keresztül. A termékmegtekintés a `product-detail.component` komponensben történik, amely részletes információkat (ár, készlet, képek, leírás) mutat, és lehetőséget biztosít a kosárba helyezésre.
 
 ### Kosárkezelés
 
-A kosár oldal megvalósítása a `CartPageComponent` segítségével történik. Ez a komponens felelős a kosár tartalmának megjelenítéséért és kezeléséért. A `cartItems` változó a kosárban lévő termékeket tartalmazza, míg a `subtotal` és `totalAmount` változók számítják ki a kosár alösszegét és végösszegét, beleértve a szállítási díjakat. A `clearCart` metódus lehetőséget nyújt a kosár teljes tartalmának törlésére, míg az `updateQuantity` lehetővé teszi a termékek mennyiségének módosítását.
-
-A `CartService` egy szolgáltatás, amely a kosár funkcióit központosítja. Ez biztosítja az adatok API-val történő szinkronizálását, például a termékek hozzáadását, eltávolítását vagy frissítését. A `cart$` változó segítségével az alkalmazás más részei figyelhetik a kosár tartalmának változásait.
+A kosárkezelés a `cart-page.component`, `cart-dropdown.component`, `cart-icon.component` és `cart-item.component` komponensek együttműködésével valósul meg. A `CartService` kezeli a kosár tartalmának szinkronizálását a backenddel. A felhasználók hozzáadhatnak, módosíthatnak vagy törölhetnek termékeket, és valós idejű visszajelzést kapnak a készletinformációkról és az árakról.
 
 ### Rendelések kezelése
 
-A rendelésekkel kapcsolatos funkcionalitás két komponens segítségével valósul meg: az `OrdersComponent` és az `OrderDetailComponent`. Az `OrdersComponent` listázza a felhasználó összes rendelését, megjelenítve azok státuszát és összegét. Az `OrderDetailComponent` egy konkrét rendelés részleteit mutatja be, beleértve a szállítási és számlázási adatokat, valamint a rendelt tételeket.
-
-Mindkét komponens az API-val dolgozik, és a felhasználói tokent használja az adatok hiteles lekéréséhez. A `loadOrders` és `loadOrder` metódusok biztosítják a megfelelő adatok betöltését, míg a státuszkezelő metódusok, például az `isStatusCompleted`, vizuális visszajelzést adnak a felhasználónak a rendelés állapotáról.
+A rendelések kezelését a `orders.component` és `order-details.component` komponensek biztosítják. Az `orders.component` listázza a felhasználó korábbi rendeléseit, míg az `order-details.component` részletes információkat mutat a rendelés státuszáról, termékeiről, szállítási és számlázási adatokról, valamint a rendelési előzményekről.
 
 ### Webshop főoldal és szűrési funkciók
 
-A webshop főoldalát a `WebshopHomepage` valósítja meg. Ez a komponens felelős a termékek listázásáért, szűréséért és kategorizálásáért. A `products` változó a termékek teljes listáját tárolja, míg a `filteredProducts` a szűrt eredményeket. Az `applyFilters` metódus lehetővé teszi a felhasználók számára, hogy kategóriák, árak vagy keresési kulcsszavak alapján szűrjék a termékeket.
+A webshop főoldala (`webshop-homepage.component`) egy dinamikus terméklistát kínál, amely támogatja a kategóriák szerinti szűrést, keresést és rendezést (pl. ár, név, újdonság szerint). A komponens kiemelt és akciós termékeket is megjelenít egy karuszelen keresztül, és reszponzív dizájnnal alkalmazkodik különböző képernyőméretekhez.
 
 ### Hitelesítési és adminisztrációs funkciók
 
-Az `AuthService` a felhasználói hitelesítést kezeli. Ez a szolgáltatás felel a bejelentkezési és kijelentkezési folyamatokért, valamint a felhasználói adatok API-ból történő lekéréséért. A `login` metódus a felhasználói adatok ellenőrzésére szolgál, míg a `logout` eltávolítja az autentikációs tokent, ezzel megszüntetve a bejelentkezést.
+A hitelesítést a `auth.component` (felhasználói) és `admin-auth.component` (admin) komponensek kezelik. Az adminisztrációs felületet az `AdminGuard` védi, amely biztosítja, hogy csak jogosult felhasználók férjenek hozzá. Az adminisztrációs funkciók a következőket tartalmazzák:
+
+- Blogbejegyzések és kategóriák kezelése (`posts.component`, `create-post.component`, `categories.component`)
+- Termékek és termékkategóriák kezelése (`products.component`, `create-product.component`, `edit-product.component`, `product-categories.component`)
+- Rendelések kezelése (`orders.component`, `order-detail.component`)
+- Szállítási és fizetési módok kezelése (`shipping-methods.component`, `payment-methods.component`)
+- Üzenetek és hírlevél-feliratkozók kezelése (`admin-messages.component`, `subscribers.component`)
+- Statisztikák megtekintése (`product-statistics.component`)
 
 ### Kapcsolódó tartalmak kezelése
 
-A `RelatedContentService` segítségével a rendszer képes kapcsolódó termékeket vagy blogbejegyzéseket ajánlani. Ez a szolgáltatás például a felhasználók által megtekintett cikkek alapján keres hasonló termékeket, vagy fordítva. A `filterRelatedProducts` és `filterRelatedPosts` metódusok biztosítják a releváns találatokat.
+A kapcsolódó tartalmakat a `related-posts.component` és `related-products.component` komponensek kezelik. Ezek a komponensek a `RelatedContentService` segítségével dinamikusan töltik be a releváns blogbejegyzéseket vagy termékeket a felhasználó aktuális megtekintése alapján.
 
 ### Komponensek és osztályváltozók listája
 
-**AppComponent**
-- title: Az alkalmazás címe, például „gyogynovenykereso".
+- **AdminAuthComponent**: Admin bejelentkezés kezelése (`loginForm`, `submitted`)
+- **CategoriesComponent**: Blogkategóriák kezelése (`categories`, `categoryForm`, `successMessage`, `errorMessage`)
+- **DashboardComponent**: Adminisztrációs műszerfal
+- **SubscribersComponent**: Hírlevél-feliratkozók kezelése (`subscribers`, `loading`, `error`, `successMessage`, `showDeleteConfirmation`, `subscriberToDelete`)
+- **OrdersComponent**: Felhasználói rendelések listázása (`orders`, `isLoading`, `error`)
+- **OrderDetailComponent**: Rendelési részletek (`order`, `isLoading`, `error`, `orderStatuses`, `standardStatuses`, `storageUrl`)
+- **WebshopHomepageComponent**: Webshop főoldal (`products`, `filteredProducts`, `categories`, `featuredProducts`, `discountedProducts`, `loading`, `storageUrl`, `selectedCategory`, `searchTerm`, `sortOption`, `toastMessage`)
 
-**HeaderComponent**
-- Nincsenek explicit osztályváltozók, a fejléc megjelenítéséért felelős.
+### Frontend projekt struktúra
 
-**SearchComponent**
-- searchForm: A keresési űrlap mezőit és adatstruktúráját tartalmazza.
-- searchResults: Az API-ból kapott keresési eredményeket tárolja.
-- searchQuery: A keresési kifejezés, amelyet a felhasználó megadott.
+A frontend Angular alapú, a következő főbb könyvtárszerkezettel:
 
-**HomeComponent**
-- featuredPosts: A kiemelt blogbejegyzések listája.
-- latestPosts: A legújabb blogbejegyzések listája.
-- loading: A betöltési állapotot jelzi.
-- error: A hibaüzeneteket tárolja, ha a betöltés sikertelen.
+```
+frontend/
+├── public/                              # Nyilvános statikus fájlok
+├── src/
+│   ├── app/                             # Az alkalmazás fő könyvtára
+│   │   ├── admin/                       # Adminisztrációs komponensek
+│   │   │   ├── admin-auth/              # Admin bejelentkezés
+│   │   │   ├── categories/              # Blogkategóriák kezelése
+│   │   │   ├── dashboard/               # Admin műszerfal
+│   │   │   │   └── subscribers/         # Hírlevél-feliratkozók
+│   │   │   ├── messages/                # Üzenetek kezelése
+│   │   │   ├── orders/                  # Rendelések kezelése
+│   │   │   │   └── order-detail/        # Rendelési részletek
+│   │   │   ├── payment-methods/         # Fizetési módok
+│   │   │   ├── posts/                   # Blogbejegyzések
+│   │   │   │   └── create-post/         # Új bejegyzés létrehozása
+│   │   │   ├── product-categories/      # Termékkategóriák
+│   │   │   ├── product-statistics/      # Termékstatisztikák
+│   │   │   ├── products/                # Termékek kezelése
+│   │   │   │   ├── create-product/      # Új termék
+│   │   │   │   └── edit-product/        # Termék szerkesztése
+│   │   │   ├── services/                # Adminisztrációs szolgáltatások
+│   │   │   ├── shipping-methods/        # Szállítási módok
+│   │   │   └── users/                   # Felhasználók kezelése
+│   │   ├── guards/                      # Hozzáférési védelmek
+│   │   ├── layout/                      # Elrendezési komponensek
+│   │   │   ├── content/                 # Tartalmi komponensek
+│   │   │   │   └── detail/              # Részletes nézetek
+│   │   │   ├── footer/                  # Lábléc
+│   │   │   │   └── pages/               # Statikus oldalak
+│   │   │   ├── header/                  # Fejléc
+│   │   │   │   ├── auth/                # Autentikáció
+│   │   │   │   ├── header/              # Navigáció
+│   │   │   │   └── search/              # Keresés
+│   │   │   └── home/                    # Kezdőlap
+│   │   ├── related/                     # Kapcsolódó tartalmak
+│   │   │   ├── related-posts/           # Kapcsolódó bejegyzések
+│   │   │   └── related-products/        # Kapcsolódó termékek
+│   │   ├── shared/                      # Közös erőforrások
+│   │   │   └── services/                # Szolgáltatások
+│   │   ├── webshop/                     # Webáruház komponensei
+│   │   │   ├── cart/                    # Kosárkezelés
+│   │   │   │   ├── cart-dropdown/       # Kosár legördülő
+│   │   │   │   ├── cart-icon/           # Kosár ikon
+│   │   │   │   ├── cart-item/           # Kosártétel
+│   │   │   │   └── cart-page/           # Kosár oldal
+│   │   │   ├── checkout/                # Pénztár
+│   │   │   ├── discounted-products/     # Akciós termékek
+│   │   │   ├── featured-products/       # Kiemelt termékek
+│   │   │   ├── order-details/           # Rendelési részletek
+│   │   │   ├── orders/                  # Rendelések
+│   │   │   └── webshop-homepage/        # Webshop főoldal
+│   │   ├── app.component.*              # Alkalmazás gyökérkomponens
+│   │   ├── app.config.ts                # Alkalmazás konfiguráció
+│   │   └── app.routes.ts                # Útvonalak definíciója
+│   ├── assets/                          # Statikus erőforrások
+│   │   └── img/                         # Képek
+│   ├── environments/                    # Környezeti változók
+│   │   ├── environment.development.ts   # Fejlesztői környezet
+│   │   └── environment.ts               # Alapértelmezett környezet
+│   ├── index.html                       # Fő HTML fájl
+│   ├── main.ts                          # Alkalmazás belépési pont
+│   └── styles.css                       # Globális stílusok
+├── storage/                             # Tárolt fájlok (pl. képek)
+├── .editorconfig                        # Szerkesztő konfiguráció
+├── .gitignore                           # Git figyelmen kívül hagyás
+├── angular.json                         # Angular CLI konfiguráció
+├── package.json                         # Függőségek és szkriptek
+├── README.md                            # Projekt leírás
+├── tsconfig.app.json                    # TypeScript konfiguráció (app)
+├── tsconfig.json                        # TypeScript konfiguráció (általános)
+└── tsconfig.spec.json                   # TypeScript konfiguráció (tesztek)
+```
 
-**ProductDetailComponent**
-- product: Az aktuális termék részletes adatai.
-- loading: Jelzi, hogy a termék adatai töltődnek-e.
-- error: Hibaüzenetet tárol, ha a betöltés sikertelen.
-- quantity: A kosárba helyezendő termék mennyisége.
-- toastMessage: Visszajelző üzenet szövegét tárolja.
+### Fontos frontend fájlok
 
-**CartDropdownComponent**
-- isOpen: Jelzi, hogy a lenyíló kosármenü nyitott-e.
-- cartItems: A kosárban lévő termékek listája.
-- totalItems: Az összes kosárban lévő termék darabszáma.
-- subtotal: A kosár alösszege.
+1. **.editorconfig**
+   - Egységesíti a kódformázást (pl. indentálás: 2 szóköz, UTF-8 kódolás).
 
-**CartIconComponent**
-- totalItems: A kosár ikonon megjelenő összes termék darabszáma.
+2. **.gitignore**
+   - Kihagyja a generált fájlokat (pl. `node_modules`, `dist`) a verziókövetésből.
 
-**CartPageComponent**
-- cartItems: A kosárban lévő termékek listája.
-- subtotal: Az alösszeg értéke.
-- shippingCost: Szállítási költség.
-- totalAmount: A végösszeg.
-- loading: A betöltési állapotot jelzi.
-- error: Hibaüzenetet tárol, ha a kosár betöltése sikertelen.
-- freeShippingThreshold: Az ingyenes szállítás elérésének küszöbértéke.
+3. **angular.json**
+   - Az Angular CLI konfigurációs fájlja, meghatározza a build, szerver és tesztelési beállításokat.
+   - Tartalmazza a statikus erőforrások (pl. favicon, assets) és stílusok (Bootstrap, globális CSS) kezelését.
 
-**OrdersComponent**
-- orders: A felhasználó korábbi rendeléseinek listája.
-- isLoading: A betöltési állapotot jelzi.
-- error: Hibaüzenetek tárolására használatos.
+4. **package.json**
+   - Felsorolja a függőségeket (pl. Angular, Bootstrap, Chart.js) és fejlesztési szkripteket (pl. `ng serve`, `ng build`).
 
-**OrderDetailComponent**
-- order: Az aktuális rendelés részletei.
-- isLoading: Betöltési állapot.
-- error: Hibaüzenetet tárol.
-- orderStatuses: Az összes rendelési státusz listája.
-- standardStatuses: Alapértelmezett státuszok, ha az API nem érhető el.
+5. **README.md**
+   - Leírja a projekt telepítését, fejlesztői szerver indítását, buildelését és tesztelését.
 
-**WebshopHomepage**
-- products: Az API-ból lekért termékek teljes listája.
-- categories: Az API-ból lekért kategóriák listája.
-- filteredProducts: Szűrt terméklista a felhasználó keresése vagy kategóriaválasztása alapján.
-- selectedCategory: Az aktuálisan kiválasztott kategória.
-- searchTerm: A keresési kulcsszó.
-- sortOption: A termékek rendezési módja (pl. legújabb, ár szerint).
-- toastMessage: Visszajelző üzenet szövege.
-- quantity: Kosárba helyezni kívánt mennyiség.
+6. **environments/environment.development.ts**
+   - Fejlesztői környezet beállításai (pl. API URL: `http://localhost:8000/api`).
 
-**CheckoutComponent**
-- checkoutForm: Az űrlap, amely tartalmazza a rendelési adatokat (számlázási, szállítási adatok).
-- cartItems: A kosár tartalma a rendelés idején.
-- subtotal: A kosár alösszege.
-- shippingCost: Szállítási költség.
-- total: A teljes rendelési összeg.
-- loading: Jelzi, hogy a rendelés feldolgozása folyamatban van.
-- shippingMethods: Az elérhető szállítási módok listája.
-- paymentMethods: Az elérhető fizetési módok listája.
-- orderSuccess: Jelzi, hogy a rendelés sikeres volt-e.
-- orderNumber: A rendelés azonosítószáma.
+7. **index.html**
+   - Az alkalmazás belépési pontja, betölti a Bootstrap Icons-t és az Angular gyökérkomponenst.
 
-**Komponensek célja és funkciója**
+8. **main.ts**
+   - Az Angular alkalmazás bootstrapelése.
 
-- **AppComponent**: Az alkalmazás alapstruktúrájának megjelenítése.
-- **SearchComponent**: Keresési funkció biztosítása.
-- **ProductDetailComponent**: Egy konkrét termék részleteinek megjelenítése.
-- **CartPageComponent**: A kosár tartalmának és műveleteinek kezelése.
-- **OrdersComponent**: A felhasználói rendelések listázása.
-- **CheckoutComponent**: A vásárlási folyamat végrehajtása.
+9. **styles.css**
+   - Globális stílusok, importálja a Bootstrapet és meghatározza az alapvető elrendezést (pl. padding, min-height).
+
+### Adminisztrációs felület komponensei
+
+Az adminisztrációs felület a `/admin` útvonalon érhető el, és az `AdminModule` modulba szervezett komponensekből áll. A főbb komponensek:
+
+- **AdminAuthComponent** (`admin-auth/`): Kezeli a Szuper Admin bejelentkezést, validálja az emailt és jelszót, és token alapú autentikációt használ.
+- **DashboardComponent** (`dashboard/`): Az adminisztrációs műszerfal, amely navigációs menüt biztosít a különböző admin funkciókhoz.
+- **CategoriesComponent** (`categories/`): Blogkategóriák létrehozása, listázása és törlése. Toast üzenetekkel jelzi a sikeres műveleteket.
+- **SubscribersComponent** (`dashboard/subscribers/`): Hírlevél-feliratkozók kezelése, aktiválás/deaktiválás és törlés, reszponzív táblázattal és kártyanézettel.
+- **OrdersComponent** (`orders/`): Adminisztrátori rendelések listázása és kezelése.
+- **OrderDetailComponent** (`orders/order-detail/`): Egy rendelés részletes nézete, státuszfrissítési lehetőséggel.
+- **ProductsComponent** (`products/`): Termékek listázása, létrehozása és szerkesztése.
+- **ProductCategoriesComponent** (`product-categories/`): Termékkategóriák kezelése.
+- **ShippingMethodsComponent** (`shipping-methods/`): Szállítási módok kezelése.
+- **PaymentMethodsComponent** (`payment-methods/`): Fizetési módok kezelése.
+- **ProductStatisticsComponent** (`product-statistics/`): Termékekkel kapcsolatos statisztikák (pl. eladások, megtekintések).
+
+### Webshop komponensei
+
+A webáruház funkcionalitását a `webshop/` mappában található komponensek biztosítják:
+
+- **WebshopHomepageComponent** (`webshop-homepage/`): A webshop főoldala, amely akciós és kiemelt termékeket mutat karuszelen, valamint szűrhető terméklistát kínál. Támogatja a kategóriaválasztást, keresést és rendezést.
+- **OrdersComponent** (`orders/`): Felhasználói rendelések listázása táblázatos formában, részletek linkkel.
+- **OrderDetailsComponent** (`order-details/`): Egy rendelés részletes nézete, amely mutatja a státuszt, szállítási/fizetési adatokat, termékeket és rendelési előzményeket. Progress bar jelzi a rendelés előrehaladását.
+- **CartPageComponent** (`cart/cart-page/`): A kosár tartalmának részletes nézete, módosítási és törlési lehetőségekkel.
+- **CheckoutComponent** (`checkout/`): A rendelés leadásának felülete, számlázási és szállítási adatok megadásával.
+- **DiscountedProductsComponent** (`discounted-products/`): Akciós termékek kiemelése.
+- **FeaturedProductsComponent** (`featured-products/`): Kiemelt termékek megjelenítése.
 
 ---
-
-Készült: 2025.03.25.

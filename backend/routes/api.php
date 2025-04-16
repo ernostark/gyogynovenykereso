@@ -3,7 +3,7 @@
 use App\Http\Controllers\Admin\PaymentMethodController;
 use App\Http\Controllers\Admin\ShippingMethodController;
 use App\Http\Controllers\Admin\AdminOrderController;
-use App\Http\Controllers\admin\StatisticsController;
+use App\Http\Controllers\Admin\StatisticsController;
 use App\Http\Controllers\AdminAuthController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoryController;
