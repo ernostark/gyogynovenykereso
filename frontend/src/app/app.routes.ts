@@ -18,6 +18,8 @@ import { OrderDetailComponent } from './webshop/order-details/order-details.comp
 import { OrdersComponent } from './webshop/orders/orders.component';
 import { DiscountedProductsComponent } from './webshop/discounted-products/discounted-products/discounted-products.component';
 import { FeaturedProductsComponent } from './webshop/featured-products/featured-products/featured-products.component';
+import { ResetPasswordComponent } from './layout/header/auth/forgot-password/reset-password/reset-password.component';
+import { ForgotPasswordComponent } from './layout/header/auth/forgot-password/forgot-password/forgot-password.component';
 
 export const routes: Routes = [
   {
@@ -90,6 +92,8 @@ export const routes: Routes = [
     path: 'orders/:id',
     component: OrderDetailComponent
   },
+  { path: 'forgot-password', component: ForgotPasswordComponent },
+  { path: 'reset-password', component: ResetPasswordComponent },
   {
     path: '**',
     redirectTo: 'home',

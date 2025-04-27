@@ -95,7 +95,7 @@ export class CheckoutComponent implements OnInit {
 
     this.onSameAsBillingChange();
 
-    this.isLoggedIn = !!sessionStorage.getItem('auth_token');
+    this.isLoggedIn = !!localStorage.getItem('auth_token');
   }
 
   ngOnInit(): void {

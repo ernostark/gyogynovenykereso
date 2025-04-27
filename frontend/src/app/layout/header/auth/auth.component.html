@@ -72,18 +72,24 @@
       </div>
       <div class="modal-body">
         <form (submit)="onLogin()">
-          <div class="form-group">
+          <div class="form-group mb-3">
             <label for="loginEmail">Email</label>
             <input id="loginEmail" type="email" class="form-control" [(ngModel)]="email" name="email" required />
           </div>
-          <div class="form-group">
+          <div class="form-group mb-3">
             <label for="loginPassword">Jelszó</label>
             <input id="loginPassword" type="password" class="form-control" [(ngModel)]="password" name="password"
               required />
+            <div class="text-end mt-1">
+              <a href="#" class="text-decoration-none small" data-bs-dismiss="modal"
+                (click)="navigateToForgotPassword()">Elfelejtettem a jelszavamat</a>
+            </div>
           </div>
-          <button type="submit" class="btn btn-success mt-3">
-            Bejelentkezés
-          </button>
+          <div class="d-grid">
+            <button type="submit" class="btn btn-success mt-3">
+              Bejelentkezés
+            </button>
+          </div>
         </form>
         <div *ngIf="errorMessage" class="alert alert-danger mt-3" [innerHTML]="errorMessage"></div>
         <div *ngIf="successMessage" class="alert alert-success mt-3">

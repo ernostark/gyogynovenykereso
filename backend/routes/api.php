@@ -10,6 +10,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\NewsletterController;
+use App\Http\Controllers\PasswordResetController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProductCategoryController;
 use App\Http\Controllers\ProductController;
@@ -131,6 +132,9 @@ Route::delete('/cart/items/{id}', [CartController::class, 'removeItem']);
 Route::delete('/cart', [CartController::class, 'clear']);
 
 Route::post('/checkout', [CheckoutController::class, 'checkout']);
+
+Route::post('/forgot-password', [PasswordResetController::class, 'forgotPassword']);
+Route::post('/reset-password', [PasswordResetController::class, 'resetPassword']);
 
 Route::get('/shipping-methods', function () {
     return ShippingMethod::where('is_active', true)

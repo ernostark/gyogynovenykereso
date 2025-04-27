@@ -47,7 +47,7 @@ export class AuthService {
       .subscribe({
         next: (response: any) => {
           localStorage.removeItem('admin_token');
-          sessionStorage.removeItem('auth_token');
+          localStorage.removeItem('auth_token');
           this.sharedService.updateAdminStatus(false);
           this.router.navigate(['/']).then(() => {
             window.location.reload();

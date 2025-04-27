@@ -90,7 +90,7 @@ export class OrderDetailComponent implements OnInit {
 
   loadOrder(id: number): void {
     this.isLoading = true;
-    const token = sessionStorage.getItem('auth_token');
+    const token = localStorage.getItem('auth_token');
 
     this.http.get<Order>(`${environment.apiUrl}/orders/${id}`, {
       headers: {

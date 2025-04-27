@@ -6,6 +6,7 @@
   - [Technikai követelmények](#technikai-követelmények)
   - [Az oldal elérése](#az-oldal-elérése)
   - [Regisztráció és bejelentkezés](#regisztráció-és-bejelentkezés)
+  - [Elfelejtett jelszó kezelése](#elfelejtett-jelszó-kezelése)
   - [Keresőfunkció használata](#keresőfunkció-használata)
   - [Blog használata](#blog-használata)
   - [Webshop használata](#webshop-használata)
@@ -77,6 +78,39 @@ A Gyógynövénykereső böngészőalapú, tehát nincs szükség külön letöl
 - Add meg az e-mail címedet és jelszavadat.
 
 ![Belépési űrlap](md_images/bejelentkezes_form.jpg)
+
+### Elfelejtett jelszó kezelése
+
+Ha elfelejtetted a jelszavadat, egyszerűen visszaállíthatod az alábbi lépésekkel:
+
+#### Jelszó-visszaállítás kezdeményezése:
+1. A bejelentkező felületen kattints az **Elfelejtettem a jelszavamat** linkre.
+
+![Elfelejtett jelszó link](md_images/elfelejtett_jelszo_link.jpg)
+
+2. Add meg a regisztrációnál használt e-mail címedet a megjelenő űrlapon.
+
+![Elfelejtett jelszó űrlap](md_images/elfelejtett_jelszo_urlap.jpg)
+
+3. Kattints a **Visszaállító link küldése** gombra.
+4. A rendszer egy jelszó-visszaállító e-mailt küld a megadott címre.
+
+![Visszaállító e-mail elküldve](md_images/visszaallito_email_elkuldve.jpg)
+
+#### Új jelszó beállítása:
+1. Nyisd meg a postafiókodba érkezett e-mailt.
+2. Kattints a **Jelszó visszaállítása** gombra vagy a megadott linkre.
+3. A megjelenő oldalon add meg az új jelszavadat.
+   - A jelszónak legalább 8 karakter hosszúnak kell lennie
+   - Tartalmaznia kell nagybetűt, kisbetűt és számot
+
+![Új jelszó megadása](md_images/uj_jelszo_megadasa.jpg)
+
+4. Írd be még egyszer az új jelszavadat a megerősítéshez.
+5. Kattints a **Jelszó frissítése** gombra.
+6. Sikeres jelszó-visszaállítás után bejelentkezhetsz az új jelszavaddal.
+
+![Sikeres jelszó-visszaállítás](md_images/sikeres_jelszo_visszaallitas.jpg)
 
 ### Keresőfunkció használata
 
@@ -187,6 +221,8 @@ A Gyógynövénykereső böngészőalapú, tehát nincs szükség külön letöl
 #### Profil frissítése:
 - Új jelszó megadása és megerősítése.
 - Személyes adatok, például cím és elérhetőség módosítása.
+
+![Profil szerkesztése](md_images/profil_szerkesztese.jpg)
 
 ### Információs oldalak
 

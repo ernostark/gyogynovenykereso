@@ -38,7 +38,7 @@ export class OrdersComponent implements OnInit {
 
   loadOrders(): void {
     this.isLoading = true;
-    const token = sessionStorage.getItem('auth_token');
+    const token = localStorage.getItem('auth_token');
 
     this.http.get<Order[]>(`${environment.apiUrl}/orders`, {
       headers: {

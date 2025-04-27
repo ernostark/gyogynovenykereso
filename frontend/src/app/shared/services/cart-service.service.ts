@@ -18,10 +18,11 @@ export class CartService {
 
   constructor(private http: HttpClient) {
     this.cartId = localStorage.getItem('cart_id');
+    this.loadCart().subscribe();
   }
 
   private getCurrentUser(): any {
-    const authToken = sessionStorage.getItem('auth_token');
+    const authToken = localStorage.getItem('auth_token');
     if (authToken) {
       const tokenParts = authToken.split('|');
       if (tokenParts.length > 0) {
@@ -35,7 +36,7 @@ export class CartService {
   }
 
   private getAuthHeaders(): HttpHeaders {
-    const token = sessionStorage.getItem('auth_token');
+    const token = localStorage.getItem('auth_token');
     if (token) {
       return new HttpHeaders({
         'Authorization': `Bearer ${token}`
@@ -183,7 +184,7 @@ export class CartService {
       cart_id: this.cartId
     };
 
-    const token = sessionStorage.getItem('auth_token');
+    const token = localStorage.getItem('auth_token');
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`
     });

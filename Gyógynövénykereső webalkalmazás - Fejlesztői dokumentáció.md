@@ -54,6 +54,7 @@ Miután a telepítés közben létrehoztuk a Szuper Admint, a következő linken
    - [Console Commandok](#console-commandok)
    - [Útvonalak (Routes)](#útvonalak-routes)
    - [Email küldési rendszer](#email-küldési-rendszer)
+   - [Jelszó-visszaállítási rendszer](#jelszó-visszaállítási-rendszer)
    - [Végpontok megnevezése és leírása](#végpontok-megnevezése-és-leírása)
 3. [Frontend](#3-frontend)
    - [Az alkalmazás struktúrája és alapszerkezete](#az-alkalmazás-struktúrája-és-alapszerkezete)
@@ -63,6 +64,7 @@ Miután a telepítés közben létrehoztuk a Szuper Admint, a következő linken
    - [Rendelések kezelése](#rendelések-kezelése)
    - [Webshop főoldal és szűrési funkciók](#webshop-főoldal-és-szűrési-funkciók)
    - [Hitelesítési és adminisztrációs funkciók](#hitelesítési-és-adminisztrációs-funkciók)
+   - [Jelszó-visszaállítási komponensek](#jelszó-visszaállítási-komponensek)
    - [Kapcsolódó tartalmak kezelése](#kapcsolódó-tartalmak-kezelése)
    - [Komponensek és osztályváltozók listája](#komponensek-és-osztályváltozók-listája)
    - [Frontend projekt struktúra](#frontend-projekt-struktúra)
@@ -112,6 +114,7 @@ backend/
 │   │   ├── Controllers/     # Vezérlők - üzleti logika
 │   │   │   ├── Admin/       # Admin vezérlők
 │   │   │   └── User/        # Felhasználói vezérlők
+│   │   │   └── PasswordResetController.php # Jelszó-visszaállítás kezelő
 │   │   ├── Middleware/      # Kérések köztes feldolgozása
 │   │   └── Requests/        # Űrlap kérések validációja
 │   ├── Mail/                # Email sablonok és logika
@@ -157,6 +160,7 @@ A vezérlők a következő fő csoportokra oszthatók:
 2. **Autentikációs vezérlők**:
    - AdminAuthController
    - UserController (regisztráció, bejelentkezés, profil)
+   - PasswordResetController (jelszó-visszaállítás)
 
 3. **Közös vezérlők**: 
    - CartController (kosárkezelés)
@@ -462,6 +466,10 @@ A backend vezérlők kezelik a bejövő kéréseket, végrehajtják az üzleti l
    - `unsubscribeWithToken()`: Leiratkozás egyedi token alapján
    - `toggleStatus()`: Feliratkozás státuszának módosítása
 
+9. **PasswordResetController**: Jelszó-visszaállítás kezelése
+   - `forgotPassword()`: Jelszó-visszaállítási link küldése
+   - `resetPassword()`: Jelszó visszaállítása a kapott tokennel
+
 ### Middleware komponensek
 
 A middleware komponensek a kérések feldolgozását segítik a végpontok elérése előtt vagy után. A fontosabb middleware-ek:
@@ -493,6 +501,37 @@ A Laravel artisan konzolos parancsai fontos szerepet játszanak a fejlesztésben
    - Futtatja a migrációkat
    - Betölti a seeder adatokat
    - Opcionálisan létrehoz egy Szuper Admint
+
+### Jelszó-visszaállítási rendszer
+
+A backend oldalon a jelszó-visszaállítás a `PasswordResetController.php` vezérlőn keresztül valósul meg, amely két fő végpontot biztosít:
+
+1. **/forgot-password** (POST): 
+   - E-mail cím elfogadása és validálása
+   - Rate limiting alkalmazása (maximum 3 kérés/óra ugyanazon e-mail és IP kombinációra)
+   - Jelszó-visszaállító token generálása és e-mail küldése
+   - A token a `password_reset_tokens` táblában tárolódik
+
+2. **/reset-password** (POST):
+   - Token, e-mail és új jelszó elfogadása
+   - Jelszó validálása (min. 8 karakter, nagy- és kisbetű, szám)
+   - Jelszó frissítése és a token törlése
+
+A kontroller a Laravel beépített jelszó-visszaállítási rendszerét használja (`Password` facade), amely automatikusan kezeli a tokenek generálását, e-mail küldést és adatbázis műveleteket.
+
+Biztonsági funkcióként a kontroller rate limitet alkalmaz a `RateLimiter` facade segítségével, megakadályozva a túl sok kérést azonos e-mail címről vagy IP-címről. Ez véd a brute force támadások és szolgáltatás-megtagadási támadások ellen.
+
+### Email küldési rendszer
+
+A jelszó-visszaállítási rendszer az alapértelmezett Laravel e-mail sablon rendszert használja. A sablon testreszabása a `/resources/views/vendor/notifications/email.blade.php` fájlon keresztül történik, amely a következő jellemzőkkel rendelkezik:
+
+- Professzionális és felhasználóbarát üzenet stílus
+- Kiemelt gomb a jelszó-visszaállítási linkhez
+- Explicit magyarázat a link érvényességi idejéről (60 perc)
+- Alternatív hozzáférési lehetőség szöveges URL formájában
+- Explicit tájékoztatás, hogy mi a teendő, ha nem a felhasználó kérte a jelszó-visszaállítást
+
+A jelszó-visszaállító e-mail tartalma az `AuthServiceProvider.php` fájlban is testreszabható a `ResetPassword::toMailUsing()` metódus segítségével, amely lehetővé teszi a témák, üzenetek és további paraméterek módosítását.
 
 ### Végpontok megnevezése és leírása
 
@@ -553,6 +592,8 @@ A Laravel artisan konzolos parancsai fontos szerepet játszanak a fejlesztésben
 | /newsletter/subscribe | POST | Nyilvános | Feliratkozás a hírlevélre |
 | /newsletter/unsubscribe/{token} | GET | Nyilvános | Leiratkozás a hírlevélről token alapján |
 | /contact | POST | Nyilvános | Kapcsolatfelvételi üzenet küldése |
+| /forgot-password | POST | Nyilvános | Jelszó-visszaállítási link küldése |
+| /reset-password | POST | Nyilvános | Új jelszó beállítása a kapott token alapján |
 
 ---
 
@@ -601,6 +642,30 @@ A hitelesítést a `auth.component` (felhasználói) és `admin-auth.component` 
 - Üzenetek és hírlevél-feliratkozók kezelése (`admin-messages.component`, `subscribers.component`)
 - Statisztikák megtekintése (`product-statistics.component`)
 
+### Jelszó-visszaállítási komponensek
+
+A felhasználói jelszó-visszaállítás kezelésére két dedikált komponens szolgál:
+
+1. **ForgotPasswordComponent** (`layout/header/auth/forgot-password/forgot-password/`):
+   - E-mail cím bekérése a jelszó-visszaállításhoz
+   - Validációs ellenőrzések (kötelező mező, érvényes e-mail formátum)
+   - Kérés küldése a backend API-nak
+   - Sikeres kérés esetén megerősítő képernyő megjelenítése
+   - Hibaüzenetek kezelése (pl. nem létező e-mail, túl sok kérés)
+   - Bejelentkezéshez visszatérés lehetősége
+
+2. **ResetPasswordComponent** (`layout/header/auth/forgot-password/reset-password/`):
+   - URL paraméterek feldolgozása (token és e-mail cím)
+   - Új jelszó és megerősítés bekérése
+   - Validációs ellenőrzések (min. 8 karakter, nagybetű, kisbetű, szám)
+   - Token és új jelszó elküldése a backendnek
+   - Sikeres jelszóváltoztatás esetén megerősítés és bejelentkezési lehetőség
+   - Hibaüzenetek kezelése (érvénytelen token, gyenge jelszó)
+
+Mindkét komponens összhangban van az alkalmazás általános dizájnjával, és Bootstrap-alapú stílusokat használ a felhasználói élmény javítására, beleértve a kártyaelemeket, animációkat és reszponzív megjelenést.
+
+A jelszó-visszaállítási folyamat további funkcióit a `ModalService` teszi lehetővé, amely a bejelentkező modalt nyitja meg, amikor a felhasználó vissza szeretne térni a bejelentkezéshez. Az `AuthService` szolgáltatás biztosítja a backend API-val való kommunikációt, beleértve a jelszó-visszaállítási kéréseket és a jelszófrissítést.
+
 ### Kapcsolódó tartalmak kezelése
 
 A kapcsolódó tartalmakat a `related-posts.component` és `related-products.component` komponensek kezelik. Ezek a komponensek a `RelatedContentService` segítségével dinamikusan töltik be a releváns blogbejegyzéseket vagy termékeket a felhasználó aktuális megtekintése alapján.
@@ -614,6 +679,8 @@ A kapcsolódó tartalmakat a `related-posts.component` és `related-products.com
 - **OrdersComponent**: Felhasználói rendelések listázása (`orders`, `isLoading`, `error`)
 - **OrderDetailComponent**: Rendelési részletek (`order`, `isLoading`, `error`, `orderStatuses`, `standardStatuses`, `storageUrl`)
 - **WebshopHomepageComponent**: Webshop főoldal (`products`, `filteredProducts`, `categories`, `featuredProducts`, `discountedProducts`, `loading`, `storageUrl`, `selectedCategory`, `searchTerm`, `sortOption`, `toastMessage`)
+- **ForgotPasswordComponent**: Jelszó-visszaállítás kezdeményezése (`forgotPasswordForm`, `loading`, `submitted`, `emailSent`, `toastMessage`, `error`)
+- **ResetPasswordComponent**: Új jelszó beállítása (`resetForm`, `loading`, `submitted`, `resetComplete`, `token`, `email`, `toastMessage`, `error`)
 
 ### Frontend projekt struktúra
 
@@ -651,6 +718,9 @@ frontend/
 │   │   │   │   └── pages/               # Statikus oldalak
 │   │   │   ├── header/                  # Fejléc
 │   │   │   │   ├── auth/                # Autentikáció
+│   │   │   │   │   ├── forgot-password/ # Jelszó-visszaállító komponensek
+│   │   │   │   │   │   ├── forgot-password/ # E-mail bekérő komponens
+│   │   │   │   │   │   └── reset-password/  # Új jelszó megadása komponens
 │   │   │   │   ├── header/              # Navigáció
 │   │   │   │   └── search/              # Keresés
 │   │   │   └── home/                    # Kezdőlap
@@ -659,6 +729,9 @@ frontend/
 │   │   │   └── related-products/        # Kapcsolódó termékek
 │   │   ├── shared/                      # Közös erőforrások
 │   │   │   └── services/                # Szolgáltatások
+│   │   │       ├── auth.service.ts      # Felhasználói autentikáció szolgáltatás
+│   │   │       ├── modal.service.ts     # Modal kezelő szolgáltatás
+│   │   │       └── toast.service.ts     # Értesítések szolgáltatás
 │   │   ├── webshop/                     # Webáruház komponensei
 │   │   │   ├── cart/                    # Kosárkezelés
 │   │   │   │   ├── cart-dropdown/       # Kosár legördülő
@@ -722,6 +795,13 @@ frontend/
 
 9. **styles.css**
    - Globális stílusok, importálja a Bootstrapet és meghatározza az alapvető elrendezést (pl. padding, min-height).
+
+10. **app.routes.ts** 
+    - Az útvonalak definíciója, beleértve a jelszó-visszaállítási útvonalakat is:
+    ```typescript
+    { path: 'forgot-password', component: ForgotPasswordComponent },
+    { path: 'reset-password', component: ResetPasswordComponent }
+    ```
 
 ### Adminisztrációs felület komponensei
 
